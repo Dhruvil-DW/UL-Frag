@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 require('dotenv').config();
+const routes = require('./routes/index.route');
+const path = require('path');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -15,10 +17,4 @@ app.use(express.static(root));
 app.use((req, res) => {
   res.sendFile('index.html', { root });
 });
-// app.get('/',function(req,res){
-//     res.send('Hello world');
-// })
 
-// app.listen(3001, function(){
-//     console.log('Example app');
-// })

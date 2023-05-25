@@ -1,0 +1,68 @@
+/*
+ Text Field
+*/
+
+.MuiTextField-root {
+  --color: hsl(0, 0%, 100%);
+  --focusedColor: hsl(0, 0%, 100%);
+  --hoverColor: hsl(0, 0%, 100%);
+  --disableColor: hsl(0, 0%, 40%);
+  /* --disableColor: red; */
+}
+
+.MuiTextField-root .MuiInputLabel-root {
+  color: var(--color);
+}
+.MuiTextField-root fieldset.MuiOutlinedInput-notchedOutline {
+  border-color: var(--color);
+}
+.MuiTextField-root .Mui-focused fieldset.MuiOutlinedInput-notchedOutline {
+  border-color: var(--focusedColor);
+}
+.MuiTextField-root .MuiInputBase-root.Mui-disabled fieldset.MuiOutlinedInput-notchedOutline,
+.MuiTextField-root .MuiInputBase-root.Mui-disabled .MuiOutlinedInput-input {
+  border-color: var(--disableColor);
+  color: var(--disableColor);
+}
+.MuiTextField-root .MuiInputBase-root:not(.Mui-disabled):hover fieldset.MuiOutlinedInput-notchedOutline {
+  border-color: var(--hoverColor);
+}
+.MuiTextField-root .MuiOutlinedInput-input {
+  color: var(--color);
+}
+.MuiTextField-root .MuiOutlinedInput-root {
+  border-radius: 32px;
+}
+
+/* Helper Text */
+.MuiTextField-root .MuiFormHelperText-root {
+  color: var(--color)
+}
+.MuiTextField-root .MuiFormHelperText-root.Mui-disabled {
+  color: var(--disableColor);
+}
+
+
+
+/*
+ Button 
+ */
+ .MuiButton-root.MuiButtonBase-root {
+   --contBG: hsl(0, 0%, 100%);
+   --contColor: hsl(219, 39%, 32%);
+   --disableBG: hsl(0, 0%, 50%);
+   --disableColor: hsl(219, 39%, 32%);
+   --bdrRds: 32px;
+   --minWid: 140px;
+   text-transform: none;
+  }
+  .MuiButton-root.MuiButton-contained {
+    background-color: var(--contBG);
+    color: var(--contColor);
+    border-radius: var(--bdrRds);
+    min-width: var(--minWid);
+  }
+  .MuiButton-root.MuiButtonBase-root.Mui-disabled {
+    background-color: var(--disableBG);
+    color: var(--disableColor);
+  }

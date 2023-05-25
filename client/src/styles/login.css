@@ -5,7 +5,20 @@
 
 .loginContainer {
   height: 100%;
+  margin-left: min(5%, 200px);
+  max-width: min(100%, 400px);
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
   color: white;
+}
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.helperText {
+  font-size: 0.75rem;
 }

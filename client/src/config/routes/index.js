@@ -9,6 +9,8 @@ export function Redirect() {
   useEffect(() => {
     switch (authState.userdata?.role_id) {
       case 0:
+        navigate('/profile');
+        return;
       case 1:
       case 2:
         navigate('/dashboard');

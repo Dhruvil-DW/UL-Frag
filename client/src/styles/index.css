@@ -1,1 +1,5 @@
-@import './App.css'
+@import './login.css';
+@import './dashboard.css';
+@import './header.css';
+@import './App.css';
+@import './mui.css';

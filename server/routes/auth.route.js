@@ -4,7 +4,7 @@ const authMiddleware = require('../middlewares/auth.middleware');
 
 const router = express.Router();
 
-router.post("/login", authController.login);
+router.post("/sendotp", authController.sendOTP);
 router.post("/verifyotp", authController.verifyOtp);
 router.get("/resendotp", authController.resendOtp);
 

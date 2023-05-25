@@ -1,0 +1,8 @@
+.headerWrapper {
+  background-color: hsl(202, 63%, 98%);
+}
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  
+}

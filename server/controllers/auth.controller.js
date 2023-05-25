@@ -27,7 +27,7 @@ function sendOTP(req, res) {
                 return;
             }
         }
-        res.status(200).send({ message: "OTP send succesfully" });
+        res.status(200).send({ message: "OTP send successfully" });
     })();
 }
 
@@ -56,7 +56,7 @@ function resendOtp(req, res) {
 
     (async () => {
         const getRes = await seq.seqFindOne(User, ['email', 'otp', 'role_id'], { email: email });
-        if (getRes == 500) {
+        if (getRes === 500) {
             res.status(500).send({ message: "Some error occurred while resent otp." });
         }
         res.status(200).send({ message: "New OTP sent" });

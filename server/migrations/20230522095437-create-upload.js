@@ -15,7 +15,7 @@ module.exports = {
       app_id:{
         type: Sequelize.INTEGER
       },
-      status:{
+      active:{
         type: Sequelize.INTEGER
       },
       createdAt: {

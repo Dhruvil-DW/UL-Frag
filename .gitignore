@@ -11,3 +11,6 @@ server/package-lock.json
 client/package-lock.json
 
 server/public/*
+
+# production
+build

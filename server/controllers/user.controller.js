@@ -48,7 +48,21 @@ function getProfileDetails(req,res){
     })();
 }
 
-
+function updateProfile(req,res){
+    const userId = req.userdata.user_id;
+(async () => {
+    const userData = {
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        contact_no: req.body.contact_no, 
+    }
+    const updateRes = await seq.seqUpdate(User, userData, {id:userId});
+    if (updateRes === 500){
+        res.status(500).send({message: "Error while updating profile details"}); 
+    }
+    res.status(200).send({message: "User updated successfully"});
+})();
+}
 module.exports = {
-     addProfileDetails, getProfileDetails
+     addProfileDetails, getProfileDetails, updateProfile
 }

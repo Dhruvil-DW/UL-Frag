@@ -49,6 +49,26 @@
   color: var(--disableColor);
 }
 
+.MuiInputBase-root.MuiOutlinedInput-root {
+  color: var(--Color-Primary);
+  border-radius: 32px;
+}
+.MuiInputBase-root.MuiOutlinedInput-root .MuiOutlinedInput-input {
+  padding: 8px 14px;
+}
+
+
+.MuiInputBase-root.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: hsla(222, 57%, 42%, 0.4);
+}
+
+.MuiInputBase-root.MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+  border-color: hsla(222, 57%, 42%, 0.2);
+}
+
+.MuiInputBase-root.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: hsla(222, 57%, 42%, 0.9);
+}
 
 
 /*
@@ -87,6 +107,21 @@
   color: hsl(219, 39%, 32%);
 }
 
+.MuiButton-root.MuiButtonBase-root.MuiButton-containedSecondary {
+  background-color: hsl(221, 100%, 30%);
+  color: hsl(0, 0%, 100%);
+  border-color: hsl(221, 100%, 30%);
+}
+
+.MuiButton-root.MuiButtonBase-root.MuiButton-containedSecondary:hover {
+  background-color: hsl(221, 100%, 40%);
+}
+
+.MuiButton-root.MuiButtonBase-root.MuiButton-containedSecondary.Mui-disabled {
+  background-color: hsl(0, 0%, 50%);
+  color: hsl(219, 39%, 32%);
+}
+
 .MuiButton-root.MuiButtonBase-root.MuiButton-outlined {
   background-color: hsla(0, 0%, 0%, 0%);
   color: hsl(0, 0%, 100%);
@@ -99,3 +134,22 @@
 }
 
 .MuiButton-root.MuiButtonBase-root.MuiButton-outlined.Mui-disabled {}
+
+
+/*
+ Tab Panel
+*/
+
+
+.MuiTab-root.MuiButtonBase-root {
+  color: hsla(222, 28%, 60%, 1);
+  text-transform: none;
+}
+
+.MuiTab-root.MuiButtonBase-root.Mui-selected {
+  color: hsla(224, 50%, 29%, 1);
+}
+
+.MuiTabs-root .MuiTabs-indicator {
+  background-color: hsla(224, 50%, 29%, 1);
+}

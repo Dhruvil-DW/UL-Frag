@@ -7,7 +7,7 @@ export default function Header() {
       <header className="headerWrapper">
         <div className="headerContainer">
           <div><Avatar /></div>
-          <div><UnileverIcon /></div>
+          <div><UnileverIcon height="48px" /></div>
         </div>
       </header>
     </>

@@ -1,6 +1,76 @@
 .dashboardWrapper {
   background: hsl(202, 63%, 98%);
+  min-height: 100vh;
+  padding: 1rem;
 }
+
 .dashboardContainer {
   /* background: hsl(202, 63%, 98%); */
+}
+
+.dashboardContentWrapper {
+  padding: 16px 0px;
+}
+
+.tabContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.filterContainer {
+  display: flex;
+  gap: 0.75rem;
+  margin: 1rem 0px;
+}
+
+.applicationCardContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 2fr));
+  gap: 1rem;
+  overflow-y: auto;
+}
+
+.appCard {
+  background-color: hsl(0, 0%, 100%);
+  border: 1px solid hsla(222, 57%, 42%, 0.25);
+  border-radius: 16px;
+  color: hsl(221, 100%, 30%);
+  padding: 16px;
+  transition: all 500ms;
+  cursor: pointer;
+  position: relative;
+}
+
+.appCard:hover {
+  background-color: hsl(221, 100%, 30%);
+  border: 1px solid hsl(221, 100%, 30%);
+  color: hsl(0, 0%, 100%);
+}
+
+.appCard .optionIcon {
+  width: 32px;
+  position: absolute;
+  right: 16px;
+  top: 16px;
+}
+
+.appCard img {
+  width: 32px;
+}
+
+.appCard .appCardActionContainer {
+  position: absolute;
+  right: 16px;
+  top: 56px;
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+}
+
+.appCard .appCardActionContainer.hovered {
+  visibility: visible;
 }

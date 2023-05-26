@@ -5,7 +5,7 @@ import { authContext } from "../../context/authContext";
 export function Redirect() {
   const navigate = useNavigate();
   const { authState } = useContext(authContext);
-  console.log({ authState }, { navigate });
+  console.debug({ authState }, { navigate });
   useEffect(() => {
     switch (authState.userdata?.role_id) {
       case 0:

@@ -1,3 +1,4 @@
+import { Avatar } from "@mui/material";
 import UnileverIcon from "../../assets/icons/unileverIcon";
 
 export default function Header() {
@@ -5,7 +6,7 @@ export default function Header() {
     <>
       <header className="headerWrapper">
         <div className="headerContainer">
-          <div>User</div>
+          <div><Avatar /></div>
           <div><UnileverIcon /></div>
         </div>
       </header>

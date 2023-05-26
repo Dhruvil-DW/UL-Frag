@@ -28,6 +28,9 @@ main {
   min-width: 100px;
 }
 
+.sidebar > .navLinkContainer {
+  
+}
 main>aside button.prev {
   color: green;
 }

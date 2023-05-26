@@ -6,6 +6,7 @@ import Context from "./context";
 import Dashboard from "./components/dashboard/dashboard";
 import AddProfile from "./components/profile/addProfile";
 import Logout from "./components/login/logout";
+import FragranceBrief from './components/fragranceBrief/fragranceBrief'
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ export default function App() {
             <Route path="/logout" element={<Logout />} />
             <Route path="/profile" element={<AddProfile />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/fragrance-brief" element={<FragranceBrief />} />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>

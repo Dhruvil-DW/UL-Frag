@@ -1,0 +1,13 @@
+.overviewWrapper{
+    height: 100vh;
+  background-size: cover;
+}
+
+.overviewContainer{
+    position: relative;
+}
+.unilever-icon{
+  position:absolute;
+  right: 40px;
+  top: 33px;
+}

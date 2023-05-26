@@ -8,6 +8,7 @@ import AddProfile from "./components/profile/addProfile";
 import Logout from "./components/login/logout";
 import AddApplication from "./components/application/addApplication";
 import FragranceBrief from './components/fragranceBrief/fragranceBrief'
+import SubmitApplication from "./components/application/submitApplication";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ export default function App() {
             <Route path="/application">
               <Route index element={<FragranceBrief />} />
               <Route path="new" element={<AddApplication />} />
+              <Route path="summary" element={<SubmitApplication />}/>
             </Route>
           </Routes>
         </BrowserRouter>

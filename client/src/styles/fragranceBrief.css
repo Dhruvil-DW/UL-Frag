@@ -11,3 +11,8 @@
   right: 40px;
   top: 33px;
 }
+.commonContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}

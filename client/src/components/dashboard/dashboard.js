@@ -3,8 +3,12 @@ import Header from "../basic/header";
 import { Button, Divider, InputAdornment, OutlinedInput, Tab, Tabs } from "@mui/material";
 import { TabPanel } from "../../assets/tabs/tabs";
 import MagnifierIcon from "../../assets/icons/magnifierIcon";
+import { useNavigate } from "react-router-dom";
+import UserIcon from "../../assets/icons/userIcon";
+import CalenderIcon from "../../assets/icons/calenderIcon";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [appData, setAppData] = useState(() => createApplicationCardData(20))
   const [selectedTab, setSelectedTab] = useState(0);
   const handleChangeTab = (__event, newTab) => setSelectedTab(newTab);
@@ -29,19 +33,28 @@ export default function Dashboard() {
               name="search"
               startAdornment=
               <InputAdornment position="start">
-                <MagnifierIcon />
+                <MagnifierIcon fill="#002F98" />
               </InputAdornment>
             />
-            <Button variant="contained" color="secondary">+ Create New Application</Button>
+            <Button variant="contained" color="secondary" onClick={() => navigate("/application")}>+ Create New Application</Button>
           </div>
           <TabPanel value={selectedTab} index={0}>
             <FilterContainer type="myapp" />
             <div className="applicationCardContainer">
               {appData?.map((app, i) => (
                 <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit}>
-                  <p>{app.title}</p>
-                  <p>{app.name}</p>
-                  <p>{app.modifiedDate}</p>
+                  <h2>{app.title}</h2>
+                  <div className="statusContainer">
+                    <Button className="cardButton">Status</Button>
+                  </div>
+                  <div className="cardDetails">
+                    <UserIcon />
+                    <p>{app.name}</p>
+                  </div>
+                  <div className="cardDetails">
+                    <CalenderIcon />
+                    <p>Edited on <b>{app.modifiedDate}</b></p>
+                  </div>
                   <img src="/images/icons/three_dot_blue.svg" alt="option" className="optionIcon" />
                   <div className={`appCardActionContainer ${hoverCardId === i ? "hovered" : ""}`}>
                     <img src="/images/icons/eye_round.svg" alt="view" />
@@ -56,11 +69,27 @@ export default function Dashboard() {
           <TabPanel value={selectedTab} index={1}>
             <FilterContainer type="all" />
             <div className="applicationCardContainer">
-              {appData?.map((app, i) => (
-                <div className="appCard" key={i}>
-                  <p>{app.title}</p>
-                  <p>{app.name}</p>
-                  <p>{app.modifiedDate}</p>
+            {appData?.map((app, i) => (
+                <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit}>
+                  <h2>{app.title}</h2>
+                  <div className="statusContainer">
+                    <Button className="cardButton">Status</Button>
+                  </div>
+                  <div className="cardDetails">
+                    <UserIcon />
+                    <p>{app.name}</p>
+                  </div>
+                  <div className="cardDetails">
+                    <CalenderIcon />
+                    <p>Edited on <b>{app.modifiedDate}</b></p>
+                  </div>
+                  <img src="/images/icons/three_dot_blue.svg" alt="option" className="optionIcon" />
+                  <div className={`appCardActionContainer ${hoverCardId === i ? "hovered" : ""}`}>
+                    <img src="/images/icons/eye_round.svg" alt="view" />
+                    <img src="/images/icons/copy_round.svg" alt="copy" />
+                    <img src="/images/icons/pencil_round.svg" alt="edit" />
+                    <img src="/images/icons/invite_user.svg" alt="invite" />
+                  </div>
                 </div>
               ))}
             </div>

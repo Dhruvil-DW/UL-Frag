@@ -1,4 +1,4 @@
-export default function MagnifierIcon({ fill = '#002F98', width = "1em", height = "1em" }) {
+export default function MagnifierIcon({ fill = 'currentColor', width = "1em", height = "1em" }) {
   return (
     <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path

@@ -2,38 +2,13 @@
  Text Field
 */
 
-.MuiTextField-root {
-  --color: hsl(0, 0%, 100%);
-  --focusedColor: hsl(0, 0%, 100%);
-  --hoverColor: hsl(0, 0%, 100%);
-  --disableColor: hsl(0, 0%, 40%);
-  /* --disableColor: red; */
+.MuiTextField-root > .MuiOutlinedInput-root.MuiInputBase-colorPrimary {
+  background-color: transparent;
+  color: white;
 }
-
-.MuiTextField-root .MuiInputLabel-root {
-  color: var(--color);
-}
-
-.MuiTextField-root fieldset.MuiOutlinedInput-notchedOutline {
-  border-color: var(--color);
-}
-
-.MuiTextField-root .Mui-focused fieldset.MuiOutlinedInput-notchedOutline {
-  border-color: var(--focusedColor);
-}
-
-.MuiTextField-root .MuiInputBase-root.Mui-disabled fieldset.MuiOutlinedInput-notchedOutline,
-.MuiTextField-root .MuiInputBase-root.Mui-disabled .MuiOutlinedInput-input {
-  border-color: var(--disableColor);
-  color: var(--disableColor);
-}
-
-.MuiTextField-root .MuiInputBase-root:not(.Mui-disabled):hover fieldset.MuiOutlinedInput-notchedOutline {
-  border-color: var(--hoverColor);
-}
-
-.MuiTextField-root .MuiOutlinedInput-input {
-  color: var(--color);
+.MuiTextField-root > .MuiOutlinedInput-root.MuiInputBase-colorPrimary.Mui-focused > .MuiOutlinedInput-notchedOutline,
+.MuiTextField-root > .MuiOutlinedInput-root.MuiInputBase-colorPrimary > .MuiOutlinedInput-notchedOutline {
+  border-color: white;
 }
 
 .MuiTextField-root .MuiOutlinedInput-root {
@@ -52,6 +27,7 @@
 .MuiInputBase-root.MuiOutlinedInput-root {
   color: var(--Color-Primary);
   border-radius: 32px;
+  background-color: white;
 }
 .MuiInputBase-root.MuiOutlinedInput-root .MuiOutlinedInput-input {
   padding: 8px 14px;

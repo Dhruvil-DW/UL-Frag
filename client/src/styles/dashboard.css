@@ -48,8 +48,26 @@
   color: hsl(0, 0%, 100%);
 }
 
+.appCard h2 {
+  color: black;
+}
+
+.appCard:hover h2 {
+  color: inherit
+}
+
+.appCard .cardDetails {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.appCard .statusContainer {
+  margin-top: 40px;
+  margin-bottom: 32px;
+}
+
 .appCard .optionIcon {
-  width: 32px;
   position: absolute;
   right: 16px;
   top: 16px;
@@ -62,7 +80,7 @@
 .appCard .appCardActionContainer {
   position: absolute;
   right: 16px;
-  top: 56px;
+  top: 64px;
   display: flex;
   gap: 16px;
   flex-direction: column;
@@ -73,4 +91,8 @@
 
 .appCard .appCardActionContainer.hovered {
   visibility: visible;
+}
+
+.cardButton.MuiButton-root.MuiButtonBase-root {
+  border: 1px solid hsla(222, 57%, 42%, 0.2);
 }

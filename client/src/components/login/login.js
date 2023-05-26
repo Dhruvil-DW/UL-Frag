@@ -72,8 +72,8 @@ export default function Login() {
         <UnileverIcon fill="white" />
         <h1>We create a fragrant world!</h1>
         <div className="formContainer">
-          <TextField placeholder="Email" name="email" value={inputs.email} onChange={handleInputChange} onKeyUp={handleKeyUp} autoFocus />
-          <TextField placeholder='OTP' name="otp" value={inputs.otp} onChange={handleInputChange} error={!authStatus.isAuth} helperText={authStatus.msg} onKeyUp={handleKeyUp} />
+          <TextField variant="outlined" color="primary" placeholder="Email" name="email" value={inputs.email} onChange={handleInputChange} onKeyUp={handleKeyUp} autoFocus />
+          <TextField variant="outlined" color="primary" placeholder='OTP' name="otp" value={inputs.otp} onChange={handleInputChange} error={!authStatus.isAuth} helperText={authStatus.msg} onKeyUp={handleKeyUp} />
           <div style={{ marginTop: '1em', display: 'flex', gap: '1rem', justifyContent: 'space-between' }}>
             <Button variant="contained" onClick={submitOTP}>Submit</Button>
             <Button variant="outlined" onClick={sendOTP}>{step === 1 ? "Send OTP" : step === 2 ? "Resend OTP" : "Invalid Step"}</Button>

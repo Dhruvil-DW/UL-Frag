@@ -13,7 +13,7 @@ export default function FragranceBrief() {
         <div className="unilever-icon">
           <UnileverIcon/>
         </div>
-        <div className="commonContainer">
+        <div className="newContainer">
         <Button variant="contained" color="secondary" style={{marginTop: 64, marginLeft:123}} onClick={() => navigate("/dashboard")}><ArrowIcon/><CategoryIcon/>Dashboard
         </Button>
         <h1 style={{textAlign: 'left', paddingTop: '18vw', margin: 0, paddingLeft: 121, color: '#002F98'}}>Give us an overview of<br/>your fragrance brief</h1>

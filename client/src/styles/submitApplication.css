@@ -1,0 +1,11 @@
+.commonContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 133px;
+    margin-left: -837px;
+}
+.imageWrapper{
+    position: relative;
+    margin: 0;
+}

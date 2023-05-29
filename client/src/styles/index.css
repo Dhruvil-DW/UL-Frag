@@ -1,8 +1,9 @@
+@import './mui/mui.css';
+@import './sidebar.css';
 @import './application.css';
 @import './login.css';
 @import './dashboard.css';
 @import './header.css';
 @import './App.css';
-@import './mui.css';
 @import './fragranceBrief.css';
 @import './submitApplication.css';

@@ -1,0 +1,15 @@
+.MuiStepper-root .MuiStepLabel-label{
+  color: white;
+}
+.MuiStepper-root .MuiStepLabel-label.Mui-active{
+  color: white;
+}
+
+.MuiStepper-root .MuiStepConnector-root {
+  margin-left: 6px;
+}
+
+.panel .MuiStepper-root .MuiStepLabel-iconContainer,
+.panel .MuiStepper-root .MuiStepLabel-label {
+  font-size: 12px;
+}

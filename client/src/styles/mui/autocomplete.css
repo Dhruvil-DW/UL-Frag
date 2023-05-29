@@ -1,0 +1,15 @@
+.MuiAutocomplete-popper .MuiAutocomplete-paper {
+  border-radius: 32px;
+}
+
+.MuiAutocomplete-popper .MuiAutocomplete-paper .MuiAutocomplete-listbox {
+  background-color: hsl(0, 0%, 98%);
+  padding: 0;
+  
+}
+.MuiAutocomplete-listbox .MuiAutocomplete-option {
+  padding: 1rem;
+}
+.MuiAutocomplete-listbox .MuiAutocomplete-option[aria-selected="true"] {
+  background-color: red;
+}

@@ -70,10 +70,6 @@
   overflow-y: auto;
 }
 
-.sidebar>.navLinkContainer::-webkit-scrollbar {
-  width: 0px;
-}
-
 .sidebar>.navLinkContainer a {
   text-decoration: none;
   color: white;

@@ -1,9 +1,14 @@
+.submitAppContainer {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
 .commonContainer{
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    margin-top: 133px;
-    margin-left: -837px;
+    /* margin-top: 5%; */
+    margin-left: 10%;
 }
 .imageWrapper{
     position: relative;

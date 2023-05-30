@@ -33,9 +33,6 @@ main {
 .appFormContainer .pageWrapper .questionContainer {
   margin-left: 15vw;
 }
-.appFormContainer>section::-webkit-scrollbar {
-  width: 0px;
-}
 
 .navBtnCont {
   position: absolute;
@@ -44,6 +41,7 @@ main {
   display: flex;
   gap: 1rem;
 }
+
 .navBtnCont .nextBtn,
 .navBtnCont .prevBtn {
   border: none;
@@ -53,6 +51,7 @@ main {
   padding: 0;
   cursor: pointer;
 }
+
 .navBtnCont .nextBtn:hover svg,
 .navBtnCont .prevBtn:hover svg {
   fill: var(--Color-Primary);
@@ -68,7 +67,8 @@ section>.pageWrapper {
   justify-content: center;
   align-items: center;
 }
-.pageWrapper > .pageContainer {
+
+.pageWrapper>.pageContainer {
   height: calc(100vh - 4rem);
   width: calc(100% - 4rem);
   border: 1px solid hsl(0, 0%, 90%);

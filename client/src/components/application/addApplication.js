@@ -5,6 +5,7 @@ import QuestionType from "./questionTypes";
 import ArrowLeftRoundIcon from "../../assets/icons/arrowLeftRoundIcon";
 import NavSideBar from "./navSideBar";
 import debounce from "../../utils/globalFunctions/debounce";
+import SubmitApplication from "./submitApplication";
 
 export default function AddApplication() {
   const [questions] = useState(questionsData);
@@ -76,6 +77,11 @@ export default function AddApplication() {
           </div>
         )
       )}
+          <div className="pageWrapper">
+            <div className="pageContainer submitAppContainer">
+              <SubmitApplication />
+            </div>
+          </div>
       </section>
       
       <div className='navBtnCont'>

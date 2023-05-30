@@ -2,14 +2,19 @@
   border-radius: 32px;
 }
 
-.MuiAutocomplete-popper .MuiAutocomplete-paper .MuiAutocomplete-listbox {
+.MuiAutocomplete-paper .MuiAutocomplete-listbox {
   background-color: hsl(0, 0%, 98%);
   padding: 0;
   
 }
-.MuiAutocomplete-listbox .MuiAutocomplete-option {
-  padding: 1rem;
+.MuiAutocomplete-paper .MuiAutocomplete-listbox .MuiAutocomplete-option {
+  padding: 0.75rem;
 }
-.MuiAutocomplete-listbox .MuiAutocomplete-option[aria-selected="true"] {
-  background-color: red;
+.MuiAutocomplete-listbox .MuiAutocomplete-option:focus {
+  background-color: hsl(1, 100%, 100%);
+}
+.MuiAutocomplete-paper .MuiAutocomplete-listbox .MuiAutocomplete-option.Mui-focused[aria-selected="true"],
+.MuiAutocomplete-paper .MuiAutocomplete-listbox .MuiAutocomplete-option[aria-selected="true"] {
+  background-color: hsl(1, 100%, 66%);
+  color: white;
 }

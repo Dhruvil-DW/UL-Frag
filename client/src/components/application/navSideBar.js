@@ -42,7 +42,7 @@ export default function NavSideBar({ questionData, inputs, activeQue }) {
                 {catWiseQue[cat].map((que) => (
                   <Step key={que.id} active={que.no === activeQue}>
                     <StepButton className={`navLink`} onClick={() => handleNextPrevNav(que.no, "fixed")} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
-                      {que.question}
+                      <div className="sidebarQueText">{que.question}</div>
                     </StepButton>
                   </Step>
                 ))}
@@ -76,8 +76,8 @@ function getSidebarData(questions) {
 
 function getInitialState(catQue) {
   const result = {};
-  // Object.keys(catQue).map((cat, i) => result[cat] = i ? false : true)
-  Object.keys(catQue).map((cat, i) => result[cat] = i ? true : true)
+  Object.keys(catQue).map((cat, i) => result[cat] = i ? false : true)
+  // Object.keys(catQue).map((cat, i) => result[cat] = i ? true : true)
   return result;
 }
 

@@ -4,6 +4,7 @@ import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { childQuestionData } from "../../../utils/globalData/questionData";
 import { Autocomplete, Checkbox, TextField } from "@mui/material";
 import ArrowDownIcon from "../../../assets/icons/arrowDownIcon";
+import { showPickerOnFocus } from "../../../utils/globalFunctions/showPickerOnFocus";
 // import PlusRoundIcon from "../../../assets/icons/plusRoundIcon";
 
 export default function NestedQuestion({ question, index, onChange, onDateSelect, inputs = {}, onKeyUp }) {
@@ -51,7 +52,7 @@ export default function NestedQuestion({ question, index, onChange, onDateSelect
                 inputs[que.question_opt] ? inputs[que.question_opt].map((ans, index) => (
                   <div key={index} style={{ fontSize: 14, display: "flex", alignItems: "center", gap: 8 }}>
                     <p>{ans}</p>
-                    <TextField type="date" className="whiteDatePicker" value={inputs[que.id]?.[index] ?? ""} onChange={(e) => onDateSelect(e.target.value, que.id, index)} />
+                    <TextField type="date" className="whiteDatePicker" value={inputs[que.id]?.[index] ?? ""} onChange={(e) => onDateSelect(e.target.value, que.id, index)} inputProps={{ onFocus: showPickerOnFocus }} />
                   </div>
                 )) : <p style={{ fontSize: 14 }}>Please Select Market First</p>
               )}

@@ -1,16 +1,21 @@
-import { Autocomplete, TextField } from "@mui/material";
-import ArrowDownIcon from "../../../assets/icons/arrowDownIcon";
+import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 
-export default function SelectSingleStatic({ question, index, value = null, onKeyUp }) {
+export default function CheckBoxConfirm({ question, index, value = [], onKeyUp }) {
   const { handleNextPrevNav, handleAnswerChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const defferInput = useDeferredValue(input);
-
-  function handleInputChange(__event, value, __reason) {
-    setInput(value);
+  
+  function handleInputChange(e) {
+    const option = e.target.name;
+    setInput(prevInput => {
+      const copyOld = [...prevInput];
+      const index = prevInput.indexOf(option);
+      index === -1 ? copyOld.push(option) : copyOld.splice(index, 1);
+      return copyOld
+    });
   }
 
   useEffect(() => {
@@ -20,15 +25,11 @@ export default function SelectSingleStatic({ question, index, value = null, onKe
   return (
     <div className="questionContainer">
       <h2 className="question">{question.question}</h2>
-      <Autocomplete
-        disablePortal
-        options={question.question_opt}
-        value={input}
-        onChange={handleInputChange}
-        popupIcon={<ArrowDownIcon />}
-        renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Select Option" />}
-        onKeyUp={onKeyUp}
-      />
+      <FormGroup onChange={handleInputChange}>
+        {question.question_opt.map((opt) => (
+          <FormControlLabel key={opt} control={<Checkbox checked={Boolean(input.find(x => x === opt))} />} label={opt} name={opt} />
+        ))}
+      </FormGroup>
       <div className='navBtnCont'>
         <div className="prevBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'prev')}><ArrowLeftRoundIcon /></div>
         <div className="nextBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'next')}><ArrowLeftRoundIcon /></div>

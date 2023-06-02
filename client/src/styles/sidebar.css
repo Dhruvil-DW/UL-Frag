@@ -20,7 +20,7 @@
   transition: all 300ms;
 }
 
-.navLinkContainer .accordion:has(~.panel.open) .accordionToggleIcon {
+.navLinkContainer .accordion:has(+.panel.open) .accordionToggleIcon {
   transform: rotate(0.5turn);
 }
 
@@ -86,4 +86,11 @@
   gap: 0.25rem;
   padding: 1rem;
   background-color: hsl(221, 100%, 30%);
+}
+
+.sidebar .sidebarQueText{
+  width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

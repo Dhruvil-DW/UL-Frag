@@ -5,11 +5,10 @@ import CategoryIcon from '../../assets/icons/categoryIcon';
 import UserIcon from '../../assets/icons/userIcon';
 import CalenderIcon from '../../assets/icons/calenderIcon';
 import PageIcon from '../../assets/icons/pageIcon';
-const submitApp = JSON.parse(localStorage.getItem("submitApp"));
 
 export default function ViewApplication() {
   const { appId } = useParams();
-  const [appData] = useState(submitApp.find(({ app_id }) => app_id === appId));
+  const [appData] = useState(JSON.parse(localStorage.getItem("submitApp"))?.find(({ app_id }) => app_id === appId));
 
   console.log(appData);
   if (!appData) {
@@ -79,6 +78,8 @@ function GetAnswer({ answer, queId }) {
     )
   } else if (typeof answer === 'object') {
     switch (queId) {
+      case 1:
+        return <p>{answer.projectName ?? "N/A"}</p>
       case 8:
         return (
           <div>

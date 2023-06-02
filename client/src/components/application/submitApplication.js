@@ -1,13 +1,14 @@
 import { Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import UnileverIcon from "../../assets/icons/unileverIcon";
 import CategoryIcon from "../../assets/icons/categoryIcon";
 import ArrowIcon from "../../assets/icons/arrowleft";
 
 export default function SubmitApplication() {
-
+  const { state } = useLocation();
+  console.log(state);
   const navigate = useNavigate();
-  
+
   return (
     <div className="submitAppContainer">
 
@@ -25,7 +26,7 @@ export default function SubmitApplication() {
         </div>
         <h1 style={{ color: '#002F98', marginTop: "21vh" }}>Your fragrance brief<br />will be sent to CBFM <br />for technical input</h1>
         <div>
-          <Button variant="contained" color="secondary" className="get_started">View Brief</Button>
+          <Button variant="contained" color="secondary" className="get_started" onClick={() => navigate(`/application/view/${state.app_id}`)}>View Brief</Button>
         </div>
       </div>
 

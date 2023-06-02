@@ -93,13 +93,13 @@ export default function AddApplication() {
     const dateStr = `${dateTime.getDate()}/${dateTime.getMonth() + 1}/${dateTime.getFullYear()}`
     const randomNum = Math.floor(1000 + Math.random() * 9000);
     if (submitApp) {
-      newSubmitApp = [...submitApp, { app_id: `app-${randomNum}`, title: `Fragrance Brief ${randomNum}`, name: 'Andrew smith', modifiedDate: dateStr, inputs: inputs }];
+      newSubmitApp = [{ app_id: `app-${randomNum}`, title: `${inputs[1]?.projectName ?? "Fragrance Brief"} ${randomNum}`, name: 'Andrew smith', modifiedDate: dateStr, inputs: inputs }, ...submitApp];
     } else {
-      newSubmitApp = [{ app_id: `app-${randomNum}`, title: `Fragrance Brief ${randomNum}`, name: 'Andrew smith', modifiedDate: dateStr, inputs: inputs }];
+      newSubmitApp = [{ app_id: `app-${randomNum}`, title: `${inputs[1]?.projectName ?? "Fragrance Brief"} ${randomNum}`, name: 'Andrew smith', modifiedDate: dateStr, inputs: inputs }];
     }
 
     localStorage.setItem("submitApp", JSON.stringify(newSubmitApp)); //Set New App to Local
-    navigate("/application/summary");
+    navigate("/application/summary", { state: { app_id: `app-${randomNum}` } });
   }
 
   return (

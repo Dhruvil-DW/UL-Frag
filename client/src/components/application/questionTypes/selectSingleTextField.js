@@ -4,31 +4,22 @@ import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 
-export default function SelectSingleWithTextStatic({ question, index, value = null, onKeyUp }) {
+export default function SelectSingleWithTextStatic({ question, index, value = {}, onKeyUp }) {
   const { handleNextPrevNav, handleAnswerChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
-  const defferInput = useDeferredValue(input);
+  const defferedInput = useDeferredValue(input);
 
   function handleInputChange(__event, value, __reason) {
-    // switch (reason) {
-    //   case "selectOption":
-    //   case "removeOption":
-    //     // value = isArray ? option.map(x => x.id) : option.id
-    //     break;
-    //   case "clear":
-    //     // value = isArray ? [] : null;
-    //     break;
-    //   case "createOption":
-    //   case "blur":
-    //   default:
-    //     return;
-    // }
-    setInput(value);
+    setInput({ option: value });
   }
 
   useEffect(() => {
-    handleAnswerChange(question.id, defferInput);
-  }, [handleAnswerChange, question.id, defferInput]);
+    if (defferedInput.option || defferedInput.projectName) {
+      handleAnswerChange(question.id, defferedInput);
+    } else if (!defferedInput.brand && !defferedInput.desc) {
+      handleAnswerChange(question.id, null);
+    }
+  }, [handleAnswerChange, question.id, defferedInput]);
 
   return (
     <div className="questionContainer">
@@ -36,13 +27,13 @@ export default function SelectSingleWithTextStatic({ question, index, value = nu
       <Autocomplete
         disablePortal
         options={question.question_opt}
-        value={input}
+        value={input.option ?? null}
         onChange={handleInputChange}
         popupIcon={<ArrowDownIcon />}
         renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Select Option" />}
         onKeyUp={onKeyUp}
       />
-      <TextField />
+      <TextField variant="outlined" color="secondary" placeholder="Enter Project Name" name="projectName" value={input.projectName ?? ""} onChange={(e) => setInput(prevInput => ({ ...prevInput, [e.target.name]: e.target.value }))} disabled={!Boolean(input.option)} onKeyUp={onKeyUp} />
       <div className='navBtnCont'>
         <div className="prevBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'prev')}><ArrowLeftRoundIcon /></div>
         <div className="nextBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'next')}><ArrowLeftRoundIcon /></div>

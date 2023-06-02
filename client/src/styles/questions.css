@@ -12,6 +12,7 @@
   /* margin-left: 1rem; */
   color: hsl(218, 91%, 52%);
   margin: 0;
+  white-space: pre-line;
 }
 
 .questionContainer .MuiAutocomplete-root {
@@ -55,4 +56,34 @@
 .navBtnCont .nextBtn:focus-visible,
 .navBtnCont .prevBtn:focus-visible {
   outline: none;
+}
+
+.questionContainer .MuiInputBase-root.MuiOutlinedInput-root:not(.MuiInputBase-multiline) {
+  height: 56px;
+  max-width: 500px;
+}
+
+.optionContainer {
+  display: flex;
+}
+
+.imageBoxContainer {
+  height: 250px;
+  flex-grow: 1;
+}
+
+.imageBoxContainer:nth-child(1) {
+  background-color: red;
+}
+
+.imageBoxContainer:nth-child(2) {
+  background-color: antiquewhite;
+}
+
+.imageBoxContainer:nth-child(2) {
+  background-color: antiquewhite;
+}
+
+.imageBoxContainer:nth-child(2) {
+  background-color: antiquewhite;
 }

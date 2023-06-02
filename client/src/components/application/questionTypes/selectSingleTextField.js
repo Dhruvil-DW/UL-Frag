@@ -4,7 +4,7 @@ import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 
-export default function SelectSingleStatic({ question, index, value = null, onKeyUp }) {
+export default function SelectSingleWithTextStatic({ question, index, value = null, onKeyUp }) {
   const { handleNextPrevNav, handleAnswerChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const defferInput = useDeferredValue(input);
@@ -42,6 +42,7 @@ export default function SelectSingleStatic({ question, index, value = null, onKe
         renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Select Option" />}
         onKeyUp={onKeyUp}
       />
+      <TextField />
       <div className='navBtnCont'>
         <div className="prevBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'prev')}><ArrowLeftRoundIcon /></div>
         <div className="nextBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'next')}><ArrowLeftRoundIcon /></div>

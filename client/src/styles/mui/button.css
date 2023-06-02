@@ -1,0 +1,82 @@
+ .MuiButton-root.MuiButtonBase-root {
+   background-color: hsl(0, 0%, 100%);
+   color: hsl(219, 39%, 32%);
+   border-color: hsl(0, 0%, 100%);
+   border-radius: 32px;
+   min-width: 140px;
+   text-transform: none;
+ }
+
+ .MuiButton-root.MuiButtonBase-root:hover {
+   background-color: hsl(228, 100%, 80%);
+ }
+
+ .MuiButton-root.MuiButtonBase-root.Mui-disabled {
+   background-color: hsl(0, 0%, 50%);
+   color: hsl(219, 39%, 32%);
+ }
+
+ .MuiButton-root.MuiButtonBase-root.MuiButton-contained {
+   background-color: hsl(0, 0%, 100%);
+   color: hsl(219, 39%, 32%);
+   border-color: hsl(0, 0%, 100%);
+ }
+
+ .MuiButton-root.MuiButtonBase-root.MuiButton-contained:hover {
+   background-color: hsl(228, 100%, 80%);
+ }
+
+ .MuiButton-root.MuiButtonBase-root.MuiButton-contained.Mui-disabled {
+   background-color: hsl(0, 0%, 50%);
+   color: hsl(219, 39%, 32%);
+ }
+
+ .MuiButton-root.MuiButtonBase-root.MuiButton-containedSecondary {
+   background-color: hsl(221, 100%, 30%);
+   color: hsl(0, 0%, 100%);
+   border-color: hsl(221, 100%, 30%);
+ }
+
+ .MuiButton-root.MuiButtonBase-root.MuiButton-containedSecondary:hover {
+   background-color: hsl(221, 100%, 40%);
+ }
+
+ .MuiButton-root.MuiButtonBase-root.MuiButton-containedSecondary.Mui-disabled {
+   background-color: hsl(0, 0%, 50%);
+   color: hsl(219, 39%, 32%);
+ }
+
+ .MuiButton-root.MuiButtonBase-root.MuiButton-outlined {
+   background-color: hsla(0, 0%, 0%, 0%);
+   color: hsl(0, 0%, 100%);
+   border-color: hsl(0, 0%, 100%);
+ }
+
+ .MuiButton-root.MuiButtonBase-root.MuiButton-outlined:hover {
+   color: hsl(0, 0%, 70%);
+   border-color: hsl(0, 0%, 70%);
+ }
+
+ .MuiButton-root.MuiButtonBase-root.MuiButton-outlined.Mui-disabled {
+   background-color: hsla(0, 0%, 0%, 0%);
+   color: hsl(0, 0%, 70%);
+   border-color: hsl(0, 0%, 70%);
+ }
+
+ .MuiButton-root.MuiButtonBase-root.MuiButton-outlinedSecondary {
+   background-color: hsla(0, 0%, 0%, 0%);
+   color: var(--Color-Primary);
+   border-color: var(--Color-Primary);
+ }
+
+ .MuiButton-root.MuiButtonBase-root.MuiButton-outlinedSecondary:hover {
+   background-color: var(--Color-Primary);
+   color: hsl(0, 0%, 100%);
+   border-color: hsl(0, 0%, 100%);
+ }
+
+ .MuiButton-root.MuiButtonBase-root.MuiButton-outlinedSecondary.Mui-disabled {
+   background-color: hsla(0, 0%, 0%, 0%);
+   color: hsl(0, 0%, 70%);
+   border-color: hsl(0, 0%, 70%);
+ }

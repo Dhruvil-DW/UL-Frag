@@ -1,18 +1,22 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CategoryIcon from "../../assets/icons/categoryIcon";
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import { Button, Divider, Step, StepButton, StepIcon, Stepper } from "@mui/material";
 import CheckBoxRoundUnchecked from "../../assets/icons/checkBoxRoundUnchecked";
 import CheckBoxRoundChecked from "../../assets/icons/checkBoxRoundChecked";
 import PageIcon from "../../assets/icons/pageIcon";
 import ArrowDownIcon from "../../assets/icons/arrowDownIcon";
+import { ApplicationContext } from "./addApplication";
+import { childQuestionData } from "../../utils/globalData/questionData";
 
-export default function NavSideBar({ questionData, inputs, handleJump, scrollData }) {
+export default function NavSideBar({ questionData, inputs, activeQue }) {
+  const navigate = useNavigate();
+  const { handleNextPrevNav } = useContext(ApplicationContext);
   const [catWiseQue] = useState(() => getSidebarData(questionData));
   const [accOpen, setAccOpen] = useState(() => getInitialState(catWiseQue));
-  const [currentQue, setCurrentQue] = useState(0);
+  // const [lastQueNo, setLastQueNo] = useState(() => getLastQue(catWiseQue));
 
-
+  console.log({ catWiseQue, questionData });
 
   const handleAccToggle = (e) => {
     const { name } = e.target;
@@ -33,11 +37,11 @@ export default function NavSideBar({ questionData, inputs, handleJump, scrollDat
           <Fragment key={i}>
             <Divider />
             <button className="accordion" name={cat} onClick={handleAccToggle}>{getIconComp(cat)}{cat ?? "N/A"}<ArrowDownIcon className="accordionToggleIcon" /></button>
-            <div className={`panel ${accOpen[cat] ? 'open' : 'close'}`} >
-              <Stepper nonLinear activeStep={currentQue} orientation="vertical">
+            <div className={`panel ${accOpen[cat] ? 'open' : 'close'}`}>
+              <Stepper nonLinear orientation="vertical">
                 {catWiseQue[cat].map((que) => (
-                  <Step key={que.id} active={que.no === currentQue}>
-                    <StepButton className={`navLink ${scrollData.scrollTop <= (que.no * scrollData.scrollHeight) ? 'next' : 'prev'}`} onClick={() => handleJump("fixed", que.no)} icon={<StepIcon icon={inputs[que.id]?.length ? <CheckBoxRoundChecked /> : <CheckBoxRoundUnchecked />} />}>
+                  <Step key={que.id} active={que.no === activeQue}>
+                    <StepButton className={`navLink`} onClick={() => handleNextPrevNav(que.no, "fixed")} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
                       {que.question}
                     </StepButton>
                   </Step>
@@ -49,7 +53,7 @@ export default function NavSideBar({ questionData, inputs, handleJump, scrollDat
       </div>
       <div className="buttonContainer">
         <Button variant="contained">Invite</Button>
-        <Button variant="outlined">Logout</Button>
+        <Button variant="outlined" onClick={() => navigate('/logout')}>Logout</Button>
       </div>
     </aside>
   )
@@ -59,10 +63,12 @@ export default function NavSideBar({ questionData, inputs, handleJump, scrollDat
 function getSidebarData(questions) {
   const result = {};
   questions.forEach((que, index) => {
+    const childQue = que.question_type_id === 12 ? childQuestionData[que.id].map(obj => obj.id) : null;
+    const queData = { id: que.id, no: index, question: que.question, question_type_id: que.question_type_id, child_que_id: childQue };
     if (result[que.Category.name]) {
-      result[que.Category.name] = [...result[que.Category.name], { id: que.id, no: index, question: que.question }];
+      result[que.Category.name] = [...result[que.Category.name], queData];
     } else {
-      result[que.Category.name] = [{ id: que.id, no: index, question: que.question }];
+      result[que.Category.name] = [queData];
     }
   });
   return result;
@@ -70,9 +76,19 @@ function getSidebarData(questions) {
 
 function getInitialState(catQue) {
   const result = {};
-  Object.keys(catQue).map((cat, i) => result[cat] = i ? false : true)
+  // Object.keys(catQue).map((cat, i) => result[cat] = i ? false : true)
+  Object.keys(catQue).map((cat, i) => result[cat] = i ? true : true)
   return result;
 }
+
+// function getLastQue(catQue) {
+//   const result = {};
+//   Object.keys(catQue).forEach((cat, i) => {
+//     // console.log({ cat, i, data: catQue[cat].pop().no });
+//     result[catQue[cat].pop().no] = cat;
+//   })
+//   return result;
+// }
 
 function getIconComp(name) {
   switch (name) {
@@ -81,4 +97,20 @@ function getIconComp(name) {
     default:
       return <PageIcon />
   }
+}
+
+function getStepIcon(que, inputs) {
+  let isCompleted = false;
+
+  if(que.question_type_id === 12) {
+    for(const childQue of que.child_que_id) {
+      isCompleted = Boolean(inputs[childQue]);
+      if(isCompleted) break;
+    }
+
+  } else {
+    isCompleted = Boolean(inputs[que.id]);
+  }
+
+  return isCompleted ? <CheckBoxRoundChecked /> : <CheckBoxRoundUnchecked />
 }

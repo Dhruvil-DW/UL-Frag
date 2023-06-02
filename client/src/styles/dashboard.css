@@ -1,7 +1,7 @@
 .dashboardWrapper {
   background: hsl(202, 63%, 98%);
   min-height: 100vh;
-  padding: 1rem;
+  padding: 1rem 2.5rem;
 }
 
 .dashboardContainer {
@@ -9,6 +9,7 @@
 }
 
 .dashboardContentWrapper {
+  padding: 16px 32px;
   padding: 16px 0px;
 }
 

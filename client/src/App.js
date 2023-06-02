@@ -9,6 +9,7 @@ import Logout from "./components/login/logout";
 import AddApplication from "./components/application/addApplication";
 import FragranceBrief from './components/fragranceBrief/fragranceBrief'
 import SubmitApplication from "./components/application/submitApplication";
+import ViewApplication from "./components/application/viewApplication";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ export default function App() {
               <Route index element={<FragranceBrief />} />
               <Route path="new" element={<AddApplication />} />
               <Route path="summary" element={<SubmitApplication />}/>
+              <Route path="view/:appId" element={<ViewApplication />} />
             </Route>
           </Routes>
         </BrowserRouter>

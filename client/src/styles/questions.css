@@ -1,0 +1,58 @@
+.appFormContainer .pageWrapper .questionContainer {
+  margin-left: max(15%, 1rem);
+  margin: 0 2rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+}
+
+.questionContainer .question {
+  /* margin-left: 1rem; */
+  color: hsl(218, 91%, 52%);
+  margin: 0;
+}
+
+.questionContainer .MuiAutocomplete-root {
+  max-width: 500px;
+}
+
+.navBtnCont {
+  position: absolute;
+  bottom: -4rem;
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.navBtnCont .nextBtn {
+  transform: rotate(0.75turn);
+}
+
+.navBtnCont .prevBtn {
+  transform: rotate(0.25turn);
+}
+
+.navBtnCont .nextBtn,
+.navBtnCont .prevBtn {
+  border: none;
+  background-color: transparent;
+  color: var(--Color-Primary);
+  font-size: 32px;
+  padding: 0;
+  cursor: pointer;
+}
+
+.navBtnCont .nextBtn:focus-visible svg,
+.navBtnCont .prevBtn:focus-visible svg,
+.navBtnCont .nextBtn:hover svg,
+.navBtnCont .prevBtn:hover svg {
+  fill: var(--Color-Primary);
+  color: white;
+}
+
+.navBtnCont .nextBtn:focus-visible,
+.navBtnCont .prevBtn:focus-visible {
+  outline: none;
+}

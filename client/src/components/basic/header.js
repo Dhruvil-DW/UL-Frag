@@ -7,7 +7,9 @@ export default function Header() {
       <header className="headerWrapper">
         <div className="headerContainer">
           <div><Avatar /></div>
-          <div><UnileverIcon height="48px" /></div>
+          <div style={{ fontSize: 64 }}>
+            <UnileverIcon style={{ display: "block" }} />
+          </div>
         </div>
       </header>
     </>

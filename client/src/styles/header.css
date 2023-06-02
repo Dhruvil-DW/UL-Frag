@@ -1,6 +1,9 @@
 .headerWrapper {
   background-color: hsl(202, 63%, 98%);
+  padding: 0px 32px;
+  padding: 0px 0px;
 }
+
 .headerContainer {
   display: flex;
   justify-content: space-between;

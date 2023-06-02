@@ -1,8 +1,10 @@
 .MuiStepper-root .MuiStepLabel-label{
   color: white;
+  transition: all 200ms;
 }
 .MuiStepper-root .MuiStepLabel-label.Mui-active{
   color: white;
+  font-weight: 700;
 }
 
 .MuiStepper-root .MuiStepConnector-root {

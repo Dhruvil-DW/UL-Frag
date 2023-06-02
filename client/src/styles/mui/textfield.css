@@ -1,0 +1,49 @@
+.MuiTextField-root>.MuiOutlinedInput-root.MuiInputBase-colorPrimary {
+  background-color: transparent;
+  color: white;
+}
+
+.MuiTextField-root>.MuiOutlinedInput-root.MuiInputBase-colorPrimary.Mui-focused>.MuiOutlinedInput-notchedOutline,
+.MuiTextField-root>.MuiOutlinedInput-root.MuiInputBase-colorPrimary>.MuiOutlinedInput-notchedOutline {
+  border-color: white;
+}
+
+.MuiTextField-root .MuiOutlinedInput-root {
+  border-radius: 32px;
+}
+
+/* Helper Text */
+.MuiTextField-root .MuiFormHelperText-root {
+  color: var(--color)
+}
+
+.MuiTextField-root .MuiFormHelperText-root.Mui-disabled {
+  color: var(--disableColor);
+}
+
+.MuiInputBase-root.MuiOutlinedInput-root {
+  color: var(--Color-Primary);
+  border-radius: 32px;
+  background-color: white;
+}
+
+.MuiInputBase-root.MuiOutlinedInput-root .MuiOutlinedInput-input {
+  padding: 8px 14px;
+}
+
+
+.MuiInputBase-root.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: hsla(222, 57%, 42%, 0.4);
+}
+
+.MuiInputBase-root.MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+  border-color: hsla(222, 57%, 42%, 0.2);
+}
+
+.MuiInputBase-root.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: hsla(222, 57%, 42%, 0.9);
+}
+
+.whiteDatePicker input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}

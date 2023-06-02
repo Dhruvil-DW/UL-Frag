@@ -1,0 +1,14 @@
+.MuiCheckbox-root {
+  color: var(--Color-Primary);
+}
+
+.MuiCheckbox-root.MuiCheckbox-colorPrimary {
+  color: var(--Color-Primary);
+}
+
+.MuiCheckbox-root.MuiCheckbox-colorSecondary {
+  color: hsla(0, 0%, 0%, 1)
+}
+.MuiCheckbox-root.MuiCheckbox-colorSecondary.Mui-checked {
+  color: hsla(0, 0%, 100%, 1)
+}

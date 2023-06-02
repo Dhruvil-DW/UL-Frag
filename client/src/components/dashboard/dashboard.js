@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../basic/header";
 import { Button, Divider, InputAdornment, OutlinedInput, Tab, Tabs } from "@mui/material";
 import { TabPanel } from "../../assets/tabs/tabs";
@@ -9,13 +9,21 @@ import CalenderIcon from "../../assets/icons/calenderIcon";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [appData, setAppData] = useState(() => createApplicationCardData(20))
+  const [myAppData, setMyAppData] = useState(() => createApplicationCardData(20));
+  const [appData] = useState(() => createApplicationCardData(20));
   const [selectedTab, setSelectedTab] = useState(0);
   const handleChangeTab = (__event, newTab) => setSelectedTab(newTab);
 
   const [hoverCardId, setHoverCardId] = useState(null);
   const mouseEnter = (id) => setHoverCardId(id);
   const mouseExit = () => setHoverCardId(null);
+
+  useEffect(() => {
+    const submitApp = JSON.parse(localStorage.getItem("submitApp")) ?? [];
+    const staticData = createApplicationCardData(20);
+    console.log({submitApp});
+    setMyAppData([...submitApp, ...staticData]);
+  }, [])
 
   return (
     <section className="dashboardWrapper">
@@ -41,7 +49,7 @@ export default function Dashboard() {
           <TabPanel value={selectedTab} index={0}>
             <FilterContainer type="myapp" />
             <div className="applicationCardContainer">
-              {appData?.map((app, i) => (
+              {myAppData?.map((app, i) => (
                 <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit}>
                   <h2>{app.title}</h2>
                   <div className="statusContainer">
@@ -57,7 +65,7 @@ export default function Dashboard() {
                   </div>
                   <img src="/images/icons/three_dot_blue.svg" alt="option" className="optionIcon" />
                   <div className={`appCardActionContainer ${hoverCardId === i ? "hovered" : ""}`}>
-                    <img src="/images/icons/eye_round.svg" alt="view" />
+                    <img src="/images/icons/eye_round.svg" alt="view" onClick={() => navigate(`/application/view/${app.app_id}`)} />
                     <img src="/images/icons/copy_round.svg" alt="copy" />
                     <img src="/images/icons/pencil_round.svg" alt="edit" />
                     <img src="/images/icons/invite_user.svg" alt="invite" />

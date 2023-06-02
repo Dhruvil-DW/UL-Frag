@@ -1,0 +1,47 @@
+.sidebar.viewSidebar {
+  color: white;
+  justify-content: flex-start;
+}
+
+.QAWrapper {
+  height: 100vh;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.QAContainer {
+  margin: 3rem 0;
+  margin-left: 20%;
+}
+
+.QAContainer h3 {
+  color: var(--Color-Primary);
+}
+
+.nestedConteiner {
+  display: flex;
+}
+
+.nestedConteiner .QAContainer {
+  margin: 0rem 1rem;
+}
+
+.nestedConteiner .QAContainer h3 {
+  font-size: 1rem;
+}
+
+.answerContainer {
+  padding-left: 2.5rem;
+}
+
+.answerContainer ol,
+.answerContainer ul {
+  padding: 0;
+}
+
+.viewSidebarIconText {
+  margin-left: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

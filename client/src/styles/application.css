@@ -2,7 +2,7 @@
   box-sizing: border-box;
 }
 
-main {
+.appFormContainer {
   display: flex;
   margin: 0;
 }
@@ -19,7 +19,12 @@ main {
   background-color: hsl(221, 96%, 25%);
 }
 
-.appFormContainer>section {
+.appFormContainer .formRelative {
+  width: 100%;
+  position: relative;
+}
+
+.appFormContainer #form {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -30,32 +35,12 @@ main {
   scroll-behavior: smooth;
 }
 
-.appFormContainer .pageWrapper .questionContainer {
-  margin-left: 15vw;
-}
-
-.navBtnCont {
+.actionBtnCont {
   position: absolute;
-  bottom: 4rem;
-  right: 4rem;
+  bottom: 3rem;
+  left: 4rem;
   display: flex;
   gap: 1rem;
-}
-
-.navBtnCont .nextBtn,
-.navBtnCont .prevBtn {
-  border: none;
-  background-color: transparent;
-  color: var(--Color-Primary);
-  font-size: 32px;
-  padding: 0;
-  cursor: pointer;
-}
-
-.navBtnCont .nextBtn:hover svg,
-.navBtnCont .prevBtn:hover svg {
-  fill: var(--Color-Primary);
-  color: white
 }
 
 section>.pageWrapper {
@@ -75,9 +60,16 @@ section>.pageWrapper {
   display: flex;
   align-items: center;
   box-shadow: 40px 40px 69px 0px hsla(0, 0%, 0%, 0.05);
+  position: relative;
 }
 
-.questionContainer .question {
-  /* margin-left: 1rem; */
-  color: hsl(218, 91%, 52%);
+.unilever-icon {
+  position: absolute;
+  right: 3rem;
+  top: 2rem;
+  font-size: 64px;
+}
+
+.unilever-icon.questionPage {
+  right: 2rem;
 }

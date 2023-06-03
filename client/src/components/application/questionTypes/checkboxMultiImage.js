@@ -1,4 +1,4 @@
-import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+import { Checkbox } from "@mui/material";
 import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
@@ -24,19 +24,17 @@ export default function CheckBoxImage({ question, index, value = [], onKeyUp }) 
   return (
     <div className="questionContainer">
       <h2 className="question">{question.question}</h2>
-      <FormGroup onChange={handleInputChange}>
+      <div className="optionContainer">
         {question.question_opt.map((opt) => (
-          <FormControlLabel key={opt} control={<div><Checkbox checked={Boolean(input.find(x => x === opt))} /></div>} label={opt} name={opt} />
-        ))}
-      </FormGroup>
-      {/* <div className="optionContainer">
-        {question.question_opt.map((opt) => (
-          <div className="imageBoxContainer" onClick={() => handleInputChange(opt)}>
+          <div key={opt} className="imageBoxContainer" onClick={() => handleInputChange(opt)}>
             <Checkbox checked={Boolean(input.find(x => x === opt))} />
+            <div className="iconContainer">
+              <GetSVG option={opt} />
+            </div>
             <p>{opt}</p>
           </div>
         ))}
-      </div> */}
+      </div>
       <div className='navBtnCont'>
         <div className="prevBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'prev')}><ArrowLeftRoundIcon /></div>
         <div className="nextBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'next')}><ArrowLeftRoundIcon /></div>
@@ -45,11 +43,25 @@ export default function CheckBoxImage({ question, index, value = [], onKeyUp }) 
   )
 }
 
-// function getSVG(option) {
-//   switch (option) {
-//     case "Pre-wash":
-//     case "During wash":
-//     case "After wash\n(wet)":
-//     case "After wash\n(dry)"
-//   }
-// }
+function GetSVG({ option }) {
+  switch (option) {
+    case "Pre-wash":
+      return <img src='/images/icons/pre_wash.svg' alt={option} />
+    case "During wash":
+      return <img src='/images/icons/during_wash.svg' alt={option} />
+    case "After wash\n(wet)":
+      return <img src='/images/icons/after_wash_wet.svg' alt={option} />
+    case "After wash\n(dry)":
+      return <img src='/images/icons/after_wash_dry.svg' alt={option} />
+    case "TV":
+      return <img src='/images/icons/tv.svg' alt={option} />
+    case "Digital":
+      return <img src='/images/icons/digital.svg' alt={option} />
+    case "Pack":
+      return <img src='/images/icons/pack.svg' alt={option} />
+    case "Point of sale":
+      return <img src='/images/icons/point_of_sale.svg' alt={option} />
+    default:
+      return null
+  }
+}

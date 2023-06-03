@@ -61,6 +61,7 @@ export default function QuestionType({ question, index, inputs, onChange, onKeyU
 
     case 14: //Select with TextBox
       return <SelectSingleWithTextStatic question={question} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
+      
     case 15: // Confirm Checkbox
       return <CheckBoxConfirm question={question} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
       

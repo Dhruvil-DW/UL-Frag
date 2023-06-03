@@ -65,25 +65,44 @@
 
 .optionContainer {
   display: flex;
+  cursor: pointer;
 }
 
 .imageBoxContainer {
   height: 250px;
   flex-grow: 1;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.imageBoxContainer p {
+  text-align: center;
+  white-space: pre-line;
+}
+
+.iconContainer img {
+  height: 100px;
+}
+
+.imageBoxContainer .MuiCheckbox-root.MuiCheckbox-colorPrimary {
+  color: white;
+  align-self: flex-start;
 }
 
 .imageBoxContainer:nth-child(1) {
-  background-color: red;
+  background-color: hsla(326, 100%, 74%, 1);
 }
 
 .imageBoxContainer:nth-child(2) {
-  background-color: antiquewhite;
+  background-color: hsla(1, 100%, 66%, 1);
 }
 
-.imageBoxContainer:nth-child(2) {
-  background-color: antiquewhite;
+.imageBoxContainer:nth-child(3) {
+  background-color: hsla(168, 100%, 35%, 1);
 }
 
-.imageBoxContainer:nth-child(2) {
-  background-color: antiquewhite;
+.imageBoxContainer:nth-child(4) {
+  background-color: hsla(198, 99%, 50%, 1);
 }

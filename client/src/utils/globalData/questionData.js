@@ -129,14 +129,14 @@ export const questionsData = [
     category_id: 3,
     Category: { id: 3, name: "Section 2" },
   },
-  // {
-  //   id: 16,
-  //   question: "Select the moments where you would expect the fragrance to do its best",
-  //   question_type_id: 8,
-  //   question_opt: ["Pre-wash", "During wash", "After wash\n(wet)", "After wash\n(dry)"],
-  //   category_id: 3,
-  //   Category: { id: 3, name: "Section 2" },
-  // },
+  {
+    id: 16,
+    question: "Select the moments where you would expect the fragrance to do its best",
+    question_type_id: 8,
+    question_opt: ["Pre-wash", "During wash", "After wash\n(wet)", "After wash\n(dry)"],
+    category_id: 3,
+    Category: { id: 3, name: "Section 2" },
+  },
   {
     id: 17,
     question: "What is the investment you are wanting to make ?",
@@ -193,14 +193,14 @@ export const questionsData = [
     category_id: 4,
     Category: { id: 4, name: "Section 3" },
   },
-  // {
-  //   id: 23,
-  //   question: "Do you plan to celebrate this claim within your comms ?",
-  //   question_type_id: 8,
-  //   question_opt: ["TV", "Digital", "Pack", "Point of sale"],
-  //   category_id: 4,
-  //   Category: { id: 4, name: "Section 3" },
-  // },
+  {
+    id: 23,
+    question: "Do you plan to celebrate this claim within your comms ?",
+    question_type_id: 8,
+    question_opt: ["TV", "Digital", "Pack", "Point of sale"],
+    category_id: 4,
+    Category: { id: 4, name: "Section 3" },
+  },
 ]
 
 export const childQuestionData = {

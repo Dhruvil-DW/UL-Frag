@@ -8,7 +8,7 @@ import { showPickerOnFocus } from "../../../utils/globalFunctions/showPickerOnFo
 
 export default function NestedQuestion({ question, index, onChange, onDateSelect, inputs = {}, onKeyUp }) {
   const { handleNextPrevNav } = useContext(ApplicationContext);
-  console.log(question);
+  // console.log(question);
   // console.log(childQuestionData[question.id]);
 
   return (
@@ -47,7 +47,7 @@ export default function NestedQuestion({ question, index, onChange, onDateSelect
                   </div> */}
                 </>
               )}
-              {question.id === 7 && (
+              {question.id === 10 && (
                 inputs[que.question_opt] ? inputs[que.question_opt].map((ans, index) => (
                   <div key={index} style={{ fontSize: 14, display: "flex", alignItems: "center", gap: 8 }}>
                     <p>{ans}</p>

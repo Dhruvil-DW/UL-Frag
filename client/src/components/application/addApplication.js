@@ -55,16 +55,16 @@ export default function AddApplication() {
     }
   }
 
-  useEffect(() => {
-    // total height of scroll track
-    // const trackHeight = containerRef.current.scrollHeight;
-    //height of scroll
-    const scrollBarHeight = containerRef.current.clientHeight;
-    // top of the scroll from top of scroll track
-    // const scrollTop = containerRef.current.scrollTop;
+  // useEffect(() => {
+  //   // total height of scroll track
+  //   // const trackHeight = containerRef.current.scrollHeight;
+  //   //height of scroll
+  //   const scrollBarHeight = containerRef.current.clientHeight;
+  //   // top of the scroll from top of scroll track
+  //   // const scrollTop = containerRef.current.scrollTop;
 
-    containerRef.current.scrollTo(0, currentQue * scrollBarHeight);
-  }, [currentQue]);
+  //   containerRef.current.scrollTo(0, currentQue * scrollBarHeight);
+  // }, [currentQue]);
 
   const handleFocusNext = (e) => {
     // debugger;

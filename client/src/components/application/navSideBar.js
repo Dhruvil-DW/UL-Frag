@@ -7,13 +7,14 @@ import CheckBoxRoundChecked from "../../assets/icons/checkBoxRoundChecked";
 import PageIcon from "../../assets/icons/pageIcon";
 import ArrowDownIcon from "../../assets/icons/arrowDownIcon";
 import { ApplicationContext } from "./addApplication";
+import { useAxios } from "../../hooks/useAxios";
 
 export default function NavSideBar({ activeQue }) {
   const navigate = useNavigate();
   const { catWiseQues, inputs, handleNextPrevNav } = useContext(ApplicationContext);
   const [accOpen, setAccOpen] = useState(() => getInitialState(catWiseQues));
   // const [lastQueNo, setLastQueNo] = useState(() => getLastQue(catWiseQues));
-
+  
   const handleAccToggle = (e) => {
     const { name } = e.target;
     setAccOpen(prevState => ({ ...prevState, [name]: !prevState[name] }))
@@ -41,9 +42,11 @@ export default function NavSideBar({ activeQue }) {
                     {/* <StepButton className={`navLink`} onClick={() => handleNextPrevNav(que.id, "fixed")} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
                       <div className="sidebarQueText">{que.question}</div>
                     </StepButton> */}
+                    <a href={`#${que.id}`} className="navlink">
                     <StepButton className={`navLink`} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
-                      <div className="sidebarQueText"><a href={`#${que.id}`} className="navlink">{que.question}</a></div>
+                      <div className="sidebarQueText">{que.question}</div>
                     </StepButton>
+                    </a>
                   </Step>
                 ))}
               </Stepper>

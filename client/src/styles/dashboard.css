@@ -27,7 +27,7 @@
 
 .applicationCardContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 2fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 400px));
   gap: 1rem;
   overflow-y: auto;
 }

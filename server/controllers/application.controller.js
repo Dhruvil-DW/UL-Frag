@@ -188,7 +188,7 @@ function submitApplication(req, res, type) {
         }
       }
     }
-    res.status(200).send({ message: "Application successfully submitted" });
+    res.status(200).send({ message: "Application successfully submitted", app_id: app_id });
   })();
 }
 

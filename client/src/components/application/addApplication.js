@@ -16,7 +16,7 @@ export default function AddApplication() {
   const [catWiseQues, setCatWiseQues] = useState([]);
   const [inputs, setInputs] = useState({});
   const containerRef = useRef(null);
-  const { getData } = useAxios();
+  const { getData, postData } = useAxios();
 
   function getQuestions() {
     getData(`/application/questions/getall`, {}, (data) => {
@@ -95,23 +95,32 @@ export default function AddApplication() {
 
   const handleSubmit = () => {
     console.log({ inputs });
+    const project_name = inputs[1]?.projectName ?? "Fragrance Brief";
+    const final_inputs = {
+      project_name: project_name,
+      inputs: inputs
+    };
+
+    console.log(final_inputs);
+
+    postData(`/user/submit`, final_inputs, (data) => {navigate("/application/summary", { state: { app_id: data.app_id } }) });
 
     //API CALLS
     //Temp Save to Local
-    const submitApp = JSON.parse(localStorage.getItem("submitApp")); //Get App from Local
-    console.log({ submitApp });
-    let newSubmitApp;
-    const dateTime = new Date();
-    const dateStr = `${dateTime.getDate()}/${dateTime.getMonth() + 1}/${dateTime.getFullYear()}`
-    const randomNum = Math.floor(1000 + Math.random() * 9000);
-    if (submitApp) {
-      newSubmitApp = [{ app_id: `app-${randomNum}`, title: `${inputs[1]?.projectName ?? "Fragrance Brief"} ${randomNum}`, name: 'Andrew smith', modifiedDate: dateStr, inputs: inputs }, ...submitApp];
-    } else {
-      newSubmitApp = [{ app_id: `app-${randomNum}`, title: `${inputs[1]?.projectName ?? "Fragrance Brief"} ${randomNum}`, name: 'Andrew smith', modifiedDate: dateStr, inputs: inputs }];
-    }
+    // const submitApp = JSON.parse(localStorage.getItem("submitApp")); //Get App from Local
+    // console.log({ submitApp });
+    // let newSubmitApp;
+    // const dateTime = new Date();
+    // const dateStr = `${dateTime.getDate()}/${dateTime.getMonth() + 1}/${dateTime.getFullYear()}`
+    // const randomNum = Math.floor(1000 + Math.random() * 9000);
+    // if (submitApp) {
+    //   newSubmitApp = [{ app_id: `app-${randomNum}`, title: `${inputs[1]?.projectName ?? "Fragrance Brief"} ${randomNum}`, name: 'Andrew smith', modifiedDate: dateStr, inputs: inputs }, ...submitApp];
+    // } else {
+    //   newSubmitApp = [{ app_id: `app-${randomNum}`, title: `${inputs[1]?.projectName ?? "Fragrance Brief"} ${randomNum}`, name: 'Andrew smith', modifiedDate: dateStr, inputs: inputs }];
+    // }
 
-    localStorage.setItem("submitApp", JSON.stringify(newSubmitApp)); //Set New App to Local
-    navigate("/application/summary", { state: { app_id: `app-${randomNum}` } });
+    // localStorage.setItem("submitApp", JSON.stringify(newSubmitApp)); //Set New App to Local
+    // navigate("/application/summary", { state: { app_id: `app-${randomNum}` } });
   }
 
   console.log("QUESTIONS: ", catWiseQues);
@@ -144,6 +153,11 @@ export default function AddApplication() {
                         <div className="unilever-icon questionPage">
                           <UnileverIcon width="64px" />
                         </div>
+                        <div className="assets bg_images">
+                        {que.imgData?.map((e) => (
+                          <img src={`/images/${e.path}`} style={{position: 'absolute',right: 0, bottom: 0 ,...e.style}} />
+                        ))}
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -170,12 +184,84 @@ export default function AddApplication() {
 function getCatWiseQues(questions) {
   const result = [];
   questions.forEach((que, index) => {
+    const imgData = img_data[que.id];
     if (result[que.category.id - 1]) {
-      result[que.category.id - 1].questions = [...result[que.category.id - 1].questions, que];
+      result[que.category.id - 1].questions = [...result[que.category.id - 1].questions, {...que, imgData: imgData}];
     } else {
-      result[que.category.id - 1] = { category_id: que.category.id, category_name: que.category.name, questions: [que] }
+      result[que.category.id - 1] = { category_id: que.category.id, category_name: que.category.name, questions: [{...que, imgData: imgData}] }
     }
   });
   // console.log("Sidebar_CatWiseData: ", result);
   return result;
 }
+
+const img_data = {
+  1: [
+    { path: "question_1_main.png", style: { right: 0, width: 300}},
+    { path: "question_1_small.png", style: { bottom: -140, right: 0, width: 300 }},
+  ],
+  2: [
+    { path: "question_1_main.png", style: {}},
+    { path: "question_1_small.png", style: {}},
+  ],
+  3: [
+    { path: "question_1_main.png", style: {}},
+    { path: "question_1_small.png", style: {}},
+  ],
+  4: [
+    { path: "question_1_main.png", style: {}},
+    { path: "question_1_small.png", style: {}},
+  ],
+  5: [
+    { path: "question_1_main.png", style: {}},
+    { path: "question_1_small.png", style: {}},
+  ],
+  6: [
+    { path: "question_1_main.png", style: {}},
+    { path: "question_1_small.png", style: {}},
+  ],
+  7: [
+    { path: "question_1_main.png", style: {}},
+    { path: "question_1_small.png", style: {}},
+  ],
+  8: [
+    { path: "question_1_main.png", style: {}},
+    { path: "question_1_small.png", style: {}},
+  ],
+  9: [
+    { path: "question_1_main.png", style: {}},
+    { path: "question_1_small.png", style: {}},
+  ],
+  10: [
+    { path: "question_1_main.png", style: {}},
+    { path: "question_1_small.png", style: {}},
+  ],
+  11: [
+    { path: "question_1_main.png", style: {}},
+    { path: "question_1_small.png", style: {}},
+  ],
+  12: [
+    { path: "question_1_main.png", style: {}},
+    { path: "question_1_small.png", style: {}},
+  ],
+  13: [
+    { path: "question_1_main.png", style: {}},
+    { path: "question_1_small.png", style: {}},
+  ],
+  14: [
+    { path: "question_1_main.png", style: {}},
+    { path: "question_1_small.png", style: {}},
+  ],
+  15: [
+    { path: "question_1_main.png", style: {}},
+    { path: "question_1_small.png", style: {}},
+  ],
+  16: [
+    { path: "question_1_main.png", style: {}},
+    { path: "question_1_small.png", style: {}},
+  ],
+  17: [
+    { path: "question_1_main.png", style: {}},
+    { path: "question_1_small.png", style: {}},
+  ]
+};

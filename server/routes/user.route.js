@@ -2,7 +2,7 @@ const express = require('express');
 const userController = require('../controllers/user.controller'); 
 const authMiddleware = require('../middlewares/auth.middleware');
 const applicationController = require('../controllers/application.controller');
-const answerController = require('../controllers/answer.controller');
+// const answerController = require('../controllers/answer.controller');
 const router = express.Router();
 
 router.post("/profile/add", authMiddleware.checkAuth, userController.addProfileDetails);

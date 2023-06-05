@@ -59,7 +59,7 @@
 }
 
 .questionContainer .MuiInputBase-root.MuiOutlinedInput-root:not(.MuiInputBase-multiline) {
-  height: 56px;
+  min-height: 56px;
   max-width: 500px;
 }
 

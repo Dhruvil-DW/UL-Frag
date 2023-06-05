@@ -39,7 +39,7 @@ const seqFindAndCountAll = (Model, attrArr, whereCond, includeData, orderData, l
 
 const seqFindAll = (Model, attrArr, whereCond, includeData, orderData, limit, offset, groupBy) => {
   return new Promise((resolve, reject) => {
-    Model.findAll({ attributes: attrArr, where: whereCond, include: includeData, order: orderData || [['id', 'DESC']], limit: limit, offset: offset, group: groupBy })
+    Model.findAll({ attributes: attrArr, where: whereCond, include: includeData, order: orderData, limit: limit, offset: offset, group: groupBy })
       .then(data => {
         resolve(data)
       })

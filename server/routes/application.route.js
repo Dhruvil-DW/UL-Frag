@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/questions/getall', authMiddleware.checkAuth, applicationController.getAllQuestions);
 router.get('/getcountry', authMiddleware.checkAuth, applicationController.getCountryNames);
-router.get('/get/nestedquestion/:parent_id', authMiddleware.checkAuth, applicationController.getNestedQuestion);
+//router.get('/get/nestedquestion/:parent_id', authMiddleware.checkAuth, applicationController.getNestedQuestion);
 
 
 module.exports = router;

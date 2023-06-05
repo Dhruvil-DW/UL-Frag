@@ -78,7 +78,7 @@ export default function Dashboard() {
                   </div>
                   <img src="/images/icons/three_dot_blue.svg" alt="option" className="optionIcon" />
                   <div className={`appCardActionContainer ${hoverCardId === i ? "hovered" : ""}`}>
-                    <img src="/images/icons/eye_round.svg" alt="view" onClick={() => navigate(`/application/view/${app.app_id}`)} />
+                    <img src="/images/icons/eye_round.svg" alt="view" onClick={() => navigate(`/application/view/${app.id}`)} />
                     <img src="/images/icons/copy_round.svg" alt="copy" />
                     <img src="/images/icons/pencil_round.svg" alt="edit" />
                     <img src="/images/icons/invite_user.svg" alt="invite" />

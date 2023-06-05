@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { questionsData } from '../../utils/globalData/questionData';
 import CategoryIcon from '../../assets/icons/categoryIcon';
@@ -12,13 +12,14 @@ export default function ViewApplication() {
   const { getData } = useAxios();
   const [appData, setAppData] = useState([]);
 
-  // function getAppQuestions() {
-  //   getData('');
-  // }
-  console.log(appData);
-  if (!appData) {
-    return <Navigate to='/dashboard' />
+  function getAppQuestions() {
+    getData(`user/viewapplication/${appId}`, {});
   }
+  useEffect(getAppQuestions, [getData, appId]);
+  console.log(appData);
+  // if (!appData) {
+  //   return <Navigate to='/dashboard' />
+  // }
 
   return (
     <div className='appFormContainer'>
@@ -37,7 +38,7 @@ export default function ViewApplication() {
         </div>
       </div>
       <div className='QAWrapper'>
-        {questionsData.map((question, index) => (
+        {appData.map((question, index) => (
           question.question_type_id === 12
             ? <NestedQueAns key={question.id} index={index + 1} que={question} appInputs={appData.inputs} />
             : <QueAns key={question.id} index={index + 1} que={question} ansData={appData.inputs[question.id]} />

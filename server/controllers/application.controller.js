@@ -97,7 +97,9 @@ function submitApplication(req, res, type) {
   let app_id = req.query.app_id;
   //console.log(app_id);
   const inputs = req.body.inputs;
-  //console.log("INPUTS-", inputs);
+  const project_name = req.body.project_name;
+  console.log("INPUTS-", inputs);
+  console.log("project-", project_name);
   (async () => {
     //let questionData = [];
     // const quesData = await seq.seqFindAll(Question, ["question_type_id"]);
@@ -187,7 +189,7 @@ function submitApplication(req, res, type) {
         }
       }
     }
-    res.status(200).send({ message: "Application successfully submitted" });
+    res.status(200).send({ message: "Application successfully submitted", app_id: app_id });
   })();
 }
 

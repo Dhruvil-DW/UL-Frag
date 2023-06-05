@@ -1,0 +1,46 @@
+h1{
+    font-size: 2rem;
+}
+
+.innerContainer{
+    width: 25vw;
+    margin-left: max(15%, 1rem);
+    margin: 13vw 0vw 0vw 6vw;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: relative;
+}
+
+.welcomeScreenContainer {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.welcomeHeading{
+    margin: 0;
+    white-space: pre-line;
+    font-size: 2.2rem;
+    word-spacing: 0.2rem;
+}
+
+.welcomeTextColor{
+    color: #002F98;
+}
+
+.MuiButton-root.MuiButtonBase-root.MuiButton-contained{
+
+    background-color: #002F98;
+    color: #ffffff
+}
+
+.horizontal_spacer {
+    display: inline-block;
+    width: 1vw;
+}
+
+.buttonContainer {
+    margin-top: 1vw;
+}

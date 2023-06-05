@@ -25,7 +25,7 @@ export default function CheckBoxImage({ question, index, value = [], onKeyUp }) 
     <div className="questionContainer">
       <h2 className="question">{question.question}</h2>
       <div className="optionContainer">
-        {question.question_opt.map((opt) => (
+        {question.question_opt?.map((opt) => (
           <div key={opt} className="imageBoxContainer" onClick={() => handleInputChange(opt)}>
             <Checkbox checked={Boolean(input.find(x => x === opt))} />
             <div className="iconContainer">

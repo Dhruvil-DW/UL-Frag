@@ -7,7 +7,7 @@ export default function RadioImage({ question, index, value = {}, onKeyUp }) {
   const { handleNextPrevNav, handleAnswerChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const defferedInput = useDeferredValue(input);
-  // console.log(question);
+  console.log(question);
 
   useEffect(() => {
     if (defferedInput.brand || defferedInput.desc) {
@@ -25,7 +25,7 @@ export default function RadioImage({ question, index, value = {}, onKeyUp }) {
 
         <RadioGroup value={input.brand ?? ""} onChange={(e, value) => setInput((prevInput) => ({ ...prevInput, brand: value }))} style={{ flexGrow: 1 }}>
           <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
-            {question.question_opt.map((path) => (
+            {question.question_opt?.map((path) => (
               <FormControlLabel key={path} label={<BrandImage path={path} />} value={path} control={<Radio style={{ alignSelf: "flex-start" }} />} />
             ))}
           </div>

@@ -21,7 +21,7 @@ export default function RadioText({ question, index, value = "", onKeyUp }) {
       <h2 className="question">{question.question}</h2>
 
       <RadioGroup value={value} onChange={handleInputChange} name={question.id.toString()}>
-        {question.question_opt.map((opt) => (
+        {question.question_opt?.map((opt) => (
           <FormControlLabel key={opt} label={opt} value={opt} control={<Radio />} />
         ))}
       </RadioGroup>

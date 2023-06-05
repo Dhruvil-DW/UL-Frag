@@ -75,7 +75,7 @@ function getMyApplications(req, res) {
     (async () => {
         const applRes = await seq.seqFindAll(
             Application, 
-            ['id', 'project_name', 'application_status_id', 'user_id', 'status', 'updatedAt'], 
+            ['id', 'project_name', 'application_status_id', 'user_id', 'status', 'updatedAt'], //Change the column updatedAt name if causes error here
             { user_id: userId }, 
             [
                 { model: ApplicationStatus, attributes: ['id', 'status'] },

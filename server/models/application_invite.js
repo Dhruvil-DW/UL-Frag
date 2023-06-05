@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'application_invite',
+    underscored: true
   });
   return application_invite;
 };

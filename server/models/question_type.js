@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'question_type',
+    underscored: true
   });
   return question_type;
 };

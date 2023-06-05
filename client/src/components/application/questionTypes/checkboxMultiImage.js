@@ -49,9 +49,9 @@ function GetSVG({ option }) {
       return <img src='/images/icons/pre_wash.svg' alt={option} />
     case "During wash":
       return <img src='/images/icons/during_wash.svg' alt={option} />
-    case "After wash\n(wet)":
+    case "After wash (wet)":
       return <img src='/images/icons/after_wash_wet.svg' alt={option} />
-    case "After wash\n(dry)":
+    case "After wash (dry)":
       return <img src='/images/icons/after_wash_dry.svg' alt={option} />
     case "TV":
       return <img src='/images/icons/tv.svg' alt={option} />

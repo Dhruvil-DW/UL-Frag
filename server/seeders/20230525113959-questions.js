@@ -29,7 +29,7 @@ const questions = [
   // Category:- Section 2
   { category_id: 3, question: "Please outline the specific consumer segment that you intend to influence with the new fragrance", question_type_id: 1, status: 1, parent_id: 0 },
   { category_id: 3, question: "Describe the experience you wish to give consumers with the new fragrance", question_type_id: 1, status: 1, parent_id: 0 },
-  { category_id: 3, question: "Select the moments where you would expect the fragrance to do its best", question_opt: '["Pre-wash", "During wash", "After wash\n(wet)", "After wash\n(dry)"]', question_type_id: 1, status: 1, parent_id: 0 },
+  { category_id: 3, question: "Select the moments where you would expect the fragrance to do its best", question_opt: '["Pre-wash", "During wash", "After wash (wet)", "After wash (dry)"]', question_type_id: 8, status: 1, parent_id: 0 },
 
   // Category:- Section 3
   { category_id: 4, question: "What is the investment you are wanting to make?", question_type_id: 10, question_opt: '["Incremental", "At current level", "Below current level"]', status: 1, parent_id: 0 },

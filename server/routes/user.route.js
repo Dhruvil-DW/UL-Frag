@@ -15,4 +15,5 @@ router.post('/draft', authMiddleware.checkAuth, applicationController.draftAppli
 //router.get('/getanswers', authMiddleware.checkAuth, answerController.getAnswers);
 router.get('/getall/applications', authMiddleware.checkAuth, userController.getAllApplications);
 router.get('/getall/approve/applications', authMiddleware.checkAuth, userController.getApprovedApplications);
+router.get('/viewapplication/:app_id', authMiddleware.checkAuth, userController.viewApplications);
 module.exports = router;

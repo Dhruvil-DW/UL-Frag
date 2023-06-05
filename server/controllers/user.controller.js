@@ -2,6 +2,9 @@ const db = require('../models/index');
 const User = db.User;
 const Application = db.Application;
 const ApplicationStatus = db.application_status;
+const AppQuestion = db.app_question;
+const Question = db.question;
+const Answers = db.answers;
 const generateToken = require('../config/jwt.config');
 const seq = require('../config/sequelize.config');
 
@@ -69,7 +72,7 @@ function updateProfile(req,res){
 
 function getAllApplications(req,res){
     (async () => {
-        const applRes = await seq.seqFindAll(Application, ['id', 'project_name', 'application_status_id', 'user_id', 'status'],{},{model:ApplicationStatus, attributes:['id', 'status']});
+        const applRes = await seq.seqFindAll(Application, ['id', 'project_name', 'application_status_id', 'user_id', 'status'],{user_id:user_id},{model:ApplicationStatus, attributes:['id', 'status']});
         if(applRes === 500){
             res.status(500).send({message:'Error while retrieving applications'});
             return;
@@ -87,7 +90,29 @@ function getApprovedApplications(req,res){
     }
     res.status(200).send(approveRes);
 })();
+
+}
+function viewApplications(req,res){
+    const app_id = req.params.app_id;
+    (async () => {
+    const appQues = [];
+       const appQuesRes = await seq.seqFindAll(AppQuestion, ['id', 'app_id', 'question_id'],{app_id:app_id});
+       console.log(appQuesRes);
+       appQuesRes.forEach((items)=> {
+        //console.log(items.dataValues.id);
+        appQues.push(items.dataValues.id);
+       });
+       //console.log(appQues);
+       //console.log(appQuesRes.dataValues);
+       const viewRes = await seq.seqFindAll(Answers, ['id', 'question_id', 'answer', 'app_question_id'], {app_question_id:appQues}, {model:Question, attributes:['id','question']});
+       //console.log("VIEWRES-", viewRes);
+       if(viewRes === 500){
+        res.status(500).send({message:"Error while retrieving the view applications"});
+        return;
+       }
+       res.status(200).send(viewRes); 
+    })();
 }
 module.exports = {
-     addProfileDetails, getProfileDetails, updateProfile, getAllApplications, getApprovedApplications
+     addProfileDetails, getProfileDetails, updateProfile, getAllApplications, getApprovedApplications, viewApplications
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { childQuestionData, questionsData } from '../../utils/globalData/questionData';
+import { questionsData } from '../../utils/globalData/questionData';
 import CategoryIcon from '../../assets/icons/categoryIcon';
 import UserIcon from '../../assets/icons/userIcon';
 import CalenderIcon from '../../assets/icons/calenderIcon';
@@ -54,7 +54,7 @@ function QueAns({ que, index, ansData }) {
 }
 
 function NestedQueAns({ que, index, appInputs }) {
-  const childQue = childQuestionData[que.id];
+  const childQue = que.nestedQue;
   console.log(childQue);
 
   return (

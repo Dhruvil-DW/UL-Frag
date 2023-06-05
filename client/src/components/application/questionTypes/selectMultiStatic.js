@@ -37,7 +37,7 @@ export default function SelectMultiStatic({ question, index, value = [], onKeyUp
         multiple
         disablePortal
         disableCloseOnSelect
-        options={question.question_opt}
+        options={question.question_opt ?? []}
         value={input}
         onChange={handleInputChange}
         popupIcon={<ArrowDownIcon />}

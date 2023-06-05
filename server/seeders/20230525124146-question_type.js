@@ -15,6 +15,8 @@ const question_type = [
   {id: 11, question_type: "Multiple Choice dynamic", description:"Radio button or simple MCQ type question with dynamic options"},
   {id: 12, question_type: "Nested questions", description:"Nested questions"},
   {id: 13, question_type: "Textarea with file upload", description:"Textarea with file upload"},
+  {id: 14, question_type: "Select with TextBox", description:"One Select Field and One Text Field"},
+  {id: 15, question_type: "Confirm Checkbox", description:"I agree Checkbox"},
 ]
 module.exports = {
   async up (queryInterface, Sequelize) {

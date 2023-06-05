@@ -1,22 +1,34 @@
 import { Button } from "@mui/material";
-import { questionsData } from "../../utils/globalData/questionData";
-import { createContext, useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, createContext, useCallback, useEffect, useRef, useState } from "react";
 import QuestionType from "./questionTypes";
 import NavSideBar from "./navSideBar";
 import debounce from "../../utils/globalFunctions/debounce";
 // import { useParams } from "react-router";
 import UnileverIcon from "../../assets/icons/unileverIcon";
 import { useNavigate } from "react-router-dom";
+import ErrorBoundary from "../../config/errorBoundary/ErrorBoundary";
+import WelcomeScreen from "./welcomeScreen/welcomeScreen";
+import { useAxios } from "../../hooks/useAxios";
 export const ApplicationContext = createContext();
 
 export default function AddApplication() {
   const navigate = useNavigate();
-  const [questions] = useState(questionsData);
+  const [catWiseQues, setCatWiseQues] = useState([]);
   const [inputs, setInputs] = useState({});
   const containerRef = useRef(null);
+  const { getData } = useAxios();
 
+  function getQuestions() {
+    getData(`/application/questions/getall`, {}, (data) => {
+      const newData = getCatWiseQues(data);
+      setCatWiseQues(newData);
+    });
+  }
+
+  useEffect(getQuestions, [getData]);
   // const { appId } = useParams();
   const [currentQue, setCurrentQue] = useState(0);
+  const [activeSection, setActiveSection] = useState(0);
 
   const handleScroll = useCallback((e) => {
     const { clientHeight, scrollTop } = e.target;
@@ -102,26 +114,46 @@ export default function AddApplication() {
     navigate("/application/summary", { state: { app_id: `app-${randomNum}` } });
   }
 
+  console.log("QUESTIONS: ", catWiseQues);
   return (
-    <ApplicationContext.Provider value={{ questions, inputs, currentQue, handleNextPrevNav, handleAnswerChange }}>
+    <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleNextPrevNav, handleAnswerChange }}>
       <main className="appFormContainer">
+        <ErrorBoundary>
+          <NavSideBar formRef={containerRef} activeQue={currentQue} />
+        </ErrorBoundary>
 
-        <NavSideBar questionData={questionsData} inputs={inputs} formRef={containerRef} activeQue={currentQue} />
         <div className="formRelative">
-          <section id="form" ref={containerRef} onScroll={debouncedHandleScroll}>
-            {questions.map((que, index) => (
-              <div className="pageWrapper" key={que.id}>
-                <div className="pageContainer">
-                  <QuestionType question={que} index={index} inputs={inputs} onChange={handleAnswerChange} onKeyUp={handleFocusNext} />
-                  <div className="unilever-icon questionPage">
-                    <UnileverIcon width="64px" />
-                  </div>
-                </div>
-              </div>
-            )
-            )}
+          <ErrorBoundary>
+            <section id="form" ref={containerRef} onScroll={debouncedHandleScroll}>
+              {catWiseQues.map((cat, catIndex) => (
+                <Fragment key={cat.category_id}>
 
-          </section>
+                  <div className="pageWrapper">
+                    <div className="pageContainer">
+                      <WelcomeScreen categoryId={cat.category_id} categoryName={cat.category_name} />
+                      <div className="unilever-icon questionPage">
+                        <UnileverIcon width="64px" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {cat.questions.map((que, questionIndex) => (
+                    <div className="pageWrapper" key={que.id} id={que.id}>
+                      <div className="pageContainer">
+                        <QuestionType question={que} index={questionIndex} inputs={inputs} onChange={handleAnswerChange} onKeyUp={handleFocusNext} />
+                        <div className="unilever-icon questionPage">
+                          <UnileverIcon width="64px" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                </Fragment>
+              )
+              )}
+
+            </section>
+          </ErrorBoundary>
 
           <div className='actionBtnCont'>
             <Button variant="outlined" color="secondary">Save as Draft</Button>
@@ -133,4 +165,17 @@ export default function AddApplication() {
       </main>
     </ApplicationContext.Provider>
   )
+}
+
+function getCatWiseQues(questions) {
+  const result = [];
+  questions.forEach((que, index) => {
+    if (result[que.category.id - 1]) {
+      result[que.category.id - 1].questions = [...result[que.category.id - 1].questions, que];
+    } else {
+      result[que.category.id - 1] = { category_id: que.category.id, category_name: que.category.name, questions: [que] }
+    }
+  });
+  // console.log("Sidebar_CatWiseData: ", result);
+  return result;
 }

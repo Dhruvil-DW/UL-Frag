@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { ApplicationContext } from "../addApplication";
 import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
-import { childQuestionData } from "../../../utils/globalData/questionData";
 import { Autocomplete, Checkbox, TextField } from "@mui/material";
 import ArrowDownIcon from "../../../assets/icons/arrowDownIcon";
 import { showPickerOnFocus } from "../../../utils/globalFunctions/showPickerOnFocus";
@@ -9,7 +8,7 @@ import { showPickerOnFocus } from "../../../utils/globalFunctions/showPickerOnFo
 
 export default function NestedQuestion({ question, index, onChange, onDateSelect, inputs = {}, onKeyUp }) {
   const { handleNextPrevNav } = useContext(ApplicationContext);
-  // console.log(question);
+  console.log(question);
   // console.log(childQuestionData[question.id]);
 
   return (
@@ -18,7 +17,7 @@ export default function NestedQuestion({ question, index, onChange, onDateSelect
 
       <div className="nestedQueWrapper">
         <div className="nestedQueContainer" style={{ display: "flex", color: "white", marginRight: "2rem" }}>
-          {childQuestionData[question.id].map((que, i) => (
+          {question.nestedQue.map((que, i) => (
             <div key={que.id} style={{ flexGrow: 1, height: 250, padding: "1.5rem", backgroundColor: ["#FFB4D3", "#F8DA54", "#66C5EE"][i] }}>
               <p style={{ fontSize: 18, marginTop: 0, marginBottom: 16 }}>{que.question}</p>
               {question.id === 6 && (
@@ -28,7 +27,7 @@ export default function NestedQuestion({ question, index, onChange, onDateSelect
                     disablePortal
                     disableCloseOnSelect
                     fullWidth
-                    options={que.question_opt}
+                    options={que.question_opt ?? []}
                     value={inputs[que.id] ?? []}
                     onChange={(event, value, reason) => onChange(event, value, reason, que.id)}
                     popupIcon={<ArrowDownIcon />}

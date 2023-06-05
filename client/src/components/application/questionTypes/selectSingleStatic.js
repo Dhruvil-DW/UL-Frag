@@ -22,7 +22,7 @@ export default function SelectSingleStatic({ question, index, value = null, onKe
       <h2 className="question">{question.question}</h2>
       <Autocomplete
         disablePortal
-        options={question.question_opt}
+        options={question.question_opt ?? []}
         value={input}
         onChange={handleInputChange}
         popupIcon={<ArrowDownIcon />}

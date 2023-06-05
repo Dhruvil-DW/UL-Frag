@@ -7,22 +7,19 @@ import CheckBoxRoundChecked from "../../assets/icons/checkBoxRoundChecked";
 import PageIcon from "../../assets/icons/pageIcon";
 import ArrowDownIcon from "../../assets/icons/arrowDownIcon";
 import { ApplicationContext } from "./addApplication";
-import { childQuestionData } from "../../utils/globalData/questionData";
 
-export default function NavSideBar({ questionData, inputs, activeQue }) {
+export default function NavSideBar({ activeQue }) {
   const navigate = useNavigate();
-  const { handleNextPrevNav } = useContext(ApplicationContext);
-  const [catWiseQue] = useState(() => getSidebarData(questionData));
-  const [accOpen, setAccOpen] = useState(() => getInitialState(catWiseQue));
-  // const [lastQueNo, setLastQueNo] = useState(() => getLastQue(catWiseQue));
-
-  console.log({ catWiseQue, questionData });
+  const { catWiseQues, inputs, handleNextPrevNav } = useContext(ApplicationContext);
+  const [accOpen, setAccOpen] = useState(() => getInitialState(catWiseQues));
+  // const [lastQueNo, setLastQueNo] = useState(() => getLastQue(catWiseQues));
 
   const handleAccToggle = (e) => {
     const { name } = e.target;
     setAccOpen(prevState => ({ ...prevState, [name]: !prevState[name] }))
-    // debugger;
   }
+
+  console.log("accOpen: ", accOpen);
 
   return (
     <aside className="sidebar">
@@ -33,16 +30,19 @@ export default function NavSideBar({ questionData, inputs, activeQue }) {
             Dashboard
           </div>
         </Link>
-        {Object.keys(catWiseQue).map((cat, i) => (
+        {catWiseQues.map((cat, i) => (
           <Fragment key={i}>
             <Divider />
-            <button className="accordion" name={cat} onClick={handleAccToggle}>{getIconComp(cat)}{cat ?? "N/A"}<ArrowDownIcon className="accordionToggleIcon" /></button>
-            <div className={`panel ${accOpen[cat] ? 'open' : 'close'}`}>
+            <button className="accordion" name={cat.category_id} onClick={handleAccToggle}>{getIconComp(cat)}{cat.category_name ?? "N/A"}<ArrowDownIcon className="accordionToggleIcon" /></button>
+            <div className={`panel ${accOpen[cat.category_id] ? 'open' : 'close'}`}>
               <Stepper nonLinear orientation="vertical">
-                {catWiseQue[cat].map((que) => (
-                  <Step key={que.id} active={que.no === activeQue}>
-                    <StepButton className={`navLink`} onClick={() => handleNextPrevNav(que.no, "fixed")} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
+                {cat.questions.map((que) => (
+                  <Step key={que.id} active={que.id === activeQue}>
+                    {/* <StepButton className={`navLink`} onClick={() => handleNextPrevNav(que.id, "fixed")} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
                       <div className="sidebarQueText">{que.question}</div>
+                    </StepButton> */}
+                    <StepButton className={`navLink`} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
+                      <div className="sidebarQueText"><a href={`#${que.id}`} className="navlink">{que.question}</a></div>
                     </StepButton>
                   </Step>
                 ))}
@@ -60,24 +60,39 @@ export default function NavSideBar({ questionData, inputs, activeQue }) {
 }
 
 
+// function getSidebarData(questions) {
+//   const result = [];
+//   questions.forEach((que, index) => {
+//     const childQue = que.question_type_id === 12 ? childQuestionData[que.id].map(obj => obj.id) : null;
+//     const queData = { id: que.id, no: index, question: que.question, question_type_id: que.question_type_id, child_que_id: childQue };
+//     if (result[que.Category.name]) {
+//       result[que.Category.name] = [...result[que.Category.name], queData];
+//     } else {
+//       result[que.Category.name] = [queData];
+//     }
+//   });
+//   return result;
+// }
+
 function getSidebarData(questions) {
-  const result = {};
+  const result = [];
   questions.forEach((que, index) => {
-    const childQue = que.question_type_id === 12 ? childQuestionData[que.id].map(obj => obj.id) : null;
-    const queData = { id: que.id, no: index, question: que.question, question_type_id: que.question_type_id, child_que_id: childQue };
-    if (result[que.Category.name]) {
-      result[que.Category.name] = [...result[que.Category.name], queData];
+    if (result[que.Category.id - 1]) {
+      result[que.Category.id - 1].questions = [...result[que.Category.id - 1].questions, que];
     } else {
-      result[que.Category.name] = [queData];
+      result[que.Category.id - 1] = { category_id: que.Category.id, category_name: que.Category.name, questions: [que] }
     }
   });
+  // console.log("Sidebar_CatWiseData: ", result);
   return result;
 }
 
 function getInitialState(catQue) {
   const result = {};
-  Object.keys(catQue).map((cat, i) => result[cat] = i ? false : true)
+  // Object.keys(catQue).map((cat, i) => result[cat] = i ? false : true)
   // Object.keys(catQue).map((cat, i) => result[cat] = i ? true : true)
+  catQue.forEach((cat, i) => result[cat.category_id] = i ? false : true);
+  // console.log("ACC_STATUS: ", result);
   return result;
 }
 
@@ -102,10 +117,10 @@ function getIconComp(name) {
 function getStepIcon(que, inputs) {
   let isCompleted = false;
 
-  if(que.question_type_id === 12) {
-    for(const childQue of que.child_que_id) {
-      isCompleted = Boolean(inputs[childQue]);
-      if(isCompleted) break;
+  if (que.question_type_id === 12) {
+    for (const childQue of que.nestedQue) {
+      isCompleted = Boolean(inputs[childQue.id]);
+      if (isCompleted) break;
     }
 
   } else {

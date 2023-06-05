@@ -46,6 +46,26 @@ export const questionsData = [
     question_opt: ["Europe", "America", "South Asia", "SEAA"],
     category_id: 1,
     Category: { id: 1, name: "Overview" },
+    nestedQue: [
+      {
+        id: 61,
+        question: "Lead markets",
+        question_type_id: 3,
+        question_opt: ["Europe", "America", "South Asia", "SEAA"],
+      },
+      {
+        id: 62,
+        question: "Rollout markets",
+        question_type_id: 3,
+        question_opt: ["Europe", "America", "South Asia", "SEAA"],
+      },
+      {
+        id: 63,
+        question: "Impacted markets",
+        question_type_id: 3,
+        question_opt: ["Europe", "America", "South Asia", "SEAA"],
+      },
+    ],
   },
   {
     id: 7,
@@ -54,6 +74,26 @@ export const questionsData = [
     question_opt: null,
     category_id: 1,
     Category: { id: 1, name: "Overview" },
+    nestedQue: [
+      {
+        id: 74,
+        question: "Lead markets",
+        question_type_id: 2,
+        question_opt: 61,
+      },
+      {
+        id: 75,
+        question: "Rollout markets",
+        question_type_id: 2,
+        question_opt: 62,
+      },
+      {
+        id: 76,
+        question: "Impacted markets",
+        question_type_id: 2,
+        question_opt: 63,
+      },
+    ],
   },
   {
     id: 8,
@@ -201,48 +241,4 @@ export const questionsData = [
     category_id: 4,
     Category: { id: 4, name: "Section 3" },
   },
-]
-
-export const childQuestionData = {
-  6: [
-    {
-      id: 101,
-      question: "Lead markets",
-      question_type_id: 3,
-      question_opt: ["Europe", "America", "South Asia", "SEAA"],
-    },
-    {
-      id: 102,
-      question: "Rollout markets",
-      question_type_id: 3,
-      question_opt: ["Europe", "America", "South Asia", "SEAA"],
-    },
-    {
-      id: 103,
-      question: "Impacted markets",
-      question_type_id: 3,
-      question_opt: ["Europe", "America", "South Asia", "SEAA"],
-    },
-  ],
-
-  7: [
-    {
-      id: 104,
-      question: "Lead markets",
-      question_type_id: 2,
-      question_opt: 101,
-    },
-    {
-      id: 105,
-      question: "Rollout markets",
-      question_type_id: 2,
-      question_opt: 102,
-    },
-    {
-      id: 106,
-      question: "Impacted markets",
-      question_type_id: 2,
-      question_opt: 103,
-    },
-  ],
-};
+];

@@ -10,14 +10,14 @@ const questions = [
   {category_id:1, question:"Select business unit", question_opt:'["Europe", "Americas", "South Asia", "SEAA"]', question_type_id:4, status:1, parent_id: 0},
   {category_id:1, question:"Select country", question_opt:'["United Kingdom", "France", "Turkey", "Netherlands"]', question_type_id:6, status:1, parent_id: 0},
   {category_id:1, question:"Markets for the project", question_type_id:12, status:1, parent_id: 0},
-  {category_id:1, question:"Lead markets", question_opt:'["United Kingdom", "France", "Turkey", "Netherlands, None"]', question_type_id:0, status:1, parent_id: 6},
-  {category_id:1, question:"Rollout markets", question_opt:'["United Kingdom", "France", "Turkey", "Netherlands, None"]', question_type_id:0, status:1, parent_id: 6},
-  {category_id:1, question:"Impacted markets", question_opt:'["United Kingdom", "France", "Turkey", "Netherlands, None"]', question_type_id:0, status:1, parent_id: 6},
+  {category_id:1, question:"Lead markets", question_opt:'["United Kingdom", "France", "Turkey", "Netherlands", "None"]', question_type_id:0, status:1, parent_id: 6},
+  {category_id:1, question:"Rollout markets", question_opt:'["United Kingdom", "France", "Turkey", "Netherlands", "None""]', question_type_id:0, status:1, parent_id: 6},
+  {category_id:1, question:"Impacted markets", question_opt:'["United Kingdom", "France", "Turkey", "Netherlands", "None"]', question_type_id:0, status:1, parent_id: 6},
   {category_id:1, question:"What are the expected launch date per market?", question_type_id:12, status:1, parent_id: 0},
   {category_id:1, question:"Lead markets", question_type_id:0, status:1, parent_id: 10},
   {category_id:1, question:"Rollout markets", question_type_id:0, status:1, parent_id: 10},
   {category_id:1, question:"Impacted markets", question_type_id:0, status:1, parent_id: 10},
-  {category_id:1, question:"Brand position", question_type_id:7, status:1, parent_id: 0},
+  {category_id:1, question:"Brand position", question_opt:'["brand_sunlight.png", "brand_domestos.png", "brand_brilhante.png", "brand_cif.png", "brand_dirtisgood.png"]', question_type_id:7, status:1, parent_id: 0},
   {category_id:1, question:"Select product cell", question_type_id:10, question_opt:'["Guardrail", "Power growth", "Unsure"]', status:1, parent_id: 0},
 
   // Category:- Section 1

@@ -291,24 +291,10 @@ function draftApplication(req, res) {
   })();
 }
 
-// function sendInviteApplication(req,res){
-//     const user_id = req.body.user_id;
-//     console.log("userid-", user_id);
-//     const app_id = req.params.app_id;
-//     (async () => {
-
-//         for (let userID in user_id){
-//             console.log("inside");
-//             console.log(userID, user_id[userID]);
-//         }
-//         res.status(200).send({message:"Invitation has been sent to the collaborator"});
-//     })();
-// }
 module.exports = {
   getAllQuestions,
   getCountryNames,
   //getNestedQuestion,
   submitApplication,
   draftApplication,
-  //sendInviteApplication
 };

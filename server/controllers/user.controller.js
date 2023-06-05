@@ -1,5 +1,7 @@
 const db = require('../models/index');
 const User = db.User;
+const Application = db.Application;
+const ApplicationStatus = db.application_status;
 const generateToken = require('../config/jwt.config');
 const seq = require('../config/sequelize.config');
 
@@ -59,10 +61,33 @@ function updateProfile(req,res){
     const updateRes = await seq.seqUpdate(User, userData, {id:userId});
     if (updateRes === 500){
         res.status(500).send({message: "Error while updating profile details"}); 
+        return;
     }
     res.status(200).send({message: "User updated successfully"});
 })();
 }
+
+function getAllApplications(req,res){
+    (async () => {
+        const applRes = await seq.seqFindAll(Application, ['id', 'project_name', 'application_status_id', 'user_id', 'status'],{},{model:ApplicationStatus, attributes:['id', 'status']});
+        if(applRes === 500){
+            res.status(500).send({message:'Error while retrieving applications'});
+            return;
+        }
+        res.status(200).send(applRes);
+    })();
+}
+
+function getApprovedApplications(req,res){
+(async () => {
+    const approveRes = await seq.seqFindAll(Application, ['id', 'project_name', 'application_status_id','user_id', 'status'],{application_status_id:3},{model:ApplicationStatus, attributes:['id', 'status']});
+    if (approveRes === 500){
+        res.status(500).send({message:"Error while retrieving the list of approved applications"});
+        return;
+    }
+    res.status(200).send(approveRes);
+})();
+}
 module.exports = {
-     addProfileDetails, getProfileDetails, updateProfile
+     addProfileDetails, getProfileDetails, updateProfile, getAllApplications, getApprovedApplications
 }

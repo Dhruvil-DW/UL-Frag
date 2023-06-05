@@ -11,7 +11,7 @@ const questions = [
   {category_id:1, question:"Select country", question_opt:'["United Kingdom", "France", "Turkey", "Netherlands"]', question_type_id:6, status:1, parent_id: 0},
   {category_id:1, question:"Markets for the project", question_type_id:12, status:1, parent_id: 0},
   {category_id:1, question:"Lead markets", question_opt:'["United Kingdom", "France", "Turkey", "Netherlands", "None"]', question_type_id:0, status:1, parent_id: 6},
-  {category_id:1, question:"Rollout markets", question_opt:'["United Kingdom", "France", "Turkey", "Netherlands", "None""]', question_type_id:0, status:1, parent_id: 6},
+  {category_id:1, question:"Rollout markets", question_opt:'["United Kingdom", "France", "Turkey", "Netherlands", "None"]', question_type_id:0, status:1, parent_id: 6},
   {category_id:1, question:"Impacted markets", question_opt:'["United Kingdom", "France", "Turkey", "Netherlands", "None"]', question_type_id:0, status:1, parent_id: 6},
   {category_id:1, question:"What are the expected launch date per market?", question_type_id:12, status:1, parent_id: 0},
   {category_id:1, question:"Lead markets", question_type_id:0, status:1, parent_id: 10},

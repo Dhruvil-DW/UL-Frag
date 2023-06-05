@@ -28,7 +28,7 @@ export default function AddApplication() {
   useEffect(getQuestions, [getData]);
   // const { appId } = useParams();
   const [currentQue, setCurrentQue] = useState(0);
-  const [activeSection, setActiveSection] = useState(0);
+  // const [activeSection, setActiveSection] = useState(0);
 
   const handleScroll = useCallback((e) => {
     const { clientHeight, scrollTop } = e.target;
@@ -103,7 +103,7 @@ export default function AddApplication() {
 
     console.log(final_inputs);
 
-    postData(`/user/submit`, final_inputs, (data) => {navigate("/application/summary", { state: { app_id: data.app_id } }) });
+    postData(`/user/submit`, final_inputs, (data) => { navigate("/application/summary", { state: { app_id: data.app_id } }) });
 
     //API CALLS
     //Temp Save to Local
@@ -154,9 +154,9 @@ export default function AddApplication() {
                           <UnileverIcon width="64px" />
                         </div>
                         <div className="assets bg_images">
-                        {que.imgData?.map((e) => (
-                          <img src={`/images/${e.path}`} style={{position: 'absolute',right: 0, bottom: 0 ,...e.style}} />
-                        ))}
+                          {que.imgData?.map((e) => (
+                            <img key={e.path} src={`/images/${e.path}`} style={{ position: 'absolute', right: 0, bottom: 0, ...e.style }} alt={e.path} />
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -186,9 +186,9 @@ function getCatWiseQues(questions) {
   questions.forEach((que, index) => {
     const imgData = img_data[que.id];
     if (result[que.category.id - 1]) {
-      result[que.category.id - 1].questions = [...result[que.category.id - 1].questions, {...que, imgData: imgData}];
+      result[que.category.id - 1].questions = [...result[que.category.id - 1].questions, { ...que, imgData: imgData }];
     } else {
-      result[que.category.id - 1] = { category_id: que.category.id, category_name: que.category.name, questions: [{...que, imgData: imgData}] }
+      result[que.category.id - 1] = { category_id: que.category.id, category_name: que.category.name, questions: [{ ...que, imgData: imgData }] }
     }
   });
   // console.log("Sidebar_CatWiseData: ", result);
@@ -197,71 +197,71 @@ function getCatWiseQues(questions) {
 
 const img_data = {
   1: [
-    { path: "question_1_main.png", style: { right: 0, width: 300}},
-    { path: "question_1_small.png", style: { bottom: -140, right: 0, width: 300 }},
+    { path: "question_1_main.png", style: { right: 0, width: 300 } },
+    { path: "question_1_small.png", style: { bottom: -140, right: 0, width: 300 } },
   ],
   2: [
-    { path: "question_1_main.png", style: {}},
-    { path: "question_1_small.png", style: {}},
+    { path: "question_1_main.png", style: {} },
+    { path: "question_1_small.png", style: {} },
   ],
   3: [
-    { path: "question_1_main.png", style: {}},
-    { path: "question_1_small.png", style: {}},
+    { path: "question_1_main.png", style: {} },
+    { path: "question_1_small.png", style: {} },
   ],
   4: [
-    { path: "question_1_main.png", style: {}},
-    { path: "question_1_small.png", style: {}},
+    { path: "question_1_main.png", style: {} },
+    { path: "question_1_small.png", style: {} },
   ],
   5: [
-    { path: "question_1_main.png", style: {}},
-    { path: "question_1_small.png", style: {}},
+    { path: "question_1_main.png", style: {} },
+    { path: "question_1_small.png", style: {} },
   ],
   6: [
-    { path: "question_1_main.png", style: {}},
-    { path: "question_1_small.png", style: {}},
+    { path: "question_1_main.png", style: {} },
+    { path: "question_1_small.png", style: {} },
   ],
   7: [
-    { path: "question_1_main.png", style: {}},
-    { path: "question_1_small.png", style: {}},
+    { path: "question_1_main.png", style: {} },
+    { path: "question_1_small.png", style: {} },
   ],
   8: [
-    { path: "question_1_main.png", style: {}},
-    { path: "question_1_small.png", style: {}},
+    { path: "question_1_main.png", style: {} },
+    { path: "question_1_small.png", style: {} },
   ],
   9: [
-    { path: "question_1_main.png", style: {}},
-    { path: "question_1_small.png", style: {}},
+    { path: "question_1_main.png", style: {} },
+    { path: "question_1_small.png", style: {} },
   ],
   10: [
-    { path: "question_1_main.png", style: {}},
-    { path: "question_1_small.png", style: {}},
+    { path: "question_1_main.png", style: {} },
+    { path: "question_1_small.png", style: {} },
   ],
   11: [
-    { path: "question_1_main.png", style: {}},
-    { path: "question_1_small.png", style: {}},
+    { path: "question_1_main.png", style: {} },
+    { path: "question_1_small.png", style: {} },
   ],
   12: [
-    { path: "question_1_main.png", style: {}},
-    { path: "question_1_small.png", style: {}},
+    { path: "question_1_main.png", style: {} },
+    { path: "question_1_small.png", style: {} },
   ],
   13: [
-    { path: "question_1_main.png", style: {}},
-    { path: "question_1_small.png", style: {}},
+    { path: "question_1_main.png", style: {} },
+    { path: "question_1_small.png", style: {} },
   ],
   14: [
-    { path: "question_1_main.png", style: {}},
-    { path: "question_1_small.png", style: {}},
+    { path: "question_1_main.png", style: {} },
+    { path: "question_1_small.png", style: {} },
   ],
   15: [
-    { path: "question_1_main.png", style: {}},
-    { path: "question_1_small.png", style: {}},
+    { path: "question_1_main.png", style: {} },
+    { path: "question_1_small.png", style: {} },
   ],
   16: [
-    { path: "question_1_main.png", style: {}},
-    { path: "question_1_small.png", style: {}},
+    { path: "question_1_main.png", style: {} },
+    { path: "question_1_small.png", style: {} },
   ],
   17: [
-    { path: "question_1_main.png", style: {}},
-    { path: "question_1_small.png", style: {}},
+    { path: "question_1_main.png", style: {} },
+    { path: "question_1_small.png", style: {} },
   ]
 };

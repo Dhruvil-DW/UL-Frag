@@ -5,11 +5,16 @@ import CategoryIcon from '../../assets/icons/categoryIcon';
 import UserIcon from '../../assets/icons/userIcon';
 import CalenderIcon from '../../assets/icons/calenderIcon';
 import PageIcon from '../../assets/icons/pageIcon';
+import { useAxios } from '../../hooks/useAxios';
 
 export default function ViewApplication() {
   const { appId } = useParams();
-  const [appData] = useState(JSON.parse(localStorage.getItem("submitApp"))?.find(({ app_id }) => app_id === appId));
+  const { getData } = useAxios();
+  const [appData, setAppData] = useState([]);
 
+  // function getAppQuestions() {
+  //   getData('');
+  // }
   console.log(appData);
   if (!appData) {
     return <Navigate to='/dashboard' />

@@ -7,7 +7,7 @@ export default function RadioImage({ question, index, value = {}, onKeyUp }) {
   const { handleNextPrevNav, handleAnswerChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const defferedInput = useDeferredValue(input);
-  console.log(question);
+  // console.log(question);
 
   useEffect(() => {
     if (defferedInput.brand || defferedInput.desc) {

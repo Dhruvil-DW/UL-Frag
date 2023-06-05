@@ -36,9 +36,12 @@ function verifyOtp(req, res) {
     const otp = req.body.otp;
     console.log(req.body);
     (async () => {
-        const data = await seq.seqFindOne(User, ['id', 'unique_id' ,'role_id', 'email', 'otp', 'first_name', 'last_name'], { email: email });
+        const data = await seq.seqFindOne(User, ['id', 'unique_id', 'role_id', 'email', 'otp', 'first_name', 'last_name'], { email: email });
+        if (!Boolean(data)) {
+            res.status(500).send({ message: "No User Found" });
+            return;
+        }
         console.log("data", data.otp);
-        //const otp = req.body.otp;
         if (data.otp == otp) {
             console.log("inside");
             const token = await generateToken(data);

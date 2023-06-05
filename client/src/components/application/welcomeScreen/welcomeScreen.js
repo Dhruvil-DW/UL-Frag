@@ -7,11 +7,11 @@ const getData = {
     Title: "Tell us more about the fragrances you want to create",
     style: {background:"#FFBCD8"}, 
     ImgData: [
-      {link:"s1_i1.png", style: { width : '35vw',position: 'absolute',right:'6vw',bottom:'1vw','z-index':'1'}},
+      {link:"s1_i1.png", style: { width : '35vw',position: 'absolute',right:'6vw',bottom:'1vw','zIndex':'1'}},
       {link:"s1_i2.png", style: {width : '14vw',position: 'absolute',right:'26vw',bottom:'17vw'}},
       {link:"s1_i3.png", style: {width : '18vw',position: 'absolute',right:'20vw',top:'1vw'}},
       {link:"s1_i4.png", style: {width : '10vw',position: 'absolute',right:'7vw',bottom:'25vw'}},
-      {link:"s1_i5.png", style: {width : '5vw',position: 'absolute',right:'32vw',bottom:'13vw','z-index':'0'}},
+      {link:"s1_i5.png", style: {width : '5vw',position: 'absolute',right:'32vw',bottom:'13vw','zIndex':'0'}},
       {link:"s1_i6.png", style: {width : '3vw',position: 'absolute',right:'21vw',bottom:'26vw'}},
       {link:"s1_i7.png", style: {width : '5vw',position: 'absolute',right:'10vw',top:'0vw'}},
       {link:"s1_i8.png", style: {width : '5vw',position: 'absolute',right:'5vw',bottom:'22vw'}},
@@ -65,19 +65,19 @@ export default function WelcomeScreen({ categoryId, categoryName }) {
   }
 
   return (
-    <div class="welcomeScreenContainer" style={getData[categoryName].style}>
-      <div class="assets_container">
-      {getData[categoryName].ImgData.map(data => (
-        <img src={`/images/${data.link}`} style={data.style}/>
+    <div className="welcomeScreenContainer" style={getData[categoryName].style}>
+      <div className="assets_container">
+      {getData[categoryName].ImgData.map((data, i) => (
+        <img key={i} src={`/images/${data.link}`} style={data.style} alt={data.link}/>
       ))}
       </div>
-      <div class ="innerContainer welcomeTextColor">
+      <div className="innerContainer welcomeTextColor">
         <p>{categoryName}</p>
         <h1 className="welcomeHeading welcomeTextColor">{getData[categoryName]['Title']}</h1>
         <div className="buttonContainer">
-          <Button variant="contained" onClick={goToQuestion(getData[categoryName].linkPrevious)}>Previous</Button>
-          <div class="horizontal_spacer"></div>
-          <Button variant="contained" onClick={goToQuestion(getData[categoryName].linkNext)}>Continue</Button>
+          <Button variant="contained" onClick={() => goToQuestion(getData[categoryName].linkPrevious)}>Previous</Button>
+          <div className="horizontal_spacer"></div>
+          <Button variant="contained" onClick={() => goToQuestion(getData[categoryName].linkNext)}>Continue</Button>
         </div>
       </div>
     </div>

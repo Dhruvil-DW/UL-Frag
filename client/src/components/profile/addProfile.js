@@ -21,8 +21,7 @@ export default function AddProfile() {
       axios
         .post('user/profile/add', inputs, { headers: { Authorization: "Bearer " + token } })
         .then((res) => {
-          console.debug(res.data);
-          authDispatch({ type: authActions.AUTH_SUCCESS, payload: res.data.token });
+          authDispatch({ type: authActions.AUTH_SUCCESS, payload: { token: res.data.token } });
           navigate('/relevent-route');
         })
         .catch((err) => {

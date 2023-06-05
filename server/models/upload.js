@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   upload.init({
     filename: DataTypes.STRING,
     app_id: DataTypes.INTEGER,
-    status: DataTypes.INTEGER
+    active: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'upload',

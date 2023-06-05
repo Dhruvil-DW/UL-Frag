@@ -37,7 +37,7 @@ export default function NavSideBar({ activeQue }) {
             <div className={`panel ${accOpen[cat.category_id] ? 'open' : 'close'}`}>
               <Stepper nonLinear orientation="vertical">
                 {cat.questions.map((que) => (
-                  <Step key={que.id} active={que.id === activeQue}>
+                  <Step key={que.id}>
                     {/* <StepButton className={`navLink`} onClick={() => handleNextPrevNav(que.id, "fixed")} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
                       <div className="sidebarQueText">{que.question}</div>
                     </StepButton> */}

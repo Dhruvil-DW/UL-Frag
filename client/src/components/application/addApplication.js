@@ -128,14 +128,14 @@ export default function AddApplication() {
               {catWiseQues.map((cat, catIndex) => (
                 <Fragment key={cat.category_id}>
 
-                  <div className="pageWrapper">
+                  {cat.category_id !== 1 && (<div className="pageWrapper">
                     <div className="pageContainer">
                       <WelcomeScreen categoryId={cat.category_id} categoryName={cat.category_name} />
                       <div className="unilever-icon questionPage">
                         <UnileverIcon width="64px" />
                       </div>
                     </div>
-                  </div>
+                  </div>)}
 
                   {cat.questions.map((que, questionIndex) => (
                     <div className="pageWrapper" key={que.id} id={que.id}>

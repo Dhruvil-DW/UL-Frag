@@ -4,7 +4,7 @@
 const questions = [
   // Category:- Overview
 
-  {category_id:1, question: "Do you have a project allocated for the brief?", question_type_id:3, question_opt:'["project name", "no project", "proactive brief"]', status:1, parent_id: 0},
+  {category_id:1, question: "Do you have a project allocated for the brief?", question_type_id:14, question_opt:'["Project name", "No project", "Proactive brief"]', status:1, parent_id: 0},
   {category_id:1, question:"Select category", question_type_id:3, question_opt:'["Fabric clean(FCL)", "Fabric Enhancer(FEN)", "Home & Hygiene(H&H)"]', status:1, parent_id: 0},
   {category_id:1, question:"Select format", question_type_id:3, question_opt:'["Liquid", "Bar", "Powder", "Capsule"]', status:1, parent_id: 0},
   {category_id:1, question:"Select business unit", question_opt:'["Europe", "Americas", "South Asia", "SEAA"]', question_type_id:4, status:1, parent_id: 0},

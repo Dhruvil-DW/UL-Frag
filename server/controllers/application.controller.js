@@ -12,14 +12,14 @@ function getAllQuestions(req, res) {
   // const category_id = parseInt(req.query.category_id);
   // console.log(category_id);
   (async () => {
-    const getRes = await seq.seqFindAll(Question, ["id","category_id","question","question_type_id", "question_opt","status"],{ parent_id: 0 },{ model: Category, attributes: ["id", "name"] });
-    const quesRes = await seq.seqFindAll(Question,["id","category_id","question","parent_id","question_type_id", "question_opt", "status"],{ parent_id: { [Op.not]: 0 } },{ model: Category, attributes: ["id", "name"] });
+    const getRes = await seq.seqFindAll(Question, ["id", "category_id", "question", "question_type_id", "question_opt", "status"], { parent_id: 0 }, { model: Category, attributes: ["id", "name"] });
+    const quesRes = await seq.seqFindAll(Question, ["id", "category_id", "question", "parent_id", "question_type_id", "question_opt", "status"], { parent_id: { [Op.not]: 0 } }, { model: Category, attributes: ["id", "name"] });
     //console.log(quesRes.id);
     const childData = {};
 
     quesRes.forEach((item) => {
       const parentID = item.dataValues.parent_id;
-
+      item.dataValues.question_opt = JSON.parse(item.dataValues.question_opt);
       if (childData[parentID]) {
         childData[parentID] = [...childData[parentID], item];
       } else {
@@ -29,16 +29,16 @@ function getAllQuestions(req, res) {
     });
     //console.log({childData});
     Object.keys(childData).forEach(qId => {
-        getRes.forEach((que, index) => {
-            //console.log("QUES ID: ",que.id);
-            //console.log("Q ID: ",qId);
-            if (que.id == qId) {
-                //console.log("INDEX-", getRes[index].dataValues);
-                getRes[index].dataValues.nestedQue = childData[qId];
-            }
-        });
+      getRes.forEach((que, index) => {
+        //console.log("QUES ID: ",que.id);
+        //console.log("Q ID: ",qId);
+        if (que.id == qId) {
+          //console.log("INDEX-", getRes[index].dataValues);
+          getRes[index].dataValues.nestedQue = childData[qId];
+        }
+      });
     })
-    //console.log("GETRESP-", getRes);
+    console.log("GETRESP-", getRes);
     if (getRes === 500) {
       res.status(500).send({ message: "Error while retrieving the questions" });
     } else {
@@ -54,8 +54,8 @@ function getCountryNames(req, res) {
   const searchText = req.query.search;
   const whereCond = searchText
     ? {
-        [Op.or]: [{ name: { [Op.like]: "%" + searchText + "%" } }],
-      }
+      [Op.or]: [{ name: { [Op.like]: "%" + searchText + "%" } }],
+    }
     : {};
   (async () => {
     const countRes = await seq.seqFindAll(Country, ["id", "name"], whereCond);

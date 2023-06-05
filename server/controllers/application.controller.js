@@ -5,6 +5,7 @@ const Country = db.country;
 const Application = db.Application;
 const Answer = db.answers;
 const AppQuestion = db.app_question;
+const ApplicationInvite = db.application_invite;
 const seq = require("../config/sequelize.config");
 const { Op } = require("sequelize");
 
@@ -289,10 +290,25 @@ function draftApplication(req, res) {
     res.status(200).send({ message: "Application successfully drafted" });
   })();
 }
+
+// function sendInviteApplication(req,res){
+//     const user_id = req.body.user_id;
+//     console.log("userid-", user_id);
+//     const app_id = req.params.app_id;
+//     (async () => {
+
+//         for (let userID in user_id){
+//             console.log("inside");
+//             console.log(userID, user_id[userID]);
+//         }
+//         res.status(200).send({message:"Invitation has been sent to the collaborator"});
+//     })();
+// }
 module.exports = {
   getAllQuestions,
   getCountryNames,
   //getNestedQuestion,
   submitApplication,
   draftApplication,
+  //sendInviteApplication
 };

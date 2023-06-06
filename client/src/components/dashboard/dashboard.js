@@ -62,6 +62,7 @@ export default function Dashboard() {
           <TabPanel value={selectedTab} index={0}>
             <FilterContainer type="myapp" />
             <div className="applicationCardContainer">
+              {console.log(myAppData)}
               {myAppData.length > 0 ? myAppData.map((app, i) => (
                 <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit}>
                   <h2>{app.project_name}</h2>

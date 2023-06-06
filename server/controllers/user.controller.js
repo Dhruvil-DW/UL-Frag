@@ -12,12 +12,14 @@ function addProfileDetails(req, res) {
     //console(req.body);
     const userId = req.userdata.user_id;
     (async () => {
+        console.log('uSERS id',userId)
         const tokenData = {
-            user_id: userId,
+            id: userId,
             unique_id: "frag_usr_" + userId,
             role_id: 1,
             email: req.userdata.email
         };
+        console.log('token data - ',tokenData);
         const token = await generateToken(tokenData);
         const userData = {
             unique_id: "frag_usr_" + userId,

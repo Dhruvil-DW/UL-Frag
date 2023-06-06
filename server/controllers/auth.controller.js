@@ -2,10 +2,11 @@ const db = require('../models/index');
 const User = db.User;
 const generateToken = require('../config/jwt.config');
 const seq = require('../config/sequelize.config');
+const sendEmail = require('../config/mail.config');
 
 function sendOTP(req, res) {
     const email = req.body.email;
-    const otp = 0;
+    const otp = Math.floor(1000 + Math.random() * 9000);
 
     (async () => {
         const data = await seq.seqFindOne(User, ['id'], { email: email });
@@ -27,6 +28,8 @@ function sendOTP(req, res) {
                 return;
             }
         }
+        sendEmail([email], `OTP for Your Fragrance Login`,
+          `Your One Time Password (OTP) is <b>${otp}</b>.`)
         res.status(200).send({ message: "OTP send successfully" });
     })();
 }
@@ -56,6 +59,7 @@ function verifyOtp(req, res) {
 function resendOtp(req, res) {
     const email = req.body.email;
     //const newOtp = 0;
+    const otp = Math.floor(1000 + Math.random() * 9000);
 
     (async () => {
         const getRes = await seq.seqFindOne(User, ['email', 'otp', 'role_id'], { email: email });

@@ -39,7 +39,7 @@ export default function AddApplication() {
   const debouncedHandleScroll = debounce(handleScroll, 500);
 
   const handleNextPrevNav = (queNo, type) => {
-    console.log(queNo);
+    console.log('Questions = ',queNo);
     switch (type) {
       case 'next':
         setCurrentQue(queNo + 1);
@@ -124,22 +124,23 @@ export default function AddApplication() {
   }
 
   console.log("QUESTIONS: ", catWiseQues);
+  let count = 1;
   return (
     <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleNextPrevNav, handleAnswerChange }}>
       <main className="appFormContainer">
         <ErrorBoundary>
           <NavSideBar formRef={containerRef} activeQue={currentQue} />
         </ErrorBoundary>
-
+        
         <div className="formRelative">
           <ErrorBoundary>
             <section id="form" ref={containerRef} onScroll={debouncedHandleScroll}>
               {catWiseQues.map((cat, catIndex) => (
                 <Fragment key={cat.category_id}>
 
-                  {cat.category_id !== 1 && (<div className="pageWrapper">
+                  {cat.category_id !== 1 && (<div className="pageWrapper" id={count}>
                     <div className="pageContainer">
-                      <WelcomeScreen categoryId={cat.category_id} categoryName={cat.category_name} />
+                      <WelcomeScreen categoryId={cat.category_id} nav={count++} categoryName={cat.category_name} />
                       <div className="unilever-icon questionPage">
                         <UnileverIcon width="64px" />
                       </div>
@@ -147,9 +148,9 @@ export default function AddApplication() {
                   </div>)}
 
                   {cat.questions.map((que, questionIndex) => (
-                    <div className="pageWrapper" key={que.id} id={que.id}>
+                    <div className="pageWrapper" key={que.id} data-question-id={que.id} id={count}>
                       <div className="pageContainer">
-                        <QuestionType question={que} index={questionIndex} inputs={inputs} onChange={handleAnswerChange} onKeyUp={handleFocusNext} />
+                        <QuestionType question={que} nav={count++} index={questionIndex} inputs={inputs} onChange={handleAnswerChange} onKeyUp={handleFocusNext} />
                         <div className="unilever-icon questionPage">
                           <UnileverIcon width="64px" />
                         </div>
@@ -183,12 +184,13 @@ export default function AddApplication() {
 
 function getCatWiseQues(questions) {
   const result = [];
+  let count = 1;
   questions.forEach((que, index) => {
     const imgData = img_data[que.id];
     if (result[que.category.id - 1]) {
-      result[que.category.id - 1].questions = [...result[que.category.id - 1].questions, { ...que, imgData: imgData }];
+      result[que.category.id - 1].questions = [...result[que.category.id - 1].questions, { ...que, imgData: imgData, serial:count++ }];
     } else {
-      result[que.category.id - 1] = { category_id: que.category.id, category_name: que.category.name, questions: [{ ...que, imgData: imgData }] }
+      result[que.category.id - 1] = { category_id: que.category.id, category_name: que.category.name, questions: [{ ...que, imgData: imgData, serial:count++ }] }
     }
   });
   // console.log("Sidebar_CatWiseData: ", result);

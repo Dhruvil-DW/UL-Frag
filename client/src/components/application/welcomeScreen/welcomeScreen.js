@@ -56,7 +56,7 @@ const getData = {
   },
 }
 
-export default function WelcomeScreen({ categoryId, categoryName }) {
+export default function WelcomeScreen({ categoryId, nav, categoryName }) {
 
   const navigate = useNavigate();
 
@@ -75,10 +75,20 @@ export default function WelcomeScreen({ categoryId, categoryName }) {
         <p>{categoryName}</p>
         <h1 className="welcomeHeading welcomeTextColor">{getData[categoryName]['Title']}</h1>
         <div className="buttonContainer">
+        <a href={`#${(nav) - 1}`} className="navlink">
+          <Button variant="contained">Previous</Button>
+          </a>
+          <div className="horizontal_spacer"></div>
+          <a href={`#${(nav) + 1}`} className="navlink">
+          <Button variant="contained">Continue</Button>
+          </a>
+        </div>
+
+        {/* <div className="buttonContainer">
           <Button variant="contained" onClick={() => goToQuestion(getData[categoryName].linkPrevious)}>Previous</Button>
           <div className="horizontal_spacer"></div>
           <Button variant="contained" onClick={() => goToQuestion(getData[categoryName].linkNext)}>Continue</Button>
-        </div>
+        </div> */}
       </div>
     </div>
   )

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, Navigate, useParams } from 'react-router-dom'
-import { questionsData } from '../../utils/globalData/questionData';
+import { Link, useParams } from 'react-router-dom'
 import CategoryIcon from '../../assets/icons/categoryIcon';
 import UserIcon from '../../assets/icons/userIcon';
 import CalenderIcon from '../../assets/icons/calenderIcon';

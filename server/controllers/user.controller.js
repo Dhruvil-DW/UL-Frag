@@ -74,9 +74,9 @@ function getMyApplications(req, res) {
     const userId = req.userdata.user_id;
     (async () => {
         const applRes = await seq.seqFindAll(
-            Application, 
+            Application,
             ['id', 'project_name', 'application_status_id', 'user_id', 'status', 'updatedAt'], //Change the column updatedAt name if causes error here
-            { user_id: userId }, 
+            { user_id: userId },
             [
                 { model: ApplicationStatus, attributes: ['id', 'status'] },
                 { model: User, attributes: ['id', 'first_name', 'last_name', 'email'] },
@@ -101,25 +101,46 @@ function getApprovedApplications(req, res) {
     })();
 
 }
-function viewApplications(req,res){
+function viewApplications(req, res) {
     const app_id = req.params.app_id;
+    // (async () => {
+    // const appQues = [];
+    //    const appQuesRes = await seq.seqFindAll(AppQuestion, ['id', 'app_id', 'question_id'],{app_id:app_id});
+    //    console.log(appQuesRes);
+    //    appQuesRes.forEach((items)=> {
+    //     //console.log(items.dataValues.id);
+    //     appQues.push(items.dataValues.id);
+    //    });
+    //    //console.log(appQues);
+    //    //console.log(appQuesRes.dataValues);
+    //    const viewRes = await seq.seqFindAll(Answers, ['id', 'question_id', 'answer', 'app_question_id'], {app_question_id:appQues}, {model:Question, attributes:['id','question']});
+    //    //console.log("VIEWRES-", viewRes);
+    //    if(viewRes === 500){
+    //     res.status(500).send({message:"Error while retrieving the view applications"});
+    //     return;
+    //    }
+    //    res.status(200).send(viewRes); 
+    // })();
     (async () => {
-    const appQues = [];
-       const appQuesRes = await seq.seqFindAll(AppQuestion, ['id', 'app_id', 'question_id'],{app_id:app_id});
-       console.log(appQuesRes);
-       appQuesRes.forEach((items)=> {
-        //console.log(items.dataValues.id);
-        appQues.push(items.dataValues.id);
-       });
-       //console.log(appQues);
-       //console.log(appQuesRes.dataValues);
-       const viewRes = await seq.seqFindAll(Answers, ['id', 'question_id', 'answer', 'app_question_id'], {app_question_id:appQues}, {model:Question, attributes:['id','question']});
-       //console.log("VIEWRES-", viewRes);
-       if(viewRes === 500){
-        res.status(500).send({message:"Error while retrieving the view applications"});
-        return;
-       }
-       res.status(200).send(viewRes); 
+        const AppData = await seq.seqFindByPk(Application, app_id, ["id", "project_name", "application_status_id"],
+            [
+                { model: User, attributes: ['id', 'unique_id', "first_name", "last_name", "email", "contact_no"] },
+                { model: ApplicationStatus, attributes: ['id', 'status'] },
+            ]
+        );
+        if (AppData === 500) return res.status(500).send({ message: "Error while getting application" });
+
+        const AppQueRes = await seq.seqFindAll(AppQuestion, ["id", "question_id", "app_id"], { app_id: app_id },
+            [
+                { model: Answers, attributes: ["id", "app_question_id", "answer"] },
+                { model: Question, attributes: ["id", "category_id", "question_type_id", "question", "status", "parent_id"] },
+            ]
+        );
+        if (AppQueRes === 500) return res.status(500).send({ message: "Error while getting question-answers" });
+
+
+        // console.log("RESPONSE: ", );
+        res.status(200).send({ Application: AppData, QueAns: AppQueRes });
     })();
 }
 module.exports = {

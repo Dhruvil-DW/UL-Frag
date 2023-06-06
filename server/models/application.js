@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         through:models.app_question,
         foreignKey:'app_id'
       });
+      this.hasMany(models.app_question);
     }
   }
   Application.init({

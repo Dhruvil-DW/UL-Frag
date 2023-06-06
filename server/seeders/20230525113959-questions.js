@@ -37,9 +37,9 @@ const questions = [
   { category_id: 4, question: "Describe the experience you wish to give consumers with the new fragrance", question_type_id: 1, status: 1, parent_id: 0 },
   { category_id: 4, question: "Specific variant name & high resolution pack shot", question_type_id: 9, status: 1, parent_id: 0 },
   { category_id: 4, question: "Competitive benchmark-name & high resolution pack shot", question_type_id: 9, status: 1, parent_id: 0 },
-  { category_id: 4, question: "What is your project concept", question_type_id: 13, status: 1, parent_id: 0 },
-  { category_id: 4, question: "What are the claims you wish to make, for a new fragrances", question_type_id: 1, status: 1, parent_id: 0 },
-  { category_id: 4, question: "Do you plan to celebrate this claim within your comms", question_opt: '["TV", "Digital", "Pack", "Point of sale"]', question_type_id: 8, status: 1, parent_id: 0 },
+  { category_id: 4, question: "What is your project concept?", question_type_id: 13, status: 1, parent_id: 0 },
+  { category_id: 4, question: "What are the claims you wish to make, for a new fragrances?", question_type_id: 1, status: 1, parent_id: 0 },
+  { category_id: 4, question: "Do you plan to celebrate this claim within your comms?", question_opt: '["TV", "Digital", "Pack", "Point of sale"]', question_type_id: 8, status: 1, parent_id: 0 },
 ]
 module.exports = {
   async up(queryInterface, Sequelize) {

@@ -10,7 +10,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       project_name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true
       },
       user_id: {
         type: Sequelize.INTEGER

@@ -92,23 +92,21 @@ function getCountryNames(req, res) {
 //     }
 //   })();
 // }
-function submitApplication(req, res, type) {
+function submitApplication(req, res) {
   //console.log(req.body);
   const user_id = req.userdata.user_id;
+  console.log(user_id);
   let app_id = req.query.app_id;
   //console.log(app_id);
   const inputs = req.body.inputs;
   //console.log("INPUTS-", inputs);
   (async () => {
-    //let questionData = [];
-    // const quesData = await seq.seqFindAll(Question, ["question_type_id"]);
-    // const questionType = quesData.map((o) => {
-    //   return o.question_type_id;
-    // });
-    // console.log("QuestionType-", questionType);
-
-    //const quesTypeId = quesData.question_type_id;
-    //console.log(quesTypeId);
+    const projectName = await seq.seqFindOne(Application, ['project_name'], {project_name:req.body.project_name});
+    console.log(projectName);
+    if(projectName){
+        res.status(422).send({message:"Application name already exists"});
+        return;
+    }
     const appData = {
       project_name: req.body.project_name,
       application_status_id: 2,
@@ -291,6 +289,9 @@ function draftApplication(req, res) {
   })();
 }
 
+function editApplication(req,res){
+
+}
 module.exports = {
   getAllQuestions,
   getCountryNames,

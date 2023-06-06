@@ -3,9 +3,9 @@
 /** @type {import('sequelize-cli').Migration} */
 const categories = [
   {name: 'Overview'},
-  {name: 'Section 1'},
-  {name: 'Section 2'},
-  {name: 'Section 3'}
+  {name: 'About the Fragrance'}, // Section:1
+  {name: 'About the Consumers'}, // Section:2
+  {name: 'About the Investment'} // Section:3
 ]
 module.exports = {
   async up (queryInterface, Sequelize) {

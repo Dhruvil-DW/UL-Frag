@@ -8,7 +8,7 @@ export function useAxios() {
   const { authState } = useContext(authContext);
   const token = authState.token;
 
-  console.log(token);
+  // console.log(token);
 
   const getData = useCallback(
     (API, params = {}, thenFn, catchFn) => {

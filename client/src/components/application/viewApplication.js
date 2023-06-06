@@ -1,24 +1,30 @@
-import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import React, { Fragment, useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import CategoryIcon from '../../assets/icons/categoryIcon';
 import UserIcon from '../../assets/icons/userIcon';
 import CalenderIcon from '../../assets/icons/calenderIcon';
 import PageIcon from '../../assets/icons/pageIcon';
 import { useAxios } from '../../hooks/useAxios';
+import { formatDate } from '../../utils/globalFunctions/dateFns';
 
 export default function ViewApplication() {
   const { appId } = useParams();
   const { getData } = useAxios();
-  const [appData, setAppData] = useState([]);
+  const navigate = useNavigate();
+  const [appData, setAppData] = useState({});
+  const [queAns, setQueAns] = useState([]);
 
   function getAppQuestions() {
-    getData(`user/viewapplication/${appId}`, {});
+    getData(`user/viewapplication/${appId}`, {},
+      (data) => {
+        setAppData(data.Application);
+        setQueAns(data.QueAns);
+      },
+      (err) => {
+        navigate("/dashboard");
+      });
   }
-  useEffect(getAppQuestions, [getData, appId]);
-  console.log(appData);
-  // if (!appData) {
-  //   return <Navigate to='/dashboard' />
-  // }
+  useEffect(getAppQuestions, [navigate, getData, appId]);
 
   return (
     <div className='appFormContainer'>
@@ -30,29 +36,26 @@ export default function ViewApplication() {
               Dashboard
             </div>
           </Link>
-          <h2 style={{ textAlign: "center" }}>{appData.title ?? "N/A"}</h2>
-          <p className='viewSidebarIconText'><PageIcon />{appData.app_id ?? "N/A"}</p>
-          <p className='viewSidebarIconText'><UserIcon />{appData.name ?? "N/A"}</p>
-          <p className='viewSidebarIconText'><CalenderIcon />{appData.modifiedDate ?? "N/A"}</p>
+          <h2 style={{ textAlign: "center" }}>{appData.project_name ?? "N/A"}</h2>
+          <p className='viewSidebarIconText'><PageIcon />{appData.application_status?.status ?? "N/A"}</p>
+          <p className='viewSidebarIconText'><UserIcon />{`${appData.User?.first_name ?? "N/A"} ${appData.User?.last_name ?? ""}`}</p>
+          <p className='viewSidebarIconText'><CalenderIcon />{formatDate(appData.updated_at) ?? "N/A"}</p>
         </div>
       </div>
       <div className='QAWrapper'>
-        {appData.map((question, index) => (
-          question.question_type_id === 12
-            ? <NestedQueAns key={question.id} index={index + 1} que={question} appInputs={appData.inputs} />
-            : <QueAns key={question.id} index={index + 1} que={question} ansData={appData.inputs[question.id]} />
-        ))}
+        {queAns.map((qa, index) => <QueAns key={qa.id} index={index + 1} qa={qa} />)}
       </div>
     </div>
   )
 }
 
-function QueAns({ que, index, ansData }) {
+function QueAns({ qa, index }) {
+  // console.log("QA: ", qa);
   return (
     <div className='QAContainer'>
-      <h3>{index ? `${index}. ` : ""}{que.question}</h3>
+      <h3>{index ? `${index}. ` : ""}{qa.question?.question ?? "N/A"}</h3>
       <div className='answerContainer'>
-        <GetAnswer answer={ansData} queId={que.id} />
+        <GetAnswer qa={qa} />
       </div>
     </div>
   )
@@ -60,7 +63,7 @@ function QueAns({ que, index, ansData }) {
 
 function NestedQueAns({ que, index, appInputs }) {
   const childQue = que.nestedQue;
-  console.log(childQue);
+  // console.log(childQue);
 
   return (
     <div className='QAContainer'>
@@ -72,28 +75,51 @@ function NestedQueAns({ que, index, appInputs }) {
   )
 }
 
-function GetAnswer({ answer, queId }) {
-  if (typeof answer === 'string') {
-    return <p>{answer}</p>;
-  } else if (Array.isArray(answer)) {
-    return (
-      <ol>
-        {answer.map((ans, index) => <li key={index}>{ans}</li>)}
-      </ol>
-    )
-  } else if (typeof answer === 'object') {
-    switch (queId) {
-      case 1:
-        return <p>{answer.projectName ?? "N/A"}</p>
-      case 8:
+function GetAnswer({ qa }) {
+  // console.log("QA: ", qa);
+  switch (qa.question.question_type_id) {
+    case 1: // TextBox
+      // console.log(qa.answers);
+      return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>);
+
+    case 3: //Select Dropdown predefined
+    case 4: // Select Dropdown dynamic
+      // console.log(qa.answers);
+      return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
+
+    case 5: //Multiselect Dropdown predefined
+    case 6: // Multiselect dropdown dynamic
+      // console.log(qa.answers);
+      return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
+
+    case 14: //Select (RadioButton) with TextBox
+      return qa.answers.map((ans, i) => {
+        const ansObj = JSON.parse(ans.answer);
         return (
-          <div>
-            <img src={`/images/${answer.brand}`} alt="Brand" />
-            <p>{answer.desc}</p>
-          </div>
-        )
-      default:
-        return (<p>{JSON.stringify(answer)}</p>)
-    }
+          <Fragment key={i}>
+            <p>{ansObj.option}</p>
+            <p>{ansObj.projectName}</p>
+          </Fragment>)
+      });
+
+    case 7: // Picture Choice predefined
+      return qa.answers.map((ans, i) => {
+        const ansObj = JSON.parse(ans.answer);
+        return (
+          <Fragment key={i}>
+            <img src={`/images/${ansObj.brand}`} alt={ansObj.brand}/>
+            <p>{ansObj.desc}</p>
+          </Fragment>)
+      });
+
+    case 8: // Multiselect Picture Choice
+    case 10: // Single Choice predefinded
+    case 11: // Multiple Choice (Checkbox) predefined
+    case 15: // Confirm Checkbox
+    case 12: // Nested questions
+    case 2: // Date
+    case 9: // Add Multiple section Image Upload
+    default:
+      return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
   }
 }

@@ -57,7 +57,7 @@ export default function Dashboard() {
                 <MagnifierIcon fill="#002F98" />
               </InputAdornment>
             />
-            <Button variant="contained" color="secondary" onClick={() => navigate("/application")}>+ Create New Application</Button>
+            <Button variant="contained" color="secondary" onClick={() => navigate("/application")}>+ Create Application</Button>
           </div>
           <TabPanel value={selectedTab} index={0}>
             <FilterContainer type="myapp" />
@@ -81,7 +81,7 @@ export default function Dashboard() {
                   <div className={`appCardActionContainer ${hoverCardId === i ? "hovered" : ""}`}>
                     <img src="/images/icons/eye_round.svg" alt="view" onClick={() => navigate(`/application/view/${app.id}`)} />
                     <img src="/images/icons/copy_round.svg" alt="copy" />
-                    <img src="/images/icons/pencil_round.svg" alt="edit" onClick={() => navigate(`/application/edit/${app.id}`)} />
+                    {app.application_status_id === 1 && <img src="/images/icons/pencil_round.svg" alt="edit" onClick={() => navigate(`/application/edit/${app.id}`)} />}
                     <img src="/images/icons/invite_user.svg" alt="invite" />
                   </div>
                 </div>
@@ -109,8 +109,6 @@ export default function Dashboard() {
                   <div className={`appCardActionContainer ${hoverCardId === i ? "hovered" : ""}`}>
                     <img src="/images/icons/eye_round.svg" alt="view" />
                     <img src="/images/icons/copy_round.svg" alt="copy" />
-                    <img src="/images/icons/pencil_round.svg" alt="edit" />
-                    <img src="/images/icons/invite_user.svg" alt="invite" />
                   </div>
                 </div>
               )) : <p>No Application Found</p>}

@@ -2,6 +2,8 @@ import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
+import TooltipIcon from "../../../assets/icons/tooltipIcon";
+import Tooltip from "@mui/material/Tooltip";
 
 export default function CheckBoxConfirm({ question, nav, index, value = [], onKeyUp }) {
   const { handleNextPrevNav, handleAnswerChange } = useContext(ApplicationContext);
@@ -33,7 +35,14 @@ export default function CheckBoxConfirm({ question, nav, index, value = [], onKe
   
   return (
     <div className="questionContainer">
-      <h2 className="question">{question.question}</h2>
+      <h2 className="question">
+        {question.question}
+        <Tooltip className="tooltip" title={question.description} arrow placement="bottom-end">
+        <span style={{marginLeft:7}}>
+        <TooltipIcon/>
+        </span>
+      </Tooltip>
+      </h2>
       <FormGroup onChange={handleInputChange}>
         {question.question_opt.map((opt) => (
           <FormControlLabel key={opt} control={<Checkbox checked={Boolean(input.find(x => x === opt))} />} label={opt} name={opt} />

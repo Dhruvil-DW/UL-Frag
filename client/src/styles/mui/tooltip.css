@@ -1,0 +1,14 @@
+.MuiTooltip-popper .MuiTooltip-arrow {
+    color: #FEE300;
+}
+
+.MuiTooltip-popper .MuiTooltip-tooltip {
+    background-color: #FEE300;
+    font-family: Poppins;
+    color: black;
+    font-size: large;
+    max-width: 50vw;
+    padding: 2vw;
+    white-space: pre-line;
+    text-align: justify;
+}

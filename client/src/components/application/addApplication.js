@@ -140,7 +140,7 @@ export default function AddApplication() {
 
     console.log(final_inputs);
 
-    postData(`/application/draft?app_id=${appId}`, final_inputs, (data) => { navigate(`/application/drafted`, { state: { app_id: data.app_id } }) });
+    postData(`/application/draft?app_id=${appId ?? ""}`, final_inputs, (data) => { navigate(`/application/drafted`, { state: { app_id: data.app_id } }) });
   }
 
   console.log("QUESTIONS: ", catWiseQues);

@@ -3,6 +3,8 @@ import ArrowDownIcon from "../../../assets/icons/arrowDownIcon";
 import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
+import TooltipIcon from "../../../assets/icons/tooltipIcon";
+import Tooltip from "@mui/material/Tooltip";
 
 export default function TextBox({ question, nav, index, value = "", onKeyUp }) {
   const { handleNextPrevNav, handleAnswerChange } = useContext(ApplicationContext);
@@ -22,7 +24,14 @@ export default function TextBox({ question, nav, index, value = "", onKeyUp }) {
 }
   return (
     <div className="questionContainer">
-      <h2 className="question">{question.question}</h2>
+      <h2 className="question">
+        {question.question}
+      <Tooltip className="tooltip" title={question.description} placement="bottom-end" arrow>
+        <span style={{marginLeft:7}}>
+        <TooltipIcon/>
+        </span>
+      </Tooltip>
+      </h2>
       <TextField multiline rows={8} variant="outlined" color="secondary" placeholder="Enter your description here" value={input} onChange={(e) => setInput(e.target.value)} />
       <div className='navBtnCont'>
 

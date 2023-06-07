@@ -21,7 +21,7 @@ export default function NavSideBar({ activeQue }) {
   }
 
   console.log("accOpen: ", accOpen);
-
+  let count = 0;
   return (
     <aside className="sidebar">
       <div className="navLinkContainer">
@@ -34,17 +34,17 @@ export default function NavSideBar({ activeQue }) {
         {catWiseQues.map((cat, i) => (
           <Fragment key={i}>
             <Divider />
-            <button className="accordion" name={cat.category_id} onClick={handleAccToggle}>{getIconComp(cat)}{cat.category_name ?? "N/A"}<ArrowDownIcon className="accordionToggleIcon" /></button>
-            <div className={`panel ${accOpen[cat.category_id] ? 'open' : 'close'}`}>
+            <button className="accordion" id={count} name={cat.category_id} onClick={handleAccToggle}>{getIconComp(cat)}{cat.category_name ?? "N/A"}<ArrowDownIcon className="accordionToggleIcon" /></button>
+            <div data-id={count++} className={`panel ${accOpen[cat.category_id] ? 'open' : 'close'}`}>
               <Stepper nonLinear orientation="vertical">
                 {cat.questions.map((que) => (
                   <Step key={que.id}>
                     {/* <StepButton className={`navLink`} onClick={() => handleNextPrevNav(que.id, "fixed")} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
                       <div className="sidebarQueText">{que.question}</div>
                     </StepButton> */}
-                    <a href={`#${que.id}`} className="navlink">
+                    <a href={`#${count}`} className="navlink">
                     <StepButton className={`navLink`} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
-                      <div className="sidebarQueText">{que.question}</div>
+                      <div data-id={count++} data-que-id={que.id} className="sidebarQueText">{que.question}</div>
                     </StepButton>
                     </a>
                   </Step>

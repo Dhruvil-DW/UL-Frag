@@ -33,7 +33,7 @@ const questions = [
 
   // Category:- Section 3
   { category_id: 4, question: "What is the investment you are wanting to make?", question_type_id: 10, question_opt: '["Incremental", "At current level", "Below current level"]', status: 1, parent_id: 0 },
-  { category_id: 4, question: "How long do you plan to sustain the investment before expecting an optimization?", question_opt: '["Only for launch phase(3 to 6 months)", "Beyond for launch phase(6 to 24 months)", "Any other"]', question_type_id: 10, status: 1, parent_id: 0 },
+  { category_id: 4, question: "How long do you plan to sustain the investment before expecting an optimization?", question_opt: '["Only for launch phase(3 to 6 months)", "Beyond launch phase(6 to 24 months)", "Any other"]', question_type_id: 10, status: 1, parent_id: 0 },
   { category_id: 4, question: "Describe the experience you wish to give consumers with the new fragrance", question_type_id: 1, status: 1, parent_id: 0 },
   { category_id: 4, question: "Specific variant name & high resolution pack shot", question_type_id: 9, status: 1, parent_id: 0 },
   { category_id: 4, question: "Competitive benchmark-name & high resolution pack shot", question_type_id: 9, status: 1, parent_id: 0 },

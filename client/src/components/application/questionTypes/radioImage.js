@@ -3,7 +3,7 @@ import { ApplicationContext } from "../addApplication";
 import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
 
-export default function RadioImage({ question, index, value = {}, onKeyUp }) {
+export default function RadioImage({ question, nav, index, value = {}, onKeyUp }) {
   const { handleNextPrevNav, handleAnswerChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const defferedInput = useDeferredValue(input);
@@ -38,8 +38,12 @@ export default function RadioImage({ question, index, value = {}, onKeyUp }) {
       </div>
 
       <div className='navBtnCont'>
-        <div className="prevBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'prev')}><ArrowLeftRoundIcon /></div>
-        <div className="nextBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'next')}><ArrowLeftRoundIcon /></div>
+        <a href={`#${(nav) - 1}`} className="navlink">
+          <div className="prevBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'prev')}><ArrowLeftRoundIcon /></div>
+        </a>
+        <a href={`#${(nav) + 1}`} className="navlink">
+          <div className="nextBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'next')}><ArrowLeftRoundIcon /></div>
+        </a>
       </div>
     </div>
   )

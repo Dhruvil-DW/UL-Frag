@@ -6,7 +6,7 @@ import ArrowDownIcon from "../../../assets/icons/arrowDownIcon";
 import { showPickerOnFocus } from "../../../utils/globalFunctions/showPickerOnFocus";
 // import PlusRoundIcon from "../../../assets/icons/plusRoundIcon";
 
-export default function NestedQuestion({ question, index, onChange, onDateSelect, inputs = {}, onKeyUp }) {
+export default function NestedQuestion({ question, nav, index, onChange, onDateSelect, inputs = {}, onKeyUp }) {
   const { handleNextPrevNav } = useContext(ApplicationContext);
   // console.log(question);
   // console.log(childQuestionData[question.id]);
@@ -60,8 +60,12 @@ export default function NestedQuestion({ question, index, onChange, onDateSelect
         </div>
       </div>
       <div className='navBtnCont'>
-        <div className="prevBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'prev')}><ArrowLeftRoundIcon /></div>
-        <div className="nextBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'next')}><ArrowLeftRoundIcon /></div>
+        <a href={`#${(nav) - 1}`} className="navlink">
+          <div className="prevBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'prev')}><ArrowLeftRoundIcon /></div>
+        </a>
+        <a href={`#${(nav) + 1}`} className="navlink">
+          <div className="nextBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'next')}><ArrowLeftRoundIcon /></div>
+        </a>
       </div>
     </div>
   )

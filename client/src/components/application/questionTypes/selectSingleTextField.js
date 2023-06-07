@@ -4,7 +4,7 @@ import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 
-export default function SelectSingleWithTextStatic({ question, index, value = {}, onKeyUp }) {
+export default function SelectSingleWithTextStatic({ question, nav, index, value = {}, onKeyUp }) {
   const { handleNextPrevNav, handleAnswerChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const defferedInput = useDeferredValue(input);
@@ -35,8 +35,12 @@ export default function SelectSingleWithTextStatic({ question, index, value = {}
       />
       <TextField variant="outlined" color="secondary" placeholder="Enter Project Name" name="projectName" value={input.projectName ?? ""} onChange={(e) => setInput(prevInput => ({ ...prevInput, [e.target.name]: e.target.value }))} disabled={!Boolean(input.option)} onKeyUp={onKeyUp} />
       <div className='navBtnCont'>
-        <div className="prevBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'prev')}><ArrowLeftRoundIcon /></div>
-        <div className="nextBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'next')}><ArrowLeftRoundIcon /></div>
+        <a href={`#${(nav) - 1}`} className="navlink">
+          <div className="prevBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'prev')}><ArrowLeftRoundIcon /></div>
+        </a>
+        <a href={`#${(nav) + 1}`} className="navlink">
+          <div className="nextBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'next')}><ArrowLeftRoundIcon /></div>
+        </a>
       </div>
     </div>
   )

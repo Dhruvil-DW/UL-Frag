@@ -4,7 +4,7 @@ import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 
-export default function SelectSingleStatic({ question, index, value = null, onKeyUp }) {
+export default function SelectSingleStatic({ question, nav, index, value = null, onKeyUp }) {
   const { handleNextPrevNav, handleAnswerChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const defferInput = useDeferredValue(input);
@@ -16,7 +16,7 @@ export default function SelectSingleStatic({ question, index, value = null, onKe
   useEffect(() => {
     handleAnswerChange(question.id, defferInput);
   }, [handleAnswerChange, question.id, defferInput]);
-
+ console.log('singleMulti',nav);
   return (
     <div className="questionContainer">
       <h2 className="question">{question.question}</h2>
@@ -30,8 +30,12 @@ export default function SelectSingleStatic({ question, index, value = null, onKe
         onKeyUp={onKeyUp}
       />
       <div className='navBtnCont'>
-        <div className="prevBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'prev')}><ArrowLeftRoundIcon /></div>
-        <div className="nextBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'next')}><ArrowLeftRoundIcon /></div>
+        <a href={`#${(nav) - 1}`} className="navlink">
+          <div className="prevBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'prev')}><ArrowLeftRoundIcon /></div>
+        </a>
+        <a href={`#${(nav) + 1}`} className="navlink">
+          <div className="nextBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'next')}><ArrowLeftRoundIcon /></div>
+        </a>
       </div>
     </div>
   )

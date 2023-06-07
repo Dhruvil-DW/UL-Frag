@@ -8,7 +8,7 @@ import SelectSingleStatic from "./selectSingleStatic";
 import SelectSingleWithTextStatic from "./selectSingleTextField";
 import TextBox from "./textBox";
 
-export default function QuestionType({ question, index, inputs, onChange, onKeyUp }) {
+export default function QuestionType({ question, nav, index, inputs, onChange, onKeyUp }) {
 
   function handleNestedDateSelection(value, id, index) {
     //Used in: NestedQuestions 
@@ -39,34 +39,34 @@ export default function QuestionType({ question, index, inputs, onChange, onKeyU
   // console.log(question);
   switch (question.question_type_id) {
     case 1: // TextBox
-      return <TextBox question={question} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
+      return <TextBox question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
 
     case 3: //Select Dropdown predefined
     case 4: // Select Dropdown dynamic
-      return <SelectSingleStatic question={question} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
+      return <SelectSingleStatic question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
 
     case 5: //Multiselect Dropdown predefined
     case 6: // Multiselect dropdown dynamic
-      return <SelectMultiStatic question={question} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
+      return <SelectMultiStatic question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
 
     case 7: // Picture Choice predefined
-      return <RadioImage question={question} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
+      return <RadioImage question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
 
     case 8: // Multiselect Picture Choice
-      return <CheckBoxImage question={question} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
+      return <CheckBoxImage question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
 
     case 10: // Single Choice predefinded
-      return <RadioText question={question} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
+      return <RadioText question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
 
     case 11: // Multiple Choice (Checkbox) predefined
     case 15: // Confirm Checkbox
-      return <CheckBoxConfirm question={question} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
+      return <CheckBoxConfirm question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
 
     case 12: // Nested questions
-      return <NestedQuestion question={question} index={index} inputs={inputs} onChange={handleNestedAutoCompleteChange} onDateSelect={handleNestedDateSelection} onKeyUp={onKeyUp} />
+      return <NestedQuestion question={question} nav={nav} index={index} inputs={inputs} onChange={handleNestedAutoCompleteChange} onDateSelect={handleNestedDateSelection} onKeyUp={onKeyUp} />
 
     case 14: //Select (RadioButton) with TextBox
-      return <SelectSingleWithTextStatic question={question} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
+      return <SelectSingleWithTextStatic question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
 
 
     case 2: // Date

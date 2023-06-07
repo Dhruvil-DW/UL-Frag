@@ -1,9 +1,9 @@
-import { Button, Divider, Step, StepButton, StepIcon, Stepper } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
+// import { useNavigate } from "react-router-dom";
 
 const getData = {
 
-  'Section 1': {
+  'About the Fragrance': {
     Title: "Tell us more about the fragrances you want to create",
     style: {background:"#FFBCD8"}, 
     ImgData: [
@@ -19,7 +19,7 @@ const getData = {
     linkPrevious : "/application/new#15",
     linkNext : "/application/new#16",
   },
-  'Section 2': {
+  'About the Consumers': {
     Title: "Tell us more about consumers",
     style: {background:"#F8E075"}, 
     ImgData: [
@@ -35,7 +35,7 @@ const getData = {
     linkPrevious : "/application/new#19",
     linkNext : "/application/new#20",
   },
-  'Section 3': {
+  'About the Investment': {
     Title: "Investment Validation",
     style: {background:"#8FD7F6"}, 
     ImgData: [
@@ -56,13 +56,13 @@ const getData = {
   },
 }
 
-export default function WelcomeScreen({ categoryId, categoryName }) {
+export default function WelcomeScreen({ categoryId, nav, categoryName }) {
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  function goToQuestion(link){
-    navigate(link)
-  }
+  // function goToQuestion(link){
+  //   navigate(link)
+  // }
 
   return (
     <div className="welcomeScreenContainer" style={getData[categoryName].style}>
@@ -75,10 +75,20 @@ export default function WelcomeScreen({ categoryId, categoryName }) {
         <p>{categoryName}</p>
         <h1 className="welcomeHeading welcomeTextColor">{getData[categoryName]['Title']}</h1>
         <div className="buttonContainer">
+        <a href={`#${(nav) - 1}`} className="navlink">
+          <Button variant="contained">Previous</Button>
+          </a>
+          <div className="horizontal_spacer"></div>
+          <a href={`#${(nav) + 1}`} className="navlink">
+          <Button variant="contained">Continue</Button>
+          </a>
+        </div>
+
+        {/* <div className="buttonContainer">
           <Button variant="contained" onClick={() => goToQuestion(getData[categoryName].linkPrevious)}>Previous</Button>
           <div className="horizontal_spacer"></div>
           <Button variant="contained" onClick={() => goToQuestion(getData[categoryName].linkNext)}>Continue</Button>
-        </div>
+        </div> */}
       </div>
     </div>
   )

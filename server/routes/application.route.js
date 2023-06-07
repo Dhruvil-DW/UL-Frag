@@ -8,5 +8,7 @@ router.get('/questions/getall', authMiddleware.checkAuth, applicationController.
 router.get('/getcountry', authMiddleware.checkAuth, applicationController.getCountryNames);
 //router.get('/get/nestedquestion/:parent_id', authMiddleware.checkAuth, applicationController.getNestedQuestion);
 
+router.post('/submit', authMiddleware.checkAuth, applicationController.submitApplication)
+router.post('/draft', authMiddleware.checkAuth, applicationController.draftApplication);
 
 module.exports = router;

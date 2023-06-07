@@ -21,6 +21,15 @@ export default function CheckBoxImage({ question, nav, index, value = [], onKeyU
     handleAnswerChange(question.id, defferInput);
   }, [handleAnswerChange, question.id, defferInput]);
 
+  function BasicExample(nav) {
+    const element = document.getElementById(nav);
+    console.log('new nav', nav);
+    if (element) {
+      // 👇 Will scroll smoothly to the top of the next section
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
   return (
     <div className="questionContainer">
       <h2 className="question">{question.question}</h2>
@@ -36,12 +45,8 @@ export default function CheckBoxImage({ question, nav, index, value = [], onKeyU
         ))}
       </div>
       <div className='navBtnCont'>
-        <a href={`#${(nav) - 1}`} className="navlink">
-          <div className="prevBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'prev')}><ArrowLeftRoundIcon /></div>
-        </a>
-        <a href={`#${(nav) + 1}`} className="navlink">
-          <div className="nextBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'next')}><ArrowLeftRoundIcon /></div>
-        </a>
+          <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>
+          <div className="nextBtn" tabIndex={-1} onClick={() => BasicExample((nav) + 1)}><ArrowLeftRoundIcon /></div>
       </div>
     </div>
   )

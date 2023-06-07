@@ -30,29 +30,29 @@ export default function AddApplication() {
   const [currentQue, setCurrentQue] = useState(0);
   // const [activeSection, setActiveSection] = useState(0);
 
-  const handleScroll = useCallback((e) => {
-    const { clientHeight, scrollTop } = e.target;
-    console.log("SCROLLING...", { clientHeight, scrollTop });
-    setCurrentQue(Math.round(scrollTop / clientHeight));
-  }, [])
+  // const handleScroll = useCallback((e) => {
+  //   const { clientHeight, scrollTop } = e.target;
+  //   console.log("SCROLLING...", { clientHeight, scrollTop });
+  //   setCurrentQue(Math.round(scrollTop / clientHeight));
+  // }, [])
 
-  const debouncedHandleScroll = debounce(handleScroll, 500);
+  // const debouncedHandleScroll = debounce(handleScroll, 500);
 
   const handleNextPrevNav = (queNo, type) => {
-    console.log('Questions = ',queNo);
-    switch (type) {
-      case 'next':
-        setCurrentQue(queNo + 1);
-        break;
-      case 'prev':
-        setCurrentQue(queNo - 1);
-        break;
-      case 'fixed':
-        setCurrentQue(queNo);
-        break;
-      default:
-        return;
-    }
+  //   console.log('Questions = ',queNo);
+  //   switch (type) {
+  //     case 'next':
+  //       setCurrentQue(queNo + 1);
+  //       break;
+  //     case 'prev':
+  //       setCurrentQue(queNo - 1);
+  //       break;
+  //     case 'fixed':
+  //       setCurrentQue(queNo);
+  //       break;
+  //     default:
+  //       return;
+  //   }
   }
 
   // useEffect(() => {
@@ -102,7 +102,7 @@ export default function AddApplication() {
     };
 
     console.log(final_inputs);
-
+    
     postData(`/application/submit`, final_inputs, (data) => { navigate("/application/summary", { state: { app_id: data.app_id } }) });
 
     //API CALLS
@@ -148,7 +148,8 @@ export default function AddApplication() {
         
         <div className="formRelative">
           <ErrorBoundary>
-            <section id="form" ref={containerRef} onScroll={debouncedHandleScroll}>
+            {/* <section id="form" ref={containerRef} onScroll={debouncedHandleScroll}> */}
+            <section id="form" ref={containerRef} >
               {catWiseQues.map((cat, catIndex) => (
                 <Fragment key={cat.category_id}>
 
@@ -162,7 +163,7 @@ export default function AddApplication() {
                   </div>)}
 
                   {cat.questions.map((que, questionIndex) => (
-                    <div className="pageWrapper" key={que.id} data-question-id={que.id} id={count}>
+                    <div className="pageWrapper" key={que.id} data-que-type={que.question_type_id} data-que-id={que.id} id={count}>
                       <div className="pageContainer">
                         <QuestionType question={que} nav={count++} index={questionIndex} inputs={inputs} onChange={handleAnswerChange} onKeyUp={handleFocusNext} />
                         <div className="unilever-icon questionPage">

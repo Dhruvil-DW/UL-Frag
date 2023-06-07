@@ -20,6 +20,14 @@ export default function NavSideBar({ activeQue }) {
     setAccOpen(prevState => ({ ...prevState, [name]: !prevState[name] }))
   }
 
+  function BasicExample(nav) {
+    const element = document.getElementById(nav);
+    console.log('new nav', nav);
+    console.log('element', element)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+}
   console.log("accOpen: ", accOpen);
   let count = 0;
   return (
@@ -34,7 +42,7 @@ export default function NavSideBar({ activeQue }) {
         {catWiseQues.map((cat, i) => (
           <Fragment key={i}>
             <Divider />
-            <button className="accordion" id={count} name={cat.category_id} onClick={handleAccToggle}>{getIconComp(cat)}{cat.category_name ?? "N/A"}<ArrowDownIcon className="accordionToggleIcon" /></button>
+            <button className="accordion" data-id={count} name={cat.category_id} onClick={handleAccToggle}>{getIconComp(cat)}{cat.category_name ?? "N/A"}<ArrowDownIcon className="accordionToggleIcon" /></button>
             <div data-id={count++} className={`panel ${accOpen[cat.category_id] ? 'open' : 'close'}`}>
               <Stepper nonLinear orientation="vertical">
                 {cat.questions.map((que) => (
@@ -43,7 +51,7 @@ export default function NavSideBar({ activeQue }) {
                       <div className="sidebarQueText">{que.question}</div>
                     </StepButton> */}
                     <a href={`#${count}`} className="navlink">
-                    <StepButton className={`navLink`} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
+                    <StepButton className={`navLink`} onClick={() => BasicExample(count)} data-id={count} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
                       <div data-id={count++} data-que-id={que.id} className="sidebarQueText">{que.question}</div>
                     </StepButton>
                     </a>

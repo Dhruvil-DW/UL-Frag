@@ -17,6 +17,14 @@ export default function SelectSingleStatic({ question, nav, index, value = null,
     handleAnswerChange(question.id, defferInput);
   }, [handleAnswerChange, question.id, defferInput]);
  console.log('singleMulti',nav);
+
+ function BasicExample(nav) {
+  const element = document.getElementById(nav);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
   return (
     <div className="questionContainer">
       <h2 className="question">{question.question}</h2>
@@ -30,12 +38,12 @@ export default function SelectSingleStatic({ question, nav, index, value = null,
         onKeyUp={onKeyUp}
       />
       <div className='navBtnCont'>
-        <a href={`#${(nav) - 1}`} className="navlink">
-          <div className="prevBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'prev')}><ArrowLeftRoundIcon /></div>
-        </a>
-        <a href={`#${(nav) + 1}`} className="navlink">
-          <div className="nextBtn" tabIndex={-1} onClick={() => handleNextPrevNav(index, 'next')}><ArrowLeftRoundIcon /></div>
-        </a>
+        {/* <a href={`#${(nav) - 1}`} className="navlink"> */}
+          <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>
+        {/* </a> */}
+        {/* <a href={`#${(nav) + 1}`} className="navlink"> */}
+          <div className="nextBtn" tabIndex={-1} onClick={() => BasicExample((nav) + 1)}><ArrowLeftRoundIcon /></div>
+        {/* </a> */}
       </div>
     </div>
   )

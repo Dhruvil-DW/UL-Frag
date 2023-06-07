@@ -1,0 +1,47 @@
+.uploadWrapper {
+    width: min(100%, 450px);
+  }
+  .uploadWrapper .label {
+    margin-bottom: 16px;
+    font-size: 1rem;
+    color: var(--primary);
+  }
+  .uploadWrapper .label span {
+    color: red;
+  }
+  .uploadWrapper .dragDropArea {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+    min-height: 400px;
+    /* width: 400px; */
+    padding: 16px;
+    background: var(--bg-body);
+    border: 2px dashed var(--grey-84);
+  }
+  
+  .uploadedImgContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 24px;
+    color: hsl(0, 0%, 33%);
+    font-size: 14px;
+  }
+  .uploadedImgContainer > div {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+  
+  .uploadWrapper .infoText {
+    color: hsl(0, 0%, 40%);
+    font-size: 12px;
+  }
+  

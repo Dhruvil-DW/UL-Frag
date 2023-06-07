@@ -18,6 +18,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:'app_id'
       });
       this.hasMany(models.app_question);
+      this.belongsToMany(models.User,{
+        through: models.application_invite,
+        foreignKey: 'app_id'
+      }
+      );
     }
   }
   Application.init({

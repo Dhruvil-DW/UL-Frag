@@ -9,11 +9,25 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.Application);
+      this.belongsTo(models.User);
     }
   }
   application_invite.init({
-    app_id: DataTypes.INTEGER,
-    user_id: DataTypes.INTEGER
+    app_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Application',
+        key: 'app_id'
+      }
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'User',
+        key: 'user_id'
+      }
+    },
   }, {
     sequelize,
     modelName: 'application_invite',

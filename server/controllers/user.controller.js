@@ -5,6 +5,7 @@ const ApplicationStatus = db.application_status;
 const AppQuestion = db.app_question;
 const Question = db.question;
 const Answers = db.answers;
+const ApplicationInvite = db.application_invite;
 const generateToken = require('../config/jwt.config');
 const seq = require('../config/sequelize.config');
 const { Op } = require("sequelize");
@@ -12,8 +13,9 @@ const { Op } = require("sequelize");
 function addProfileDetails(req, res) {
     //console(req.body);
     const userId = req.userdata.user_id;
+    //console.log(userId);
     (async () => {
-        console.log('uSERS id',userId)
+        //console.log('uSERS id',userId)
         const tokenData = {
             id: userId,
             unique_id: "frag_usr_" + userId,
@@ -26,7 +28,7 @@ function addProfileDetails(req, res) {
             unique_id: "frag_usr_" + userId,
             first_name: req.body.first_name,
             last_name: req.body.last_name,
-            contact_no: req.body.contact_no,
+            // contact_no: req.body.contact_no,
             role_id: 1,
             token: token
         };
@@ -46,8 +48,9 @@ function addProfileDetails(req, res) {
 }
 
 function getProfileDetails(req, res) {
+    //console.log(req.userdata.user_id);
     (async () => {
-        const userRes = await seq.seqFindByPk(User, req.userdata.user_id, ['id', 'unique_id', 'first_name', 'last_name', 'email', 'contact_no', 'role_id']);
+        const userRes = await seq.seqFindByPk(User, req.userdata.user_id, ['id', 'unique_id', 'first_name', 'last_name', 'email', 'role_id']);
         if (userRes === 500) {
             res.status(500).send({ message: "Error while getting profile details" });
             return;
@@ -62,7 +65,7 @@ function updateProfile(req, res) {
         const userData = {
             first_name: req.body.first_name,
             last_name: req.body.last_name,
-            contact_no: req.body.contact_no,
+            // contact_no: req.body.contact_no,
         }
         const updateRes = await seq.seqUpdate(User, userData, { id: userId });
         if (updateRes === 500) {
@@ -109,7 +112,7 @@ function viewApplications(req, res) {
     (async () => {
         const AppData = await seq.seqFindByPk(Application, app_id, ["id", "project_name", "application_status_id", "updated_at"],
             [
-                { model: User, attributes: ['id', 'unique_id', "first_name", "last_name", "email", "contact_no"] },
+                { model: User, attributes: ['id', 'unique_id', "first_name", "last_name", "email"] },
                 { model: ApplicationStatus, attributes: ['id', 'status'] },
             ]
         );
@@ -121,11 +124,44 @@ function viewApplications(req, res) {
                 { model: Answers, attributes: ["id", "app_question_id", "answer"] },
             ]
         );
-
         // console.log("RESPONSE: ", );
         res.status(200).send({ Application: AppData, QueAns: AppQueRes });
     })();
 }
+function sendInviteApplication(req,res){
+    const userId = req.userdata.user_id;
+    //console.log(userId);
+    const app_id = req.params.app_id;
+    //console.log(app_id);
+    (async() => { 
+            const inviteRes = await seq.seqBulkCreate(ApplicationInvite, [{app_id:app_id, user_id:userId}]);
+            //console.log("INVITERESP-", inviteRes);
+            if(inviteRes === 500){
+                res.status(500).send({message:'Error while sending the invite'});
+            }
+        res.status(200).send({message:'Application invite sent successfully'});
+    })();
+}
+
+function getInvitedApplications(req,res){
+    const user_id = req.userdata.user_id;
+    //console.log(user_id);
+    (async () => {
+        const getInviteRes = await seq.seqFindAll(ApplicationInvite, ['id', 'app_id', 'user_id'],{user_id:user_id}, {model:User, attributes:['id', 'first_name', 'last_name', 'email']});
+        //console.log(getInviteRes);
+        if(getInviteRes === 500){
+            res.status(500).send({message:"Error while retrieving invited applications"});
+        }
+        res.status(200).send(getInviteRes);
+    })();
+}
 module.exports = {
-    addProfileDetails, getProfileDetails, updateProfile, getMyApplications, getApprovedApplications, viewApplications
+    addProfileDetails, 
+    getProfileDetails, 
+    updateProfile, 
+    getMyApplications, 
+    getApprovedApplications, 
+    viewApplications, 
+    sendInviteApplication,
+    getInvitedApplications
 }

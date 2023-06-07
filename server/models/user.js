@@ -12,6 +12,11 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.hasMany(models.Application);
+      this.belongsToMany(models.Application,{
+        through: models.application_invite,
+        foreignKey: 'user_id'
+      }
+      );
     }
   }
   User.init({

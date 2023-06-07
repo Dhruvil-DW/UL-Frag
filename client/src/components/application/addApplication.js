@@ -5,13 +5,14 @@ import NavSideBar from "./navSideBar";
 import debounce from "../../utils/globalFunctions/debounce";
 // import { useParams } from "react-router";
 import UnileverIcon from "../../assets/icons/unileverIcon";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ErrorBoundary from "../../config/errorBoundary/ErrorBoundary";
 import WelcomeScreen from "./welcomeScreen/welcomeScreen";
 import { useAxios } from "../../hooks/useAxios";
 export const ApplicationContext = createContext();
 
 export default function AddApplication() {
+  const { appId } = useParams();
   const navigate = useNavigate();
   const [catWiseQues, setCatWiseQues] = useState([]);
   const [inputs, setInputs] = useState({});
@@ -19,13 +20,18 @@ export default function AddApplication() {
   const { getData, postData } = useAxios();
 
   function getQuestions() {
+    if (appId) {
+      getData(`/application/getdraft/${appId}`, {}, (data) => {
+        setInputs(data.inputs);
+      });
+    }
     getData(`/application/questions/getall`, {}, (data) => {
       const newData = getCatWiseQues(data);
       setCatWiseQues(newData);
     });
   }
 
-  useEffect(getQuestions, [getData]);
+  useEffect(getQuestions, [getData, appId]);
   // const { appId } = useParams();
   const [currentQue, setCurrentQue] = useState(0);
   // const [activeSection, setActiveSection] = useState(0);
@@ -134,7 +140,7 @@ export default function AddApplication() {
 
     console.log(final_inputs);
 
-    // postData(`/application/draft`, final_inputs, (data) => { navigate("/application/drafted", { state: { app_id: data.app_id } }) });
+    postData(`/application/draft?app_id=${appId}`, final_inputs, (data) => { navigate(`/application/drafted`, { state: { app_id: data.app_id } }) });
   }
 
   console.log("QUESTIONS: ", catWiseQues);
@@ -145,7 +151,7 @@ export default function AddApplication() {
         <ErrorBoundary>
           <NavSideBar formRef={containerRef} activeQue={currentQue} />
         </ErrorBoundary>
-        
+
         <div className="formRelative">
           <ErrorBoundary>
             {/* <section id="form" ref={containerRef} onScroll={debouncedHandleScroll}> */}
@@ -203,9 +209,9 @@ function getCatWiseQues(questions) {
   questions.forEach((que, index) => {
     const imgData = img_data[que.id];
     if (result[que.category.id - 1]) {
-      result[que.category.id - 1].questions = [...result[que.category.id - 1].questions, { ...que, imgData: imgData, serial:count++ }];
+      result[que.category.id - 1].questions = [...result[que.category.id - 1].questions, { ...que, imgData: imgData, serial: count++ }];
     } else {
-      result[que.category.id - 1] = { category_id: que.category.id, category_name: que.category.name, questions: [{ ...que, imgData: imgData, serial:count++ }] }
+      result[que.category.id - 1] = { category_id: que.category.id, category_name: que.category.name, questions: [{ ...que, imgData: imgData, serial: count++ }] }
     }
   });
   // console.log("Sidebar_CatWiseData: ", result);

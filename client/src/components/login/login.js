@@ -50,7 +50,7 @@ export default function Login() {
   }
 
   function handleKeyUp(event) {
-    console.log("KEY_UP...", event);
+    // console.log("KEY_UP...", event);
     const key = event.key;
     const name = event.target.name;
 

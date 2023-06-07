@@ -22,7 +22,7 @@ function addProfileDetails(req, res) {
             role_id: 1,
             email: req.userdata.email
         };
-        console.log('token data - ',tokenData);
+        console.log('token data - ', tokenData);
         const token = await generateToken(tokenData);
         const userData = {
             unique_id: "frag_usr_" + userId,
@@ -86,7 +86,30 @@ function getMyApplications(req, res) {
             [
                 { model: ApplicationStatus, attributes: ['id', 'status'] },
                 { model: User, attributes: ['id', 'first_name', 'last_name', 'email'] },
-            ]
+            ],
+            [['updatedAt', 'DESC']]
+        );
+        if (applRes === 500) {
+            res.status(500).send({ message: 'Error while retrieving applications' });
+            return;
+        }
+        res.status(200).send(applRes);
+    })();
+}
+
+function getPendingApplications(req, res) {
+    const role_id = req.userdata.role_id;
+    if(role_id !== 2) return res.status(401).send({ message: "Unauthorised user"});
+    (async () => {
+        const applRes = await seq.seqFindAll(
+            Application,
+            ['id', 'project_name', 'application_status_id', 'user_id', 'status', 'updatedAt'], //Change the column updatedAt name if causes error here
+            { application_status_id: 2 },
+            [
+                { model: ApplicationStatus, attributes: ['id', 'status'] },
+                { model: User, attributes: ['id', 'first_name', 'last_name', 'email'] },
+            ],
+            [['updatedAt', 'DESC']]
         );
         if (applRes === 500) {
             res.status(500).send({ message: 'Error while retrieving applications' });
@@ -98,7 +121,10 @@ function getMyApplications(req, res) {
 
 function getApprovedApplications(req, res) {
     (async () => {
-        const approveRes = await seq.seqFindAll(Application, ['id', 'project_name', 'application_status_id', 'user_id', 'status'], { application_status_id: 3 }, { model: ApplicationStatus, attributes: ['id', 'status'] });
+        const approveRes = await seq.seqFindAll(Application, ['id', 'project_name', 'application_status_id', 'user_id', 'status'], { application_status_id: 3 },
+            { model: ApplicationStatus, attributes: ['id', 'status'] },
+            [['updatedAt', 'DESC']]
+        );
         if (approveRes === 500) {
             res.status(500).send({ message: "Error while retrieving the list of approved applications" });
             return;
@@ -159,7 +185,8 @@ module.exports = {
     addProfileDetails, 
     getProfileDetails, 
     updateProfile, 
-    getMyApplications, 
+    getMyApplications,
+    getPendingApplications, 
     getApprovedApplications, 
     viewApplications, 
     sendInviteApplication,

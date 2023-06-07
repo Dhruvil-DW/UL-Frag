@@ -32,6 +32,7 @@ export default function App() {
               <Route path="summary" element={<SubmitApplication />}/>
               <Route path="drafted" element={<DraftApplication />}/>
               <Route path="view/:appId" element={<ViewApplication />} />
+              <Route path="edit/:appId" element={<AddApplication />} />
             </Route>
           </Routes>
         </BrowserRouter>

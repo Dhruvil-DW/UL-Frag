@@ -8,12 +8,14 @@ import { useAxios } from '../../hooks/useAxios';
 import { formatDate } from '../../utils/globalFunctions/dateFns';
 import { Button } from '@mui/material';
 import { authContext } from '../../context/authContext';
+import { promptActions, promptContext } from '../../context/promptContext';
 
 export default function ViewApplication() {
   const { appId } = useParams();
   const { getData, updateData } = useAxios();
   const navigate = useNavigate();
   const { authState } = useContext(authContext);
+  const { promptDispatch } = useContext(promptContext);
   const userdata = authState.userdata;
 
   const [appData, setAppData] = useState({});
@@ -25,18 +27,24 @@ export default function ViewApplication() {
         setAppData(data.Application);
         setQueAns(data.QueAns);
       },
-      (err) => {
+      () => {
         navigate("/dashboard");
       });
   }
   useEffect(getAppQuestions, [navigate, getData, appId]);
 
   function handleApprove() {
-    updateData(`authority/application/${appId}/Approved`, {}, () => getAppQuestions());
+    updateData(`authority/application/${appId}/Approved`, {}, (data) => {
+      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: data.message, type: "success" } });
+      navigate("/dashboard");
+    });
   }
 
   function handleReject() {
-    updateData(`authority/application/${appId}/Rejected`, {}, () => getAppQuestions());
+    updateData(`authority/application/${appId}/Rejected`, {}, (data) => {
+      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: data.message, type: "success" } });
+      navigate("/dashboard");
+    });
 
   }
 
@@ -55,7 +63,7 @@ export default function ViewApplication() {
           <p className='viewSidebarIconText'><UserIcon />{`${appData.User?.first_name ?? "N/A"} ${appData.User?.last_name ?? ""}`}</p>
           <p className='viewSidebarIconText'><CalenderIcon />{formatDate(appData.updated_at) ?? "N/A"}</p>
         </div>
-        {userdata.role_id === 2 && (
+        {userdata.role_id === 2 && appData.application_status_id === 2 && (
           <>
             <div className="buttonContainer" style={{ margin: "1rem" }}>
               <Button variant="outlined" onClick={handleApprove}>Approve</Button>
@@ -83,19 +91,19 @@ function QueAns({ qa, index }) {
   )
 }
 
-function NestedQueAns({ que, index, appInputs }) {
-  const childQue = que.nestedQue;
-  // console.log(childQue);
+// function NestedQueAns({ que, index, appInputs }) {
+//   const childQue = que.nestedQue;
+//   // console.log(childQue);
 
-  return (
-    <div className='QAContainer'>
-      <h3>{`${index}. `}{que.question}</h3>
-      <div className='nestedConteiner'>
-        {childQue.map(question => <QueAns key={question.id} que={question} ansData={appInputs[question.id]} />)}
-      </div>
-    </div>
-  )
-}
+//   return (
+//     <div className='QAContainer'>
+//       <h3>{`${index}. `}{que.question}</h3>
+//       <div className='nestedConteiner'>
+//         {childQue.map(question => <QueAns key={question.id} que={question} ansData={appInputs[question.id]} />)}
+//       </div>
+//     </div>
+//   )
+// }
 
 function GetAnswer({ qa }) {
   // console.log("QA: ", qa);

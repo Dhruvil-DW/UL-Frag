@@ -1,10 +1,13 @@
 import AuthContextWrapper from "./authContext";
+import PromptContextWrapper from "./promptContext";
 
 export default function Context({ children }) {
 
   return (
     <AuthContextWrapper>
-      {children}
+      <PromptContextWrapper>
+        {children}
+      </PromptContextWrapper>
     </AuthContextWrapper>
   )
 }

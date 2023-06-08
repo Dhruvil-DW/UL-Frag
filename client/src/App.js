@@ -11,6 +11,7 @@ import FragranceBrief from './components/fragranceBrief/fragranceBrief'
 import SubmitApplication from "./components/application/submitApplication";
 import ViewApplication from "./components/application/viewApplication";
 import DraftApplication from "./components/application/draftApplication";
+import Prompt from "./assets/prompt/prompt";
 
 const queryClient = new QueryClient();
 
@@ -29,13 +30,14 @@ export default function App() {
             <Route path="/application">
               <Route index element={<FragranceBrief />} />
               <Route path="new" element={<AddApplication />} />
-              <Route path="summary" element={<SubmitApplication />}/>
-              <Route path="drafted" element={<DraftApplication />}/>
+              <Route path="summary" element={<SubmitApplication />} />
+              <Route path="drafted" element={<DraftApplication />} />
               <Route path="view/:appId" element={<ViewApplication />} />
               <Route path="edit/:appId" element={<AddApplication />} />
             </Route>
           </Routes>
         </BrowserRouter>
+        <Prompt />
       </QueryClientProvider>
     </Context>
 

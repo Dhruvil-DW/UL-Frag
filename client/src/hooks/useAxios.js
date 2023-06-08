@@ -1,11 +1,13 @@
 import axios from "axios";
 import { useCallback, useContext } from "react";
 import { authContext } from "../context/authContext";
+import { promptActions, promptContext } from "../context/promptContext";
 // import { promptShow } from "../redux/features";
 
 export function useAxios() {
   // const dispatch = useDispatch();
   const { authState } = useContext(authContext);
+  const { promptDispatch } = useContext(promptContext);
   const token = authState.token;
 
   // console.log(token);
@@ -19,13 +21,13 @@ export function useAxios() {
           thenFn && thenFn(res.data);
         })
         .catch((err) => {
-          // const msg = err.response?.data?.message ?? "Error while fetching data";
-          // dispatch(promptShow({ message: msg }));
+          const msg = err.response?.data?.message ?? "Error while fetching data";
+          promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg } });
           console.error(err);
           catchFn && catchFn(err);
         });
     },
-    [token]
+    [token, promptDispatch]
   );
 
   const postData = useCallback(
@@ -39,12 +41,12 @@ export function useAxios() {
           thenFn && thenFn(res.data);
         })
         .catch((err) => {
-          // const msg = err.response?.data?.message ?? "Error while Adding data";
-          // dispatch(promptShow({ message: msg }));
+          const msg = err.response?.data?.message ?? "Error while Adding data";
+          promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg } });
           catchFn && catchFn(err);
         });
     },
-    [token]
+    [token, promptDispatch]
   );
 
   const updateData = useCallback(
@@ -58,12 +60,12 @@ export function useAxios() {
           thenFn && thenFn(res.data);
         })
         .catch((err) => {
-          // const msg = err.response?.data?.message ?? "Error while updating data";
-          // dispatch(promptShow({ message: msg }));
+          const msg = err.response?.data?.message ?? "Error while updating data";
+          promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg } });
           catchFn && catchFn(err);
         });
     },
-    [token]
+    [token, promptDispatch]
   );
 
   return { getData, postData, updateData };

@@ -7,7 +7,6 @@ import CheckBoxRoundChecked from "../../assets/icons/checkBoxRoundChecked";
 import PageIcon from "../../assets/icons/pageIcon";
 import ArrowDownIcon from "../../assets/icons/arrowDownIcon";
 import { ApplicationContext } from "./addApplication";
-import { useAxios } from "../../hooks/useAxios";
 
 export default function NavSideBar({ activeQue }) {
   const navigate = useNavigate();

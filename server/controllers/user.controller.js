@@ -117,6 +117,7 @@ function getApprovedApplications(req, res) {
     })();
 
 }
+
 function viewApplications(req, res) {
     const app_id = req.params.app_id;
     (async () => {

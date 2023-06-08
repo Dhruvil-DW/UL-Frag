@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "drop-table": "npx sequelize-cli db:migrate:undo:all",
     "migrate": "npx sequelize-cli db:migrate",
-    "seeder": "npx sequelize-cli db:seed:all"
+    "seeder": "npx sequelize-cli db:seed:all",
+    "seeder-undo": "npx sequelize-cli db:seed:undo",
+    "seeder-undo-all": "npx sequelize-cli db:seed:undo:all"
   },
   "author": "",
   "license": "ISC",

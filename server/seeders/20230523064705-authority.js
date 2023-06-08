@@ -7,7 +7,7 @@ const authority = [
     role_id: 2,
     first_name: "Authority",
     last_name: "Test",
-    email: "authority@fragrance.com",
+    email: "web@kypsa.in",
   }
 ]
 module.exports = {

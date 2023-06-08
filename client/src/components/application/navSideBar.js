@@ -28,7 +28,7 @@ export default function NavSideBar({ activeQue }) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
 }
-  console.log("accOpen: ", accOpen);
+  // console.log("accOpen: ", accOpen);
   let count = 0;
   return (
     <aside className="sidebar">

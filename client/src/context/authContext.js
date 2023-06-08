@@ -7,7 +7,7 @@ export const authContext = createContext();
 //Initial State and Actions
 const authInitialState = {
   token: localStorage.getItem("token"),
-  userdata: localStorage.getItem("userdata"),
+  userdata: JSON.parse(localStorage.getItem("userdata")),
   isAuth: false
 }
 

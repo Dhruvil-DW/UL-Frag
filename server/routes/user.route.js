@@ -12,7 +12,6 @@ router.put('/profile/update', authMiddleware.checkAuth, userController.updatePro
 //router.get('/getanswers', authMiddleware.checkAuth, answerController.getAnswers);
 router.post('/sendinvite/:app_id', authMiddleware.checkAuth, userController.sendInviteApplication);
 router.get('/getall/applications', authMiddleware.checkAuth, userController.getMyApplications);
-router.get('/getall/pending/applications', authMiddleware.checkAuth, userController.getPendingApplications);
 router.get('/getall/approve/applications', authMiddleware.checkAuth, userController.getApprovedApplications);
 router.get('/viewapplication/:app_id', authMiddleware.checkAuth, userController.viewApplications);
 router.get('/getinvitedapplication', authMiddleware.checkAuth, userController.getInvitedApplications);

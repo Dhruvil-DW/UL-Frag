@@ -78,43 +78,24 @@ function updateProfile(req, res) {
 
 function getMyApplications(req, res) {
     const userId = req.userdata.user_id;
-    (async () => {
-        const applRes = await seq.seqFindAll(
-            Application,
-            ['id', 'project_name', 'application_status_id', 'user_id', 'status', 'updatedAt'], //Change the column updatedAt name if causes error here
-            { user_id: userId },
-            [
-                { model: ApplicationStatus, attributes: ['id', 'status'] },
-                { model: User, attributes: ['id', 'first_name', 'last_name', 'email'] },
-            ],
-            [['updatedAt', 'DESC']]
-        );
-        if (applRes === 500) {
-            res.status(500).send({ message: 'Error while retrieving applications' });
-            return;
-        }
-        res.status(200).send(applRes);
-    })();
-}
-
-function getPendingApplications(req, res) {
     const role_id = req.userdata.role_id;
-    if(role_id !== 2) return res.status(401).send({ message: "Unauthorised user"});
+
     (async () => {
+
+        const whereCond = role_id === 2 ? { application_status_id: [2, 4] } : { user_id: userId };
+
         const applRes = await seq.seqFindAll(
             Application,
             ['id', 'project_name', 'application_status_id', 'user_id', 'status', 'updatedAt'], //Change the column updatedAt name if causes error here
-            { application_status_id: 2 },
+            whereCond,
             [
                 { model: ApplicationStatus, attributes: ['id', 'status'] },
                 { model: User, attributes: ['id', 'first_name', 'last_name', 'email'] },
             ],
             [['updatedAt', 'DESC']]
         );
-        if (applRes === 500) {
-            res.status(500).send({ message: 'Error while retrieving applications' });
-            return;
-        }
+        if (applRes === 500) return res.status(500).send({ message: 'Error while retrieving applications' });
+
         res.status(200).send(applRes);
     })();
 }
@@ -122,7 +103,10 @@ function getPendingApplications(req, res) {
 function getApprovedApplications(req, res) {
     (async () => {
         const approveRes = await seq.seqFindAll(Application, ['id', 'project_name', 'application_status_id', 'user_id', 'status'], { application_status_id: 3 },
-            { model: ApplicationStatus, attributes: ['id', 'status'] },
+            [
+                { model: ApplicationStatus, attributes: ['id', 'status'] },
+                { model: User, attributes: ['id', 'first_name', 'last_name', 'email'] },
+            ],
             [['updatedAt', 'DESC']]
         );
         if (approveRes === 500) {
@@ -154,41 +138,41 @@ function viewApplications(req, res) {
         res.status(200).send({ Application: AppData, QueAns: AppQueRes });
     })();
 }
-function sendInviteApplication(req,res){
+function sendInviteApplication(req, res) {
     const userId = req.userdata.user_id;
     //console.log(userId);
     const app_id = req.params.app_id;
     //console.log(app_id);
-    (async() => { 
-            const inviteRes = await seq.seqBulkCreate(ApplicationInvite, [{app_id:app_id, user_id:userId}]);
-            //console.log("INVITERESP-", inviteRes);
-            if(inviteRes === 500){
-                res.status(500).send({message:'Error while sending the invite'});
-            }
-        res.status(200).send({message:'Application invite sent successfully'});
+    (async () => {
+        const inviteRes = await seq.seqBulkCreate(ApplicationInvite, [{ app_id: app_id, user_id: userId }]);
+        //console.log("INVITERESP-", inviteRes);
+        if (inviteRes === 500) {
+            res.status(500).send({ message: 'Error while sending the invite' });
+        }
+        res.status(200).send({ message: 'Application invite sent successfully' });
     })();
 }
 
-function getInvitedApplications(req,res){
+function getInvitedApplications(req, res) {
     const user_id = req.userdata.user_id;
     //console.log(user_id);
     (async () => {
-        const getInviteRes = await seq.seqFindAll(ApplicationInvite, ['id', 'app_id', 'user_id'],{user_id:user_id}, {model:User, attributes:['id', 'first_name', 'last_name', 'email']});
+        const getInviteRes = await seq.seqFindAll(ApplicationInvite, ['id', 'app_id', 'user_id'], { user_id: user_id }, { model: User, attributes: ['id', 'first_name', 'last_name', 'email'] });
         //console.log(getInviteRes);
-        if(getInviteRes === 500){
-            res.status(500).send({message:"Error while retrieving invited applications"});
+        if (getInviteRes === 500) {
+            res.status(500).send({ message: "Error while retrieving invited applications" });
         }
         res.status(200).send(getInviteRes);
     })();
 }
+
 module.exports = {
-    addProfileDetails, 
-    getProfileDetails, 
-    updateProfile, 
+    addProfileDetails,
+    getProfileDetails,
+    updateProfile,
     getMyApplications,
-    getPendingApplications, 
-    getApprovedApplications, 
-    viewApplications, 
+    getApprovedApplications,
+    viewApplications,
     sendInviteApplication,
     getInvitedApplications
 }

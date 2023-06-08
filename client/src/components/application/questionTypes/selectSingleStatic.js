@@ -16,7 +16,7 @@ export default function SelectSingleStatic({ question, nav, index, value = null,
   useEffect(() => {
     handleAnswerChange(question.id, defferInput);
   }, [handleAnswerChange, question.id, defferInput]);
- console.log('singleMulti',nav);
+//  console.log('singleMulti',nav);
 
  function BasicExample(nav) {
   const element = document.getElementById(nav);

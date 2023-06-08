@@ -109,7 +109,7 @@ export default function AddApplication() {
 
     console.log(final_inputs);
     
-    postData(`/application/submit`, final_inputs, (data) => { navigate("/application/summary", { state: { app_id: data.app_id } }) });
+    postData(`/application/submit?app_id=${appId ?? ""}`, final_inputs, (data) => { navigate("/application/summary", { state: { app_id: data.app_id } }) });
 
     //API CALLS
     //Temp Save to Local

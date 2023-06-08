@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useContext, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import CategoryIcon from '../../assets/icons/categoryIcon';
 import UserIcon from '../../assets/icons/userIcon';
@@ -6,11 +6,16 @@ import CalenderIcon from '../../assets/icons/calenderIcon';
 import PageIcon from '../../assets/icons/pageIcon';
 import { useAxios } from '../../hooks/useAxios';
 import { formatDate } from '../../utils/globalFunctions/dateFns';
+import { Button } from '@mui/material';
+import { authContext } from '../../context/authContext';
 
 export default function ViewApplication() {
   const { appId } = useParams();
-  const { getData } = useAxios();
+  const { getData, updateData } = useAxios();
   const navigate = useNavigate();
+  const { authState } = useContext(authContext);
+  const userdata = authState.userdata;
+
   const [appData, setAppData] = useState({});
   const [queAns, setQueAns] = useState([]);
 
@@ -25,6 +30,15 @@ export default function ViewApplication() {
       });
   }
   useEffect(getAppQuestions, [navigate, getData, appId]);
+
+  function handleApprove() {
+    updateData(`authority/application/${appId}/Approved`, {}, () => getAppQuestions());
+  }
+
+  function handleReject() {
+    updateData(`authority/application/${appId}/Rejected`, {}, () => getAppQuestions());
+
+  }
 
   return (
     <div className='appFormContainer'>
@@ -41,6 +55,14 @@ export default function ViewApplication() {
           <p className='viewSidebarIconText'><UserIcon />{`${appData.User?.first_name ?? "N/A"} ${appData.User?.last_name ?? ""}`}</p>
           <p className='viewSidebarIconText'><CalenderIcon />{formatDate(appData.updated_at) ?? "N/A"}</p>
         </div>
+        {userdata.role_id === 2 && (
+          <>
+            <div className="buttonContainer" style={{ margin: "1rem" }}>
+              <Button variant="outlined" onClick={handleApprove}>Approve</Button>
+              <Button variant="outlined" onClick={handleReject}>Reject</Button>
+            </div>
+          </>
+        )}
       </div>
       <div className='QAWrapper'>
         {queAns.map((qa, index) => <QueAns key={qa.id} index={index + 1} qa={qa} />)}
@@ -107,7 +129,7 @@ function GetAnswer({ qa }) {
         const ansObj = JSON.parse(ans.answer);
         return (
           <Fragment key={i}>
-            <img src={`/images/${ansObj.brand}`} alt={ansObj.brand}/>
+            <img src={`/images/${ansObj.brand}`} alt={ansObj.brand} />
             <p>{ansObj.desc}</p>
           </Fragment>)
       });

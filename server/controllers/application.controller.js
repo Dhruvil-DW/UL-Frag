@@ -10,6 +10,7 @@ const AppQuestion = db.app_question;
 const ApplicationStatus = db.application_status;
 const seq = require("../config/sequelize.config");
 const { Op } = require("sequelize");
+const { ifError } = require("assert");
 
 function getAllQuestions(req, res) {
   (async () => {
@@ -37,7 +38,7 @@ function getAllQuestions(req, res) {
         }
       });
     })
-    console.log("GETRESP-", getRes);
+    // console.log("GETRESP-", getRes);
     if (getRes === 500) {
       res.status(500).send({ message: "Error while retrieving the questions" });
     } else {
@@ -64,7 +65,7 @@ function getCountryNames(req, res) {
   const regionId = req.params.region_id;
   console.log(regionId);
   (async () => {
-    const countRes = await seq.seqFindAll(Country, ["id", "name", "region_id"],{region_id:regionId}, {model:Region, attributes:['id', 'region_name']});
+    const countRes = await seq.seqFindAll(Country, ["id", "name", "region_id"], { region_id: regionId }, { model: Region, attributes: ['id', 'region_name'] });
     if (countRes === 500) {
       res.status(500).send({ message: "Error while getting country names" });
     } else {
@@ -74,14 +75,17 @@ function getCountryNames(req, res) {
 }
 
 function submitApplication(req, res) {
-  //console.log(req.body);
+
   const user_id = req.userdata.user_id;
-  console.log(user_id);
   let app_id = req.query.app_id;
-  //console.log(app_id);
   const inputs = req.body.inputs;
+
+  // console.log(user_id);
+  //console.log(app_id);
   //console.log("INPUTS-", inputs);
   (async () => {
+
+    //Check for Same Project Name
     const projectName = await seq.seqFindOne(Application, ['project_name'], { project_name: req.body.project_name });
     console.log(projectName);
     if (projectName) {
@@ -95,18 +99,26 @@ function submitApplication(req, res) {
       status: 1,
     };
     if (!app_id) {
+      //Create App if App not Exist
       const appRes = await seq.seqCreate(Application, appData);
+      if (appRes === 500) return res.status(500).send({ message: "Error while creating application" });
+
+      //Got newly Created app ID
       app_id = appRes.id;
-      if (appRes === 500) {
-        res.status(500).send({ message: "Error while creating application" });
-        return;
-      }
+
+    } else {
+
+      // Must be Drafted App
+      const appDataRes = await seq.seqFindByPk(Application, app_id, ['application_status_id']);
+      // console.log(appDataRes);
+      if (appDataRes.application_status_id !== 1) return res.status(500).send({ message: "This Application is already submitted." });
+
     }
+
+    //Update App Data
     const newUpdate = await seq.seqUpdate(Application, appData, { id: app_id });
-    if (newUpdate === 500) {
-      res.status(500).send({ message: "Error while updating application" });
-      return;
-    }
+    if (newUpdate === 500) return res.status(500).send({ message: "Error while updating application" });
+
     let isError = false;
     for (let question_id in inputs) {
       console.log("Question_id-", inputs[question_id]);
@@ -221,7 +233,6 @@ function draftApplication(req, res) {
       console.log("dltedAppQue: ", dltedAppQueRes);
     }
 
-
     let isError = false;
     for (let question_id in inputs) {
       // console.log("Question_id-", inputs[question_id]);
@@ -231,8 +242,11 @@ function draftApplication(req, res) {
       });
       //console.log("QUESRESP-", quesRes);
       if (quesRes === 500) {
+        isError = true;
         res.status(500).send({ message: "Error while fetching question" });
+        return;
       }
+
       const app_question_id = quesRes.id;
       const answer = inputs[question_id];
 
@@ -248,9 +262,8 @@ function draftApplication(req, res) {
           //console.log("ANS_res-", ansRes);
           if (ansRes === 500) {
             isError = true;
-            res
-              .status(500)
-              .send({ message: "Error while fetching answer type of array" });
+            res.status(500).send({ message: "Error while fetching answer type of array" });
+            return;
           }
         });
       } else if (typeof answer === "string") {
@@ -261,9 +274,8 @@ function draftApplication(req, res) {
         });
         if (ansRes === 500) {
           isError = true;
-          res
-            .status(500)
-            .send({ message: "Error while fetching answer type of string" });
+          res.status(500).send({ message: "Error while fetching answer type of string" });
+          return;
         }
       } else if (typeof answer === "object" && answer !== null) {
         //console.log("yes");
@@ -274,14 +286,12 @@ function draftApplication(req, res) {
         });
         if (ansRes === 500) {
           isError = true;
-          res
-            .status(500)
-            .send({
-              message: "Error while fetching answer type of object or null",
-            });
+          res.status(500).send({ message: "Error while fetching answer type of object or null" });
+          return;
         }
       }
     }
+    if (isError) return;
     res.status(200).send({ message: "Application successfully drafted", app_id: app_id });
   })();
 }

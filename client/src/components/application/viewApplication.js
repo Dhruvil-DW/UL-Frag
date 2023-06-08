@@ -35,14 +35,14 @@ export default function ViewApplication() {
 
   function handleApprove() {
     updateData(`authority/application/${appId}/Approved`, {}, (data) => {
-      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: data.message, type: "success" } });
+      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: data.message, type: "success", timer: 4000 } });
       navigate("/dashboard");
     });
   }
 
   function handleReject() {
     updateData(`authority/application/${appId}/Rejected`, {}, (data) => {
-      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: data.message, type: "success" } });
+      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: data.message, type: "success", timer: 4000 } });
       navigate("/dashboard");
     });
 

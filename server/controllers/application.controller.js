@@ -2,6 +2,7 @@ const db = require("../models/index");
 const User = db.User;
 const Question = db.question;
 const Category = db.category;
+const Region = db.region;
 const Country = db.country;
 const Application = db.Application;
 const Answers = db.answers;
@@ -11,8 +12,6 @@ const seq = require("../config/sequelize.config");
 const { Op } = require("sequelize");
 
 function getAllQuestions(req, res) {
-  // const category_id = parseInt(req.query.category_id);
-  // console.log(category_id);
   (async () => {
     const getRes = await seq.seqFindAll(Question, ["id", "category_id", "question", "question_type_id", "question_opt", "status", "description"], { parent_id: 0, status: { [Op.not]: 0 } }, { model: Category, attributes: ["id", "name"] });
     const quesRes = await seq.seqFindAll(Question, ["id", "category_id", "question", "parent_id", "question_type_id", "question_opt", "status", "description"], { parent_id: { [Op.not]: 0 }, status: { [Op.not]: 0 } }, { model: Category, attributes: ["id", "name"] });
@@ -27,9 +26,7 @@ function getAllQuestions(req, res) {
       } else {
         childData[parentID] = [item];
       }
-      //childData.push(item);
     });
-    //console.log({childData});
     Object.keys(childData).forEach(qId => {
       getRes.forEach((que, index) => {
         //console.log("QUES ID: ",que.id);
@@ -52,15 +49,22 @@ function getAllQuestions(req, res) {
   })();
 }
 
-function getCountryNames(req, res) {
-  const searchText = req.query.search;
-  const whereCond = searchText
-    ? {
-      [Op.or]: [{ name: { [Op.like]: "%" + searchText + "%" } }],
-    }
-    : {};
+function getRegionNames(req, res) {
   (async () => {
-    const countRes = await seq.seqFindAll(Country, ["id", "name"], whereCond);
+    const regRes = await seq.seqFindAll(Region, ["id", "region_name"]);
+    if (regRes === 500) {
+      res.status(500).send({ message: "Error while getting region names" });
+    } else {
+      res.status(200).send(regRes);
+    }
+  })();
+}
+function getCountryNames(req, res) {
+  //console.log(req);
+  const regionId = req.params.region_id;
+  console.log(regionId);
+  (async () => {
+    const countRes = await seq.seqFindAll(Country, ["id", "name", "region_id"],{region_id:regionId}, {model:Region, attributes:['id', 'region_name']});
     if (countRes === 500) {
       res.status(500).send({ message: "Error while getting country names" });
     } else {
@@ -69,30 +73,6 @@ function getCountryNames(req, res) {
   })();
 }
 
-// function getNestedQuestion(req, res) {
-//   const parent_id = req.params.parent_id;
-//   console.log(parent_id);
-//   (async () => {
-//     const quesRes = await seq.seqFindAll(
-//       Question,
-//       [
-//         "id",
-//         "category_id",
-//         "question",
-//         "question_type_id",
-//         "question_opt",
-//         "status",
-//       ],
-//       { parent_id: parent_id },
-//       { model: Category, attributes: ["id", "name"] }
-//     );
-//     if (quesRes === 500) {
-//       res.status(500).send({ message: "Error while getting nested questions" });
-//     } else {
-//       res.status(200).send(quesRes);
-//     }
-//   })();
-// }
 function submitApplication(req, res) {
   //console.log(req.body);
   const user_id = req.userdata.user_id;
@@ -359,8 +339,8 @@ function getDraftedApp(req, res) {
 }
 module.exports = {
   getAllQuestions,
+  getRegionNames,
   getCountryNames,
-  //getNestedQuestion,
   submitApplication,
   draftApplication,
   getDraftedApp,

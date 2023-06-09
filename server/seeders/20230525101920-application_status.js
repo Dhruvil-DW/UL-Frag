@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 
 const application_status = [
-  { status: "Drafted" },
+  { status: "Draft" },
   { status: "Pending" },
   { status: "Approved" },
   { status: "Rejected" },

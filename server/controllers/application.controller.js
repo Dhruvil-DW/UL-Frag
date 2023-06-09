@@ -52,7 +52,7 @@ function getAllQuestions(req, res) {
 
 function getRegionNames(req, res) {
   (async () => {
-    const regRes = await seq.seqFindAll(Region, ["id", "region_name"]);
+    const regRes = await seq.seqFindAll(Region, ["id", ["region_name", "label"]]);
     if (regRes === 500) {
       res.status(500).send({ message: "Error while getting region names" });
     } else {
@@ -65,7 +65,7 @@ function getCountryNames(req, res) {
   const regionId = req.params.region_id;
   console.log(regionId);
   (async () => {
-    const countRes = await seq.seqFindAll(Country, ["id", "name", "region_id"], { region_id: regionId }, { model: Region, attributes: ['id', 'region_name'] });
+    const countRes = await seq.seqFindAll(Country, ["id", ["name", "label"]], { region_id: regionId });
     if (countRes === 500) {
       res.status(500).send({ message: "Error while getting country names" });
     } else {

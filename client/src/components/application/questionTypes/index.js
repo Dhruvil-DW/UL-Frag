@@ -9,33 +9,7 @@ import SelectSingleWithTextStatic from "./selectSingleTextField";
 import TextBoxImage from "./textImage";
 import TextBox from "./textBox";
 
-export default function QuestionType({ question, nav, index, inputs, onChange, onKeyUp }) {
-
-  function handleNestedDateSelection(value, id, index) {
-    //Used in: NestedQuestions 
-    const dateArr = inputs[id] ?? [];
-    dateArr[index] = value;
-    onChange(id, dateArr);
-  }
-
-  function handleNestedAutoCompleteChange(__event, value, reason, id) {
-    //Used in: NestedQuestions 
-    // debugger;
-    switch (reason) {
-      case "selectOption":
-      case "removeOption":
-        // value = isArray ? option.map(x => x.id) : option.id
-        break;
-      case "clear":
-        // value = isArray ? [] : null;
-        break;
-      case "createOption":
-      case "blur":
-      default:
-        return;
-    }
-    onChange(id, value);
-  }
+export default function QuestionType({ question, nav, index, inputs, onKeyUp }) {
 
   // console.log(question);
   switch (question.question_type_id) {
@@ -64,7 +38,7 @@ export default function QuestionType({ question, nav, index, inputs, onChange, o
       return <CheckBoxConfirm question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
 
     case 12: // Nested questions
-      return <NestedQuestion question={question} nav={nav} index={index} inputs={inputs} onChange={handleNestedAutoCompleteChange} onDateSelect={handleNestedDateSelection} onKeyUp={onKeyUp} />
+      return <NestedQuestion question={question} nav={nav} index={index} onKeyUp={onKeyUp} />
 
     case 14: //Select (RadioButton) with TextBox
       return <SelectSingleWithTextStatic question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />

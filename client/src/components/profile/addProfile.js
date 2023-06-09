@@ -9,7 +9,7 @@ export default function AddProfile() {
   const { authState, authDispatch } = useContext(authContext);
   const navigate = useNavigate();
   const { userdata, token } = authState;
-  const [inputs, setInputs] = useState({ first_name: "", last_name: "", contact_no: "" });
+  const [inputs, setInputs] = useState({ first_name: "", last_name: "" });
 
   function handleInputChange(e) {
     const { name, value } = e.target;
@@ -47,7 +47,7 @@ export default function AddProfile() {
         <div className="formContainer">
           <TextField placeholder="First Name" name="first_name" value={inputs.first_name} onChange={handleInputChange} />
           <TextField placeholder="Last Name" name="last_name" value={inputs.last_name} onChange={handleInputChange} />
-          <TextField placeholder="Contact No" name="contact_no" value={inputs.contact_no} onChange={handleInputChange} />
+          {/* <TextField placeholder="Contact No" name="contact_no" value={inputs.contact_no} onChange={handleInputChange} /> */}
           <div style={{ marginTop: '1em', display: 'flex', justifyContent: 'space-between' }}>
             <Button variant="contained" onClick={submitProfile}>{userdata.role_id === 0 ? "Submit" : "Update"}</Button>
             <Button variant="outlined" onClick={() => navigate('/logout')}>Logout</Button>

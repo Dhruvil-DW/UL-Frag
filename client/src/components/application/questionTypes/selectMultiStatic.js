@@ -5,7 +5,7 @@ import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 
 export default function SelectMultiStatic({ question, nav, index, value = [], onKeyUp }) {
-  const { handleNextPrevNav, handleAnswerChange } = useContext(ApplicationContext);
+  const { handleNextPrevNav, inputs, country, handleAnswerChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const defferInput = useDeferredValue(input);
 
@@ -42,23 +42,45 @@ export default function SelectMultiStatic({ question, nav, index, value = [], on
   return (
     <div className="questionContainer">
       <h2 className="question">{question.question}</h2>
-      <Autocomplete
-        multiple
-        disablePortal
-        disableCloseOnSelect
-        options={question.question_opt ?? []}
-        value={input}
-        onChange={handleInputChange}
-        popupIcon={<ArrowDownIcon />}
-        renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Select Options" />}
-        renderOption={(params, option, { selected }) => (
-          <li {...params}>
-            <Checkbox color="secondary" name="location" checked={selected} />
-            {option}
-          </li>
-        )}
-        onKeyUp={onKeyUp}
-      />
+      {question.id === 6 ? (
+        <Autocomplete
+          multiple
+          disablePortal
+          disableCloseOnSelect
+          options={country ?? []}
+          value={inputs[question.id] ?? []}
+          onChange={(event, value, reason) => handleInputChange(event, value.map(obj => obj.label ?? obj), reason)}
+          isOptionEqualToValue={(option, value) => option.label === value}
+          disabled={!Boolean(inputs[5])}
+          popupIcon={<ArrowDownIcon />}
+          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Select Options" />}
+          renderOption={(params, option, { selected }) => (
+            <li {...params}>
+              <Checkbox color="secondary" name="location" checked={selected} />
+              {option.label}
+            </li>
+          )}
+          onKeyUp={onKeyUp}
+        />
+      ) : (
+        <Autocomplete
+          multiple
+          disablePortal
+          disableCloseOnSelect
+          options={question.question_opt ?? []}
+          value={input}
+          onChange={handleInputChange}
+          popupIcon={<ArrowDownIcon />}
+          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Select Options" />}
+          renderOption={(params, option, { selected }) => (
+            <li {...params}>
+              <Checkbox color="secondary" name="location" checked={selected} />
+              {option}
+            </li>
+          )}
+          onKeyUp={onKeyUp}
+        />
+      )}
       <div className='navBtnCont'>
         <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>
         <div className="nextBtn" tabIndex={-1} onClick={() => BasicExample((nav) + 1)}><ArrowLeftRoundIcon /></div>

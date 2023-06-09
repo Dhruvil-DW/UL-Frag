@@ -16,9 +16,12 @@ export default function AddApplication() {
   const navigate = useNavigate();
   const [catWiseQues, setCatWiseQues] = useState([]);
   const [inputs, setInputs] = useState({});
+  const [regions, setRegions] = useState([]);
+  const [country, setCountry] = useState([]);
   const containerRef = useRef(null);
   const { getData, postData } = useAxios();
 
+  // console.log("INPUTS: ", inputs);
   function getQuestions() {
     if (appId) {
       getData(`/application/getdraft/${appId}`, {}, (data) => {
@@ -31,7 +34,20 @@ export default function AddApplication() {
     });
   }
 
+  function getRegions() {
+    getData("application/getregions", {}, setRegions);
+  }
+
+  function getCountry() {
+    if (inputs[5]) {
+      const country_id = regions?.find((obj) => obj.label === inputs[5])?.id;
+      country_id && getData(`application/getcountry/${country_id}`, {}, setCountry);
+    }
+  }
+
   useEffect(getQuestions, [getData, appId]);
+  useEffect(getRegions, [getData]);
+  useEffect(getCountry, [getData, inputs, regions]);
   // const { appId } = useParams();
   const [currentQue, setCurrentQue] = useState(0);
   // const [activeSection, setActiveSection] = useState(0);
@@ -45,20 +61,20 @@ export default function AddApplication() {
   // const debouncedHandleScroll = debounce(handleScroll, 500);
 
   const handleNextPrevNav = (queNo, type) => {
-  //   console.log('Questions = ',queNo);
-  //   switch (type) {
-  //     case 'next':
-  //       setCurrentQue(queNo + 1);
-  //       break;
-  //     case 'prev':
-  //       setCurrentQue(queNo - 1);
-  //       break;
-  //     case 'fixed':
-  //       setCurrentQue(queNo);
-  //       break;
-  //     default:
-  //       return;
-  //   }
+    //   console.log('Questions = ',queNo);
+    //   switch (type) {
+    //     case 'next':
+    //       setCurrentQue(queNo + 1);
+    //       break;
+    //     case 'prev':
+    //       setCurrentQue(queNo - 1);
+    //       break;
+    //     case 'fixed':
+    //       setCurrentQue(queNo);
+    //       break;
+    //     default:
+    //       return;
+    //   }
   }
 
   // useEffect(() => {
@@ -87,12 +103,35 @@ export default function AddApplication() {
     inputs[0]?.focus();
   }, [])
 
+  const resetInputCountry = useCallback(() => {
+    setInputs(prevInput => {
+      const oldInput = { ...prevInput };
+      [6, 8, 9, 10, 12, 13, 14].forEach(id => {
+        delete oldInput[id];
+      });
+      return oldInput;
+    })
+  }, []);
+
   const handleAnswerChange = useCallback((name, value) => {
     if (value && value.length !== 0) {
-      setInputs(prevState => ({ ...prevState, [name]: value }));
+      setInputs(prevState => {
+        const oldInput = { ...prevState };
+        // if (name === 5) {
+        //   toBeDltQueId.forEach(id => {
+        //     oldInput[id] && delete oldInput[id];
+        //   })
+        // };
+        return { ...oldInput, [name]: value }
+      });
     } else {
       setInputs(prevState => {
         const oldInput = { ...prevState };
+        // if (name === 5) {
+        //   toBeDltQueId.forEach(id => {
+        //     oldInput[id] && delete oldInput[id];
+        //   });
+        // };
         delete oldInput[name];
         return oldInput;
       })
@@ -108,7 +147,7 @@ export default function AddApplication() {
     };
 
     console.log(final_inputs);
-    
+
     postData(`/application/submit?app_id=${appId ?? ""}`, final_inputs, (data) => { navigate("/application/summary", { state: { app_id: data.app_id } }) });
 
     //API CALLS
@@ -146,7 +185,7 @@ export default function AddApplication() {
   console.log("QUESTIONS: ", catWiseQues);
   let count = 1;
   return (
-    <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleNextPrevNav, handleAnswerChange }}>
+    <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleNextPrevNav, handleAnswerChange, regions, country, resetInputCountry }}>
       <main className="appFormContainer">
         <ErrorBoundary>
           <NavSideBar formRef={containerRef} activeQue={currentQue} />
@@ -171,7 +210,7 @@ export default function AddApplication() {
                   {cat.questions.map((que, questionIndex) => (
                     <div className="pageWrapper" key={que.id} data-que-type={que.question_type_id} data-que-id={que.id} id={count}>
                       <div className="pageContainer">
-                        <QuestionType question={que} nav={count++} index={questionIndex} inputs={inputs} onChange={handleAnswerChange} onKeyUp={handleFocusNext} />
+                        <QuestionType question={que} nav={count++} index={questionIndex} inputs={inputs} onKeyUp={handleFocusNext} />
                         <div className="unilever-icon questionPage">
                           <UnileverIcon width="64px" />
                         </div>

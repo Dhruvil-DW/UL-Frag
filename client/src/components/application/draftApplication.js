@@ -24,7 +24,7 @@ export default function DraftApplication() {
             Dashboard
           </Button>
         </div>
-        <h1 style={{ color: '#002F98', marginTop: "21vh" }}>Congratulations Andrew</h1>
+        <h1 style={{ color: '#002F98', marginTop: "21vh" }}>Your Application has been saved!</h1>
         <div style={{ display: "flex", gap: 16 }}>
           <Button variant="contained" color="secondary" className="get_started" onClick={() => navigate(`/application/edit/${state.app_id}`)}>Edit</Button>
           <Button variant="contained" color="secondary" className="get_started" onClick={() => navigate(`/application/view/${state.app_id}`)}>View Brief</Button>

@@ -11,7 +11,7 @@
   transition: 0.4s;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 1rem;
   padding: 1rem;
 }
 
@@ -83,7 +83,7 @@
 .sidebar>.navLinkContainer .linkIcon {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 1rem;
   padding: 1rem;
   background-color: hsl(221, 100%, 30%);
 }

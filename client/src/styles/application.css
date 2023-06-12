@@ -38,7 +38,7 @@
 .actionBtnCont {
   position: absolute;
   bottom: 3rem;
-  left: 4rem;
+  left: calc(6vw + 2rem);
   display: flex;
   gap: 1rem;
 }

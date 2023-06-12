@@ -24,7 +24,7 @@ export default function RadioImage({ question, nav, index, value = {}, onKeyUp }
       // 👇 Will scroll smoothly to the top of the next section
       element.scrollIntoView({ behavior: 'smooth' });
     }
-}
+  }
 
   return (
     <div className="questionContainer">
@@ -32,7 +32,7 @@ export default function RadioImage({ question, nav, index, value = {}, onKeyUp }
 
       <div style={{ display: "flex", gap: "1rem" }}>
 
-        <RadioGroup value={input.brand ?? ""} onChange={(e, value) => setInput((prevInput) => ({ ...prevInput, brand: value }))} style={{ flexGrow: 1 }}>
+        <RadioGroup value={input.brand ?? ""} onChange={(e, value) => setInput((prevInput) => ({ ...prevInput, brand: value }))} style={{ flexGrow: 0 }}>
           <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
             {question.question_opt?.map((path) => (
               <FormControlLabel key={path} label={<BrandImage path={path} />} value={path} control={<Radio style={{ alignSelf: "flex-start" }} />} />
@@ -40,15 +40,16 @@ export default function RadioImage({ question, nav, index, value = {}, onKeyUp }
           </div>
         </RadioGroup>
 
-        <div style={{ height: 300, minWidth: 230, backgroundColor: "hsl(168, 100%, 35%)", padding: 16 }}>
+        <div style={{ flexGrow: 1, flexShrink: 0, height: 250, flexBasis: 250, backgroundColor: "#66C5EE", padding: 16 }}>
           <h3 style={{ color: "white", fontSize: 18 }}>Global Brand Position</h3>
-          <TextField multiline rows={8} placeholder="Enter your description here" sx={{ '& .MuiInputBase-multiline': { borderRadius: 0, padding: 0 } }} value={input.desc} onChange={(e) => setInput((prevInput) => ({ ...prevInput, desc: e.target.value }))} />
+          <TextField multiline rows={6} fullWidth inputProps={{ maxLength: 100 }} placeholder="Enter your description here" sx={{ '& .MuiInputBase-multiline': { borderRadius: 0, padding: 0 } }} value={input.desc} onChange={(e) => setInput((prevInput) => ({ ...prevInput, desc: e.target.value }))} />
+          <div style={{ position: "absolute", bottom: 24, right: 24, color: "hsl(0, 0%, 90%)" }}>{`${input.desc?.length ?? 0} / 100`}</div>
         </div>
       </div>
 
       <div className='navBtnCont'>
-          <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>
-          <div className="nextBtn" tabIndex={-1} onClick={() => BasicExample((nav) + 1)}><ArrowLeftRoundIcon /></div>
+        <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>
+        <div className="nextBtn" tabIndex={-1} onClick={() => BasicExample((nav) + 1)}><ArrowLeftRoundIcon /></div>
       </div>
     </div>
   )

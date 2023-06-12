@@ -1,6 +1,7 @@
 .MuiTab-root.MuiButtonBase-root {
   color: hsla(222, 28%, 60%, 1);
   text-transform: none;
+  font-size: 1rem;
 }
 
 .MuiTab-root.MuiButtonBase-root.Mui-selected {

@@ -49,8 +49,8 @@ export default function Dashboard() {
         <div className="dashboardContentWrapper">
           <div className="tabContainer">
             <Tabs value={selectedTab} onChange={handleChangeTab} sx={{ mr: 'auto' }}>
-              <Tab label={userdata.role_id === 2 ? "Pending projects" : "My projects"} />
-              <Tab label="All projects" />
+              <Tab label={userdata.role_id === 2 ? "Pending Projects" : "My Projects"} />
+              <Tab label="All Projects" />
             </Tabs>
             <OutlinedInput
               className="searchField"
@@ -132,7 +132,7 @@ function FilterContainer({ type = "my" }) {
       <div className="filterContainer">
         {type !== 'all' && <OutlinedInput placeholder="Status" />}
         <OutlinedInput placeholder="Category" />
-        <OutlinedInput placeholder="Date" />
+        {/* <OutlinedInput placeholder="Date" /> */}
       </div>
     </div>
   )

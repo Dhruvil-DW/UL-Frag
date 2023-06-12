@@ -7,6 +7,8 @@ import CheckBoxRoundChecked from "../../assets/icons/checkBoxRoundChecked";
 import PageIcon from "../../assets/icons/pageIcon";
 import ArrowDownIcon from "../../assets/icons/arrowDownIcon";
 import { ApplicationContext } from "./addApplication";
+import LogoutArrowIcon from "../../assets/icons/logout_arrow";
+import UserAddIcon from "../../assets/icons/userAdd";
 
 export default function NavSideBar({ activeQue }) {
   const navigate = useNavigate();
@@ -41,7 +43,9 @@ export default function NavSideBar({ activeQue }) {
         {catWiseQues.map((cat, i) => (
           <Fragment key={i}>
             <Divider />
-            <button className="accordion" data-id={count} name={cat.category_id} onClick={handleAccToggle}>{getIconComp(cat)}{cat.category_name ?? "N/A"}<ArrowDownIcon className="accordionToggleIcon" /></button>
+            <button className="accordion" data-id={count} name={cat.category_id} onClick={handleAccToggle}>
+              {getIconComp(cat)}{cat.category_name ?? "N/A"}<ArrowDownIcon className="accordionToggleIcon" pointerEvents="none" />
+            </button>
             <div data-id={count++} className={`panel ${accOpen[cat.category_id] ? 'open' : 'close'}`}>
               <Stepper nonLinear orientation="vertical">
                 {cat.questions.map((que) => (
@@ -62,8 +66,8 @@ export default function NavSideBar({ activeQue }) {
         ))}
       </div>
       <div className="buttonContainer">
-        <Button variant="contained">Invite</Button>
-        <Button variant="outlined" onClick={() => navigate('/logout')}>Logout</Button>
+        <Button variant="contained" startIcon={<UserAddIcon />}>Invite</Button>
+        <Button variant="outlined" startIcon={<LogoutArrowIcon />} onClick={() => navigate('/logout')}>Logout</Button>
       </div>
     </aside>
   )

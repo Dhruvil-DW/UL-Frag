@@ -30,7 +30,7 @@ export default function SelectSingleWithTextStatic({ question, nav, index, value
 }
 
   return (
-    <div className="questionContainer">
+    <div className="questionContainer fixWidth">
       <h2 className="question">{question.question}</h2>
       <Autocomplete
         disablePortal

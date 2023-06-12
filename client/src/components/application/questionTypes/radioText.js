@@ -27,7 +27,7 @@ export default function RadioText({ question, nav, index, value = "", onKeyUp })
 }
 
   return (
-    <div className="questionContainer">
+    <div className="questionContainer fixWidth">
       <h2 className="question">{question.question}</h2>
 
       <RadioGroup value={value} onChange={handleInputChange} name={question.id.toString()}>

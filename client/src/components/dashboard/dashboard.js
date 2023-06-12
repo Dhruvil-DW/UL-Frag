@@ -9,6 +9,7 @@ import CalenderIcon from "../../assets/icons/calenderIcon";
 import { useAxios } from "../../hooks/useAxios";
 import { formatDate } from "../../utils/globalFunctions/dateFns";
 import { authContext } from "../../context/authContext";
+import ErrorBoundary from "../../config/errorBoundary/ErrorBoundary";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -128,13 +129,15 @@ export default function Dashboard() {
 
 function FilterContainer({ type = "my" }) {
   return (
-    <div className="filterWrapper">
-      <div className="filterContainer">
-        {type !== 'all' && <OutlinedInput placeholder="Status" />}
-        <OutlinedInput placeholder="Category" />
-        {/* <OutlinedInput placeholder="Date" /> */}
+    <ErrorBoundary>
+      <div className="filterWrapper">
+        <div className="filterContainer">
+          {type !== 'all' && <OutlinedInput placeholder="Status" />}
+          <OutlinedInput placeholder="Category" />
+          {/* <OutlinedInput placeholder="Date" /> */}
+        </div>
       </div>
-    </div>
+    </ErrorBoundary>
   )
 }
 

@@ -38,7 +38,7 @@ h1{
 
 .horizontal_spacer {
     display: inline-block;
-    width: 1vw;
+    width: 1rem;
 }
 
 .buttonContainer {

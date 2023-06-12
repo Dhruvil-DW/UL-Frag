@@ -9,7 +9,7 @@ export default function CheckBoxConfirm({ question, nav, index, value = [], onKe
   const { handleNextPrevNav, handleAnswerChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const defferInput = useDeferredValue(input);
-  
+
   function handleInputChange(e) {
     const option = e.target.name;
     setInput(prevInput => {
@@ -32,16 +32,16 @@ export default function CheckBoxConfirm({ question, nav, index, value = [], onKe
       element.scrollIntoView({ behavior: 'smooth' });
     }
   }
-  
+
   return (
     <div className="questionContainer fixWidth">
       <h2 className="question">
         {question.question}
         <Tooltip className="tooltip" title={question.description} arrow placement="bottom-end">
-        <span style={{marginLeft:7}}>
-        <TooltipIcon/>
-        </span>
-      </Tooltip>
+          <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex" }}>
+            <TooltipIcon />
+          </span>
+        </Tooltip>
       </h2>
       <FormGroup onChange={handleInputChange}>
         {question.question_opt.map((opt) => (
@@ -49,8 +49,8 @@ export default function CheckBoxConfirm({ question, nav, index, value = [], onKe
         ))}
       </FormGroup>
       <div className='navBtnCont'>
-          <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>
-          <div className="nextBtn" tabIndex={-1} onClick={() => BasicExample((nav) + 1)}><ArrowLeftRoundIcon /></div>
+        <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>
+        <div className="nextBtn" tabIndex={-1} onClick={() => BasicExample((nav) + 1)}><ArrowLeftRoundIcon /></div>
       </div>
     </div>
   )

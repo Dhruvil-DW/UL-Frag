@@ -27,7 +27,7 @@ export default function TextBox({ question, nav, index, value = "", onKeyUp }) {
       <h2 className="question">
         {question.question}
         <Tooltip className="tooltip" title={question.description} placement="bottom-end" arrow>
-          <span style={{ marginLeft: 7 }}>
+          <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex" }}>
             <TooltipIcon />
           </span>
         </Tooltip>

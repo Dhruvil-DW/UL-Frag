@@ -1,6 +1,6 @@
-export default function TooltipIcon({ fill = "currentColor", width = "1em", height = "1em" }) {
+export default function TooltipIcon({ fill = "currentColor", width = "1em", height = "1em", ...props }) {
     return (
-      <svg width={width} height={height} viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width={width} height={height} viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path
           d="M16.5 16.5V22"
           stroke={fill}

@@ -4,11 +4,10 @@
 
 .MuiTooltip-popper .MuiTooltip-tooltip {
     background-color: #FEE300;
-    font-family: Poppins;
     color: black;
-    font-size: large;
+    font-size: 14px;
     max-width: 50vw;
-    padding: 2vw;
+    padding: 1.5rem;
     white-space: pre-line;
     text-align: justify;
 }

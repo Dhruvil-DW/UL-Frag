@@ -58,7 +58,8 @@ export default function ViewApplication() {
               Dashboard
             </div>
           </Link>
-          <h2 style={{ textAlign: "center" }}>{appData.project_name ?? "N/A"}</h2>
+          {/* <h2 style={{ textAlign: "center" }}>{appData.project_name ?? "N/A"}</h2> */}
+          <h2 style={{ marginLeft: "1rem" }}>{appData.project_name ?? "N/A"}</h2>
           <p className='viewSidebarIconText'><PageIcon />{appData.application_status?.status ?? "N/A"}</p>
           <p className='viewSidebarIconText'><UserIcon />{`${appData.User?.first_name ?? "N/A"} ${appData.User?.last_name ?? ""}`}</p>
           <p className='viewSidebarIconText'><CalenderIcon />{formatDate(appData.updated_at) ?? "N/A"}</p>
@@ -68,6 +69,13 @@ export default function ViewApplication() {
             <div className="buttonContainer" style={{ margin: "1rem" }}>
               <Button variant="outlined" onClick={handleApprove}>Approve</Button>
               <Button variant="outlined" onClick={handleReject}>Reject</Button>
+            </div>
+          </>
+        )}
+        {userdata.role_id === 1 && (
+          <>
+            <div className="buttonContainer" style={{ margin: "1rem" }}>
+              <Button variant="outlined" onClick={() => navigate('/logout')}>Logout</Button>
             </div>
           </>
         )}

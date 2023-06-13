@@ -5,8 +5,8 @@ import { FormControlLabel, InputAdornment, Radio, RadioGroup, TextField } from "
 
 export default function RadioTextInvestment({ question, nav, index, value = "", onKeyUp }) {
   const { handleAnswerChange } = useContext(ApplicationContext);
-  const [input, setInput] = useState(question.question_opt.includes(value) ? value : "Incremental");
-  const [textInput, setTextInput] = useState(question.question_opt.includes(value) ? "" : value);
+  const [input, setInput] = useState(value ? (question.question_opt.includes(value) ? value : "Incremental") : "");
+  const [textInput, setTextInput] = useState(value && !(question.question_opt.includes(value)) ? value : "");
   const defferInput = useDeferredValue(input);
   const defferTextInput = useDeferredValue(textInput);
 

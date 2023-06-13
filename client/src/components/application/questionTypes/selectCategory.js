@@ -6,8 +6,8 @@ import { ApplicationContext } from "../addApplication";
 
 export default function SelectCategory({ question, nav, index, value = null, onKeyUp }) {
   const { handleAnswerChange } = useContext(ApplicationContext);
-  const [input, setInput] = useState(question.question_opt.includes(value) ? value : "Other");
-  const [textInput, setTextInput] = useState(question.question_opt.includes(value) ? "" : value);
+  const [input, setInput] = useState(value ? (question.question_opt.includes(value) ? value : "Other") : null);
+  const [textInput, setTextInput] = useState((value && !(question.question_opt.includes(value))) ? value : "");
   const defferInput = useDeferredValue(input);
   const defferTextInput = useDeferredValue(textInput);
 

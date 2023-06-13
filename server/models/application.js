@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         through:models.app_question,
         foreignKey:'app_id'
       });
-      this.hasMany(models.app_question);
+      this.hasMany(models.app_question, {foreignKey:'app_id'});
       this.belongsToMany(models.User,{
         through: models.application_invite,
         foreignKey: 'app_id'

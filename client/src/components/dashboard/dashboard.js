@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import Header from "../basic/header";
-import { Button, Divider, InputAdornment, OutlinedInput, Tab, Tabs } from "@mui/material";
+import { Autocomplete, Button, Checkbox, Divider, InputAdornment, OutlinedInput, Tab, Tabs, TextField } from "@mui/material";
 import { TabPanel } from "../../assets/tabs/tabs";
 import MagnifierIcon from "../../assets/icons/magnifierIcon";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ import CalenderIcon from "../../assets/icons/calenderIcon";
 import { useAxios } from "../../hooks/useAxios";
 import { formatDate } from "../../utils/globalFunctions/dateFns";
 import { authContext } from "../../context/authContext";
+import ArrowDownIcon from "../../assets/icons/arrowDownIcon";
 import ErrorBoundary from "../../config/errorBoundary/ErrorBoundary";
 
 export default function Dashboard() {
@@ -24,23 +25,42 @@ export default function Dashboard() {
   const [hoverCardId, setHoverCardId] = useState(null);
   const mouseEnter = (id) => setHoverCardId(id);
   const mouseExit = () => setHoverCardId(null);
-
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [filterInputs, setFilterInputs] = useState({status: [], answer: null});
   // useEffect(() => {
   //   const submitApp = JSON.parse(localStorage.getItem("submitApp")) ?? [];
   //   const staticData = createApplicationCardData(20);
   //   console.log({ submitApp });
   //   setMyAppData([...submitApp, ...staticData]);
   // }, [])
+  // const categoryHandleChange = (__e, value) => {
+  //   setFilterInputs((prevState) => ({ ...prevState, answer: value }))
+  //   console.log("answer", value);
+  // }
+  // const handleChange = (__e, value) => {setFilterInputs((prevState) => ({ ...prevState, status: value }))};
+
+  const handleFilterChange = (__event ,value ,__reason, name) => {
+    setFilterInputs((prevState) => ({...prevState, [name]: value }))
+  }
+  const handleSearch = (e) => setSearch(e.target.value);
+  // console.log("search", handleSearch);
+  useEffect(() => {
+    const delayFn = setTimeout(() => setDebouncedSearch(search), 500);
+    return () => clearTimeout(delayFn);
+  }, [search]);
 
   function getMyApplication() {
-    getData('user/getall/applications', {}, setMyAppData);
+    const params = {'search': debouncedSearch, filters:filterInputs}
+    getData('user/getall/applications', { params }, setMyAppData);
   }
-  useEffect(getMyApplication, [getData]);
+  useEffect(getMyApplication, [getData, debouncedSearch, filterInputs]);
 
   function getApprovedApplication() {
-    getData('user/getall/approve/applications', {}, setAppData);
+    const params = {'search': debouncedSearch, filters:filterInputs}
+    getData('user/getall/approve/applications', { params }, setAppData);
   }
-  useEffect(getApprovedApplication, [getData]);
+  useEffect(getApprovedApplication, [getData, debouncedSearch, filterInputs]);
 
   return (
     <section className="dashboardWrapper">
@@ -56,6 +76,9 @@ export default function Dashboard() {
             <OutlinedInput
               className="searchField"
               name="search"
+              placeholder="Search application"
+              onChange={handleSearch}
+              value={search}
               startAdornment=
               <InputAdornment position="start">
                 <MagnifierIcon fill="#002F98" />
@@ -64,7 +87,7 @@ export default function Dashboard() {
             {userdata.role_id !== 2 && <Button variant="contained" color="secondary" onClick={() => navigate("/application")}>+ Create Application</Button>}
           </div>
           <TabPanel value={selectedTab} index={0}>
-            <FilterContainer type="myapp" />
+            <FilterContainer type="myapp" onChange={handleFilterChange} filterInputs={filterInputs} />
             <div className="applicationCardContainer">
               {myAppData.length > 0 ? myAppData.map((app, i) => (
                 <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit}>
@@ -96,7 +119,7 @@ export default function Dashboard() {
             </div>
           </TabPanel>
           <TabPanel value={selectedTab} index={1}>
-            <FilterContainer type="all" />
+            <FilterContainer type="all" onChange={handleFilterChange} filterInputs={filterInputs}/>
             <div className="applicationCardContainer">
               {appData.length > 0 ? appData?.map((app, i) => (
                 <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit}>
@@ -126,15 +149,43 @@ export default function Dashboard() {
     </section>
   )
 }
+const APPLICATION_STATUS = ['Draft', 'Pending', 'Approved', 'Rejected'];
+const QUESTION_CATEGORY = ['Fabric clean(FCL)', 'Fabric Enhancer(FEN)', 'Home & Hygiene(H&H)'];
 
-function FilterContainer({ type = "my" }) {
+function FilterContainer({ type = "my",  onChange, filterInputs}) {
+
   return (
     <ErrorBoundary>
       <div className="filterWrapper">
         <div className="filterContainer">
-          {type !== 'all' && <OutlinedInput placeholder="Status" />}
-          <OutlinedInput placeholder="Category" />
-          {/* <OutlinedInput placeholder="Date" /> */}
+          {type !== 'all' && 
+        // <OutlinedInput placeholder="Status" name="status"/>
+        <Autocomplete
+          multiple
+          disableCloseOnSelect
+          options={APPLICATION_STATUS}
+          value={filterInputs.status ?? []}
+          popupIcon={<ArrowDownIcon />}
+          sx={{ width: 289 }}
+          onChange={(event, value, reason) => onChange(event, value, reason, "status")}
+          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Status" />}
+          renderOption={(params, option, { selected }) => (
+            <li {...params}>
+              <Checkbox color="secondary" name="status" checked={selected} />
+              {option}
+            </li>
+          )}
+        />
+        }
+
+          <Autocomplete
+          options={QUESTION_CATEGORY}
+          value={filterInputs.answer ?? null}
+          popupIcon={<ArrowDownIcon />}
+          sx={{ width: 289 }}
+          onChange={(event, value, reason) => onChange(event, value, reason, "answer")}
+          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Category" />}
+        />
         </div>
       </div>
     </ErrorBoundary>

@@ -8,7 +8,7 @@ const Answers = db.answers;
 const ApplicationInvite = db.application_invite;
 const generateToken = require('../config/jwt.config');
 const seq = require('../config/sequelize.config');
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 
 function addProfileDetails(req, res) {
     //console(req.body);
@@ -20,7 +20,9 @@ function addProfileDetails(req, res) {
             id: userId,
             unique_id: "frag_usr_" + userId,
             role_id: 1,
-            email: req.userdata.email
+            email: req.userdata.email,
+            first_name: req.userdata.first_name,
+            last_name: req.userdata.last_name
         };
         console.log('token data - ', tokenData);
         const token = await generateToken(tokenData);
@@ -79,18 +81,37 @@ function updateProfile(req, res) {
 function getMyApplications(req, res) {
     const userId = req.userdata.user_id;
     const role_id = req.userdata.role_id;
-
+    //console.log("QUERY: ", req.query);
+    const searchText = req.query.search;
+    console.log(searchText);
+    const filters = req.query.filters;
+    //console.log("Filters-",filters);
+    let filterData = [];
+    const filterStatus = filters?.status ? filters.status : [];
+    const filterCategory = filters?.answer ? filters.answer : '';
+    //console.log('Filtercategory', filterCategory);
+    filterStatus.length != 0 && filterData.push({ '$application_status.status$': { [Op.or]: filterStatus } });
+    filterCategory.length != 0 && filterData.push({'$app_questions.answers.answer$': {[Op.eq]: filterCategory}});
+    
+    //console.log("FilterData", filterData);
+    const searchCond = searchText ? {
+        [Op.and]: filterData, [Op.or] : [
+            {project_name : { [Op.like]: '%' + searchText + '%' } }
+        ]
+    } : filters ? {[Op.and]: filterData}: {};
     (async () => {
 
-        const whereCond = role_id === 2 ? { application_status_id: [2, 4] } : { user_id: userId };
+        const whereCond = role_id === 2 ? { application_status_id: [2, 4], ...searchCond } : { user_id: userId, ...searchCond } 
 
         const applRes = await seq.seqFindAll(
             Application,
             ['id', 'project_name', 'application_status_id', 'user_id', 'status', 'updatedAt'], //Change the column updatedAt name if causes error here
-            whereCond,
+            whereCond, 
             [
                 { model: ApplicationStatus, attributes: ['id', 'status'] },
                 { model: User, attributes: ['id', 'first_name', 'last_name', 'email'] },
+                {model: AppQuestion, attributes:['id', 'app_id','question_id'], where: {question_id:3}, include: [{model: Answers, attributes:['id', 'question_id', 'answer']}]
+                },
             ],
             [['updatedAt', 'DESC']]
         );
@@ -101,14 +122,35 @@ function getMyApplications(req, res) {
 }
 
 function getApprovedApplications(req, res) {
+    const searchText = req.query.search;
+    console.log("Query-",req.query);
+    const filters = req.query.filters;
+    console.log("Filters-",filters);
+    const filterCategory = filters?.answer ? filters.answer : '';
+    console.log("filterCategory", filterCategory);
+    let filterData = [];
+    // filterCategory.length != 0 && filterData.push({'$app_question.answers.answer$': {[Op.or]: filterCategory}});
+    filterCategory.length != 0 && filterData.push({'$app_questions.answers.answer$': {[Op.eq]: filterCategory}});
+    console.log("FilterData", filterData);
+    const searchCond = searchText ? {
+        [Op.and]: filterData,
+        [Op.or] : [
+            {project_name : { [Op.like]: '%' + searchText + '%' } }
+        ]
+    } : filters ? {[Op.and]: filterData}: {};
+    console.log("SearchCond: ",searchCond);
     (async () => {
-        const approveRes = await seq.seqFindAll(Application, ['id', 'project_name', 'application_status_id', 'user_id', 'status'], { application_status_id: 3 },
+        const approveRes = await seq.seqFindAll(Application, ['id', 'project_name', 'application_status_id', 'user_id', 'status'], { application_status_id: 3, ...searchCond },
             [
                 { model: ApplicationStatus, attributes: ['id', 'status'] },
                 { model: User, attributes: ['id', 'first_name', 'last_name', 'email'] },
+                {model: AppQuestion, attributes:['id', 'app_id','question_id'], where: {question_id:3}, include: [{model: Answers, attributes:['id', 'question_id', 'answer']}]
+                },
+                
             ],
             [['updatedAt', 'DESC']]
         );
+        // console.log("Approvr-", approveRes);
         if (approveRes === 500) {
             res.status(500).send({ message: "Error while retrieving the list of approved applications" });
             return;

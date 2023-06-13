@@ -9,7 +9,7 @@ function sendOTP(req, res) {
     const otp = Math.floor(1000 + Math.random() * 9000);
 
     (async () => {
-        const data = await seq.seqFindOne(User, ['id'], { email: email });
+        const data = await seq.seqFindOne(User, ['id', 'first_name','last_name'], { email: email });
         if (data === 500) {
             res.status(500).send({ message: "Error while getting EmailID" });
             return;

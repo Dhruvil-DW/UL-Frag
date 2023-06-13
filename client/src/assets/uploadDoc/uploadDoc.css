@@ -1,5 +1,6 @@
 .uploadWrapper {
     width: min(100%, 450px);
+    /* border: 1px dashed hsla(222, 57%, 42%, 0.3); */
   }
   .uploadWrapper .label {
     margin-bottom: 16px;
@@ -16,11 +17,11 @@
     align-items: center;
     gap: 16px;
     text-align: center;
-    min-height: 400px;
+    min-height: 300px;
     /* width: 400px; */
     padding: 16px;
-    background: var(--bg-body);
-    border: 2px dashed var(--grey-84);
+    background: #fff;
+    border: 1px dashed hsla(222, 57%, 42%, 0.3);;
   }
   
   .uploadedImgContainer {
@@ -45,3 +46,6 @@
     font-size: 12px;
   }
   
+  .uploadContainer{
+    width: 30%;
+  }

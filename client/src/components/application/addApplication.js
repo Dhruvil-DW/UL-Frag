@@ -16,6 +16,8 @@ export default function AddApplication() {
   const navigate = useNavigate();
   const [catWiseQues, setCatWiseQues] = useState([]);
   const [inputs, setInputs] = useState({});
+  const [allFiles, setAllFiles] = useState([]);
+  const [removeFiles, setRemoveFiles] = useState([]);
   const [regions, setRegions] = useState([]);
   const [country, setCountry] = useState([]);
   const containerRef = useRef(null);
@@ -138,6 +140,45 @@ export default function AddApplication() {
     }
   }, []);
 
+
+  const handleRemoveFilesChange = useCallback((name, value)=> setRemoveFiles((prevState) => [...prevState, ...value]), [])
+
+  const handleFilesChange = useCallback((name, value) => {
+    // debugger;
+    // console.debug('handleFilesChange_files', allFiles);
+    // console.debug('handleFilesChange_value', value);
+    // if (value && value.length !== 0) {
+    //   debugger;
+    //     setAllFiles(prevState => ([ ...prevState, ...value ]));
+      
+    //   console.debug('file divayraj',allFiles)
+    // }
+    //  else {
+    //   debugger;
+    //   setAllFiles([...value]);
+    // }
+    setAllFiles((prevFiles) => {
+      if (value && value.length !== 0) {
+        const filtered_file = prevFiles.filter((file) =>{
+          const found = value.find((value_file)=> value_file.name == file.name);
+          if(found){
+            return false
+          }else{
+            return true;
+          }
+        } );
+        console.debug('value',value);
+        console.debug('all pre files',prevFiles);
+        return [...filtered_file, ...value];
+      }
+      else{
+        return [...value];
+      }
+      
+    })
+  }, []);
+
+  console.log('divyaraj_files',allFiles);
   const handleSubmit = () => {
     // console.log({ inputs });
     const project_name = inputs[1]?.projectName ?? "Fragrance Brief";
@@ -145,27 +186,22 @@ export default function AddApplication() {
       project_name: project_name,
       inputs: inputs
     };
+    console.log('divyaraj_files_1',allFiles);
+
+    const formData = new FormData();
+    for( const f in allFiles){
+      formData.append('filename', allFiles[f]);
+    }
+      // files.forEach((elem) => {
+      //   formData.append('filename', elem);
+      // });
+      formData.append('inputs', JSON.stringify(final_inputs));
+      // formData.append('removeUploadedFiles', JSON.stringify(removeUploadedFiles));
 
     console.log(final_inputs);
 
-    postData(`/application/submit?app_id=${appId ?? ""}`, final_inputs, (data) => { navigate("/application/summary", { state: { app_id: data.app_id } }) });
+    postData(`/application/submit?app_id=${appId ?? ""}`, formData, (data) => { navigate("/application/summary", { state: { app_id: data.app_id } }) });
 
-    //API CALLS
-    //Temp Save to Local
-    // const submitApp = JSON.parse(localStorage.getItem("submitApp")); //Get App from Local
-    // console.log({ submitApp });
-    // let newSubmitApp;
-    // const dateTime = new Date();
-    // const dateStr = `${dateTime.getDate()}/${dateTime.getMonth() + 1}/${dateTime.getFullYear()}`
-    // const randomNum = Math.floor(1000 + Math.random() * 9000);
-    // if (submitApp) {
-    //   newSubmitApp = [{ app_id: `app-${randomNum}`, title: `${inputs[1]?.projectName ?? "Fragrance Brief"} ${randomNum}`, name: 'Andrew smith', modifiedDate: dateStr, inputs: inputs }, ...submitApp];
-    // } else {
-    //   newSubmitApp = [{ app_id: `app-${randomNum}`, title: `${inputs[1]?.projectName ?? "Fragrance Brief"} ${randomNum}`, name: 'Andrew smith', modifiedDate: dateStr, inputs: inputs }];
-    // }
-
-    // localStorage.setItem("submitApp", JSON.stringify(newSubmitApp)); //Set New App to Local
-    // navigate("/application/summary", { state: { app_id: `app-${randomNum}` } });
   }
 
   function handleDraft() {
@@ -177,15 +213,29 @@ export default function AddApplication() {
       inputs: inputs
     };
 
+    // console.log(final_inputs);
+    console.log('divyaraj_files_1',allFiles);
+
+    const formData = new FormData();
+    for( const f in allFiles){
+      formData.append('filename', allFiles[f]);
+    }
+      // files.forEach((elem) => {
+      //   formData.append('filename', elem);
+      // });
+      formData.append('inputs', JSON.stringify(final_inputs));
+      formData.append('removeFiles', JSON.stringify(removeFiles));
+      // formData.append('removeUploadedFiles', JSON.stringify(removeUploadedFiles));
+
     console.log(final_inputs);
 
-    postData(`/application/draft?app_id=${appId ?? ""}`, final_inputs, (data) => { navigate(`/application/drafted`, { state: { app_id: data.app_id } }) });
+    postData(`/application/draft?app_id=${appId ?? ""}`, formData, (data) => { navigate(`/application/drafted`, { state: { app_id: data.app_id } }) });
   }
 
   console.log("QUESTIONS: ", catWiseQues);
   let count = 1;
   return (
-    <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleNextPrevNav, handleAnswerChange, regions, country, resetInputCountry }}>
+    <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleNextPrevNav, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, regions, country, resetInputCountry }}>
       <main className="appFormContainer">
         <ErrorBoundary>
           <NavSideBar formRef={containerRef} activeQue={currentQue} />

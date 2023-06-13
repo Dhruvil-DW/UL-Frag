@@ -8,7 +8,7 @@ export default function SelectMultiStatic({ question, nav, index, value = [], on
   const { handleNextPrevNav, inputs, country, handleAnswerChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const defferInput = useDeferredValue(input);
-
+  
   function handleInputChange(__event, value, __reason) {
     // switch (reason) {
     //   case "selectOption":
@@ -37,7 +37,7 @@ export default function SelectMultiStatic({ question, nav, index, value = [], on
       // 👇 Will scroll smoothly to the top of the next section
       element.scrollIntoView({ behavior: 'smooth' });
     }
-  }
+}
 
   return (
     <div className="questionContainer fixWidth">

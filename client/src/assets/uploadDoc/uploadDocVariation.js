@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { LazyImage } from '../image/lazyImage';
 import { Divider } from '@mui/material';
 
-export default function UploadDoc({ label = 'Upload Images', name = 'DefaultName', files, uploadedFiles = [], onUpload, onRemove, onRemoveUploaded, required = false }) {
+export default function UploadDocVariation({ label = 'Upload Images', name = 'DefaultName', files, uploadedFiles = [], onUpload, onRemove, onRemoveUploaded, required = false }) {
     // const drop = useRef(null);
     // useEffect(() => {
     //   const dropCurr = drop.current;
@@ -19,6 +19,7 @@ export default function UploadDoc({ label = 'Upload Images', name = 'DefaultName
     //   };
     // }, []);
 
+    console.log('upload variation', files);
     const handleDragOver = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -56,6 +57,15 @@ export default function UploadDoc({ label = 'Upload Images', name = 'DefaultName
         }
     };
 
+    const file_values = Object.values(files);
+    console.log(file_values);
+
+    console.log('uploaded files', uploadedFiles);
+
+    uploadedFiles.map((image, i) => {
+        console.log('manges',image)
+    });
+
     return (
         <section className="uploadWrapper">
 
@@ -86,13 +96,13 @@ export default function UploadDoc({ label = 'Upload Images', name = 'DefaultName
                 )}
                 {files.length > 0 ? (
                     <div className="uploadedImgContainer">
-                        {files.map((f, i) => (
-                            <div key={i}>
+                        {file_values.map((f, i) => (
+                            <div data-id={i} key={i}>
                                 <img
                                     src={'/images/icons/file_cancel.svg'}
                                     alt="Cancel Icon"
                                     style={{ position: 'absolute', top: 0, right: 0, cursor: 'pointer' }}
-                                    onClick={() => onRemove(f, name)}
+                                    onClick={() => onRemove(f, i)}
                                 />
                                 <img src={/jpeg|png|jpg/.test(f.type) ? URL.createObjectURL(f) : '/image/icon/file_pdf.png'} style={{ width: '50px' }} alt="PDF Icon" />
                                 <p>{f.name.length > 18 ? f.name.slice(0, 5) + '...' + f.name.substr(-10) : f.name}</p>
@@ -119,6 +129,6 @@ export default function UploadDoc({ label = 'Upload Images', name = 'DefaultName
     );
 }
 
-UploadDoc.propTypes = {
+UploadDocVariation.propTypes = {
     onUpload: PropTypes.func.isRequired,
 };

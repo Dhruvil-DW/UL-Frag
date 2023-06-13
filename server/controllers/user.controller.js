@@ -8,7 +8,7 @@ const Answers = db.answers;
 const ApplicationInvite = db.application_invite;
 const generateToken = require('../config/jwt.config');
 const seq = require('../config/sequelize.config');
-const { Op, where } = require("sequelize");
+const { Op } = require("sequelize");
 
 function addProfileDetails(req, res) {
     //console(req.body);

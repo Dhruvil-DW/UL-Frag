@@ -70,6 +70,15 @@
   max-width: 500px;
 }
 
+.questionContainer .MuiInputBase-root.MuiOutlinedInput-root:not(.MuiInputBase-multiline):has(#investmentField) {
+  min-height: 40px;
+  margin-left: 2rem;
+}
+
+#investmentField {
+  width: 100px;
+}
+
 .optionContainer {
   display: flex;
   cursor: pointer;

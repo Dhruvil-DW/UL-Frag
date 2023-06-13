@@ -16,20 +16,14 @@ function sendOTP(req, res) {
         }
         if (data) {
             const updateOtpRes = await seq.seqUpdate(User, { otp: otp }, { id: data.id });
-            if (updateOtpRes === 500) {
-                res.status(500).send({ message: "Error while updating OTP" });
-                return;
-            }
+            if (updateOtpRes === 500) return res.status(500).send({ message: "Error while updating OTP" });
         } else {
             const newUser = { email: email, otp: otp, role_id: 0 }
-            const addUserRes = await seq.seqCreate(User, newUser)
-            if (addUserRes === 500) {
-                res.status(500).send({ message: "Error while creating User" });
-                return;
-            }
+            const addUserRes = await seq.seqCreate(User, newUser);
+            if (addUserRes === 500) return res.status(500).send({ message: "Error while creating User" });
         }
         sendEmail([email], `OTP for Your Fragrance Login`,
-          `Your One Time Password (OTP) is <b>${otp}</b>.`)
+            `Your One Time Password (OTP) is <b>${otp}</b>.`)
         res.status(200).send({ message: "OTP send successfully" });
     })();
 }

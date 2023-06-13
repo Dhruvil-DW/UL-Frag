@@ -8,6 +8,8 @@ import SelectSingleStatic from "./selectSingleStatic";
 import SelectSingleWithTextStatic from "./selectSingleTextField";
 import TextBoxImage from "./textImage";
 import TextBox from "./textBox";
+import SelectCategory from "./selectCategory";
+import RadioTextInvestment from "./radioTextInvestment";
 
 export default function QuestionType({ question, nav, index, inputs, onKeyUp }) {
 
@@ -18,7 +20,9 @@ export default function QuestionType({ question, nav, index, inputs, onKeyUp }) 
 
     case 3: //Select Dropdown predefined
     case 4: // Select Dropdown dynamic
-      return <SelectSingleStatic question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
+      return question.id === 3
+        ? <SelectCategory question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
+        : <SelectSingleStatic question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
 
     case 5: //Multiselect Dropdown predefined
     case 6: // Multiselect dropdown dynamic
@@ -31,7 +35,9 @@ export default function QuestionType({ question, nav, index, inputs, onKeyUp }) 
       return <CheckBoxImage question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
 
     case 10: // Single Choice predefinded
-      return <RadioText question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
+      return question.id === 24
+        ? <RadioTextInvestment question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
+        : <RadioText question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
 
     case 11: // Multiple Choice (Checkbox) predefined
     case 15: // Confirm Checkbox
@@ -43,7 +49,7 @@ export default function QuestionType({ question, nav, index, inputs, onKeyUp }) 
     case 14: //Select (RadioButton) with TextBox
       return <SelectSingleWithTextStatic question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
 
-      case 13: //Add multiple image (uploadDoc) with TextBox
+    case 13: //Add multiple image (uploadDoc) with TextBox
       return <TextBoxImage question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
 
     case 2: // Date

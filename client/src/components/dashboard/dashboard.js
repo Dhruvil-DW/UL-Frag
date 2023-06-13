@@ -70,7 +70,7 @@ export default function Dashboard() {
         <div className="dashboardContentWrapper">
           <div className="tabContainer">
             <Tabs value={selectedTab} onChange={handleChangeTab} sx={{ mr: 'auto' }}>
-              <Tab label={userdata.role_id === 2 ? "Pending Projects" : "My Projects"} />
+              <Tab label={userdata.role_id === 2 ? "In Approval Projects" : "My Projects"} />
               <Tab label="All Projects" />
             </Tabs>
             <OutlinedInput
@@ -91,7 +91,7 @@ export default function Dashboard() {
             <div className="applicationCardContainer">
               {myAppData.length > 0 ? myAppData.map((app, i) => (
                 <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit}>
-                  <h2>{app.project_name}</h2>
+                  <h2 style={{marginTop: 16 }}>{app.project_name}</h2>
                   <div className="statusContainer">
                     <Button className="cardButton">{app.application_status.status}</Button>
                   </div>
@@ -103,7 +103,7 @@ export default function Dashboard() {
                     <CalenderIcon />
                     <p>Edited on <b>{formatDate(app.updatedAt)}</b></p>
                   </div>
-                  <img src="/images/icons/three_dot_blue.svg" alt="option" className="optionIcon" />
+                  <img style={{marginTop: 16}} src="/images/icons/three_dot_blue.svg" alt="option" className="optionIcon" />
                   <div className={`appCardActionContainer ${hoverCardId === i ? "hovered" : ""}`}>
                     <img src="/images/icons/eye_round.svg" alt="view" onClick={() => navigate(`/application/view/${app.id}`)} />
                     {userdata.role_id === 1 && (

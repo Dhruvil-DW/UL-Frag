@@ -12,6 +12,7 @@ import SubmitApplication from "./components/application/submitApplication";
 import ViewApplication from "./components/application/viewApplication";
 import DraftApplication from "./components/application/draftApplication";
 import Prompt from "./assets/prompt/prompt";
+import CollabModal from "./components/collaborator/collabModal";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ export default function App() {
             </Route>
           </Routes>
         </BrowserRouter>
+        <CollabModal />
         <Prompt />
       </QueryClientProvider>
     </Context>

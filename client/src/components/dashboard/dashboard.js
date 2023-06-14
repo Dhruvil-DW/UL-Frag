@@ -1,73 +1,96 @@
 import { useContext, useEffect, useState } from "react";
 import Header from "../basic/header";
-import { Autocomplete, Button, Checkbox, Divider, InputAdornment, OutlinedInput, Tab, Tabs, TextField } from "@mui/material";
+import { Button, Divider, InputAdornment, OutlinedInput, Tab, Tabs } from "@mui/material";
 import { TabPanel } from "../../assets/tabs/tabs";
 import MagnifierIcon from "../../assets/icons/magnifierIcon";
 import { useNavigate } from "react-router-dom";
-import UserIcon from "../../assets/icons/userIcon";
-import CalenderIcon from "../../assets/icons/calenderIcon";
 import { useAxios } from "../../hooks/useAxios";
-import { formatDate } from "../../utils/globalFunctions/dateFns";
 import { authContext } from "../../context/authContext";
-import ArrowDownIcon from "../../assets/icons/arrowDownIcon";
-import ErrorBoundary from "../../config/errorBoundary/ErrorBoundary";
+import MyProjectTab from "./tabs/myProjectTab";
+import AllProjectTab from "./tabs/allProjectTab";
+import InviteTab from "./tabs/inviteTab";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { authState } = useContext(authContext);
   const userdata = authState.userdata;
   const { getData } = useAxios();
-  const [myAppData, setMyAppData] = useState([]);
-  const [appData, setAppData] = useState([]);
   const [selectedTab, setSelectedTab] = useState(0);
   const handleChangeTab = (__event, newTab) => setSelectedTab(newTab);
 
-  const [hoverCardId, setHoverCardId] = useState(null);
-  const mouseEnter = (id) => setHoverCardId(id);
-  const mouseExit = () => setHoverCardId(null);
-  const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [filterInputs, setFilterInputs] = useState({ status: [], answer: null });
-  // useEffect(() => {
-  //   const submitApp = JSON.parse(localStorage.getItem("submitApp")) ?? [];
-  //   const staticData = createApplicationCardData(20);
-  //   console.log({ submitApp });
-  //   setMyAppData([...submitApp, ...staticData]);
-  // }, [])
-  // const categoryHandleChange = (__e, value) => {
-  //   setFilterInputs((prevState) => ({ ...prevState, answer: value }))
-  //   console.log("answer", value);
-  // }
-  // const handleChange = (__e, value) => {setFilterInputs((prevState) => ({ ...prevState, status: value }))};
+  //**** My Application Data Start ****//
+  const [myAppData, setMyAppData] = useState([]);
+  const [myAppParams, setMyAppParams] = useState({ search: "", filters: { status: [], answer: null } });
+  const [myAppParamsDebounced, setMyAppParamsDebounced] = useState(myAppParams);
 
-  const handleFilterChange = (__event, value, __reason, name) => {
-    setFilterInputs((prevState) => ({ ...prevState, [name]: value }))
+  const handleMyAppFilterChange = (__event, value, __reason, name) => {
+    setMyAppParams((prevState) => ({ ...prevState, filters: { ...prevState.filters, [name]: value } }))
   }
-  const handleSearch = (e) => setSearch(e.target.value);
-  // console.log("search", handleSearch);
+
   useEffect(() => {
-    const delayFn = setTimeout(() => setDebouncedSearch(search), 500);
+    const delayFn = setTimeout(() => setMyAppParamsDebounced(myAppParams), 500);
     return () => clearTimeout(delayFn);
-  }, [search]);
+  }, [myAppParams]);
 
   function getMyApplication() {
-    const params = { 'search': debouncedSearch, filters: filterInputs }
-    getData('user/getall/applications', { params }, setMyAppData);
+    const params = myAppParamsDebounced;
+    getData('user/get/myapplications', { params }, setMyAppData);
   }
-  useEffect(getMyApplication, [getData, debouncedSearch, filterInputs]);
+  useEffect(getMyApplication, [getData, myAppParamsDebounced]);
 
-  function getApprovedApplication() {
-    const params = { 'search': debouncedSearch, filters: filterInputs }
-    getData('user/getall/approve/applications', { params }, setAppData);
+  //**** My Application Data End ****//
+
+  //**** All Application Data Start ****//
+  const [allAppData, setAllAppData] = useState([]);
+  const [allAppParams, setAllAppParams] = useState({ search: "", filters: { answer: null } });
+  const [allAppParamsDebounced, setAllAppParamsDebounced] = useState(allAppParams);
+
+  const handleAllAppFilterChange = (__event, value, __reason, name) => {
+    setAllAppParams((prevState) => ({ ...prevState, filters: { ...prevState.filters, [name]: value } }))
   }
-  useEffect(getApprovedApplication, [getData, debouncedSearch, filterInputs]);
-  
-  function getCopyApplication(app_id){
-    getData(`application/copy/${app_id}`,{}, 
-    (data) => {
-      navigate(`/application/edit/${data.app_id}`)
-    });
+
+  useEffect(() => {
+    const delayFn = setTimeout(() => setAllAppParamsDebounced(allAppParams), 500);
+    return () => clearTimeout(delayFn);
+  }, [allAppParams]);
+
+  function getAllApplication() {
+    const params = allAppParamsDebounced;
+    getData('user/get/approvedapplications', { params }, setAllAppData);
   }
+  useEffect(getAllApplication, [getData, allAppParamsDebounced]);
+
+  //**** All Application Data End ****//
+
+  //**** Invited Application Data Start ****//
+  const [invitedAppData, setInvitedAppData] = useState([]);
+  const [invitedAppParams, setInvitedAppParams] = useState({ search: "", filters: { answer: null } });
+  const [invitedAppParamsDebounced, setInvitedAppParamsDebounced] = useState(invitedAppParams);
+
+  const handleinvitedAppFilterChange = (__event, value, __reason, name) => {
+    setInvitedAppParams((prevState) => ({ ...prevState, filters: { ...prevState.filters, [name]: value } }))
+  }
+
+  useEffect(() => {
+    const delayFn = setTimeout(() => setInvitedAppParamsDebounced(invitedAppParams), 500);
+    return () => clearTimeout(delayFn);
+  }, [invitedAppParams]);
+
+  function getinvitedApplication() {
+    if (userdata.role_id !== 2) {
+      const params = invitedAppParamsDebounced;
+      getData('user/get/invitedapplications', { params }, setInvitedAppData);
+    }
+  }
+  useEffect(getinvitedApplication, [getData, invitedAppParamsDebounced, userdata.role_id]);
+  //**** Invited Application Data End ****//
+
+  const handleSearch = (e) => {
+    if (selectedTab === 0) setMyAppParams((prevSearch) => ({ ...prevSearch, search: e.target.value }))
+    if (selectedTab === 1) setAllAppParams((prevSearch) => ({ ...prevSearch, search: e.target.value }))
+    if (selectedTab === 2) setInvitedAppParams((prevSearch) => ({ ...prevSearch, search: e.target.value }))
+  };
+
   return (
     <section className="dashboardWrapper">
       <div className="dashboardContainer">
@@ -78,13 +101,14 @@ export default function Dashboard() {
             <Tabs value={selectedTab} onChange={handleChangeTab} sx={{ mr: 'auto' }}>
               <Tab label={userdata.role_id === 2 ? "In Approval Projects" : "My Projects"} />
               <Tab label="All Projects" />
+              {userdata.role_id === 1 && <Tab label="Invited Projects" />}
             </Tabs>
             <OutlinedInput
               className="searchField"
               name="search"
               placeholder="Search application"
               onChange={handleSearch}
-              value={search}
+              value={selectedTab === 0 ? myAppParams.search : selectedTab === 1 ? allAppParams.search : selectedTab === 2 ? invitedAppParams.search : ""}
               startAdornment=
               <InputAdornment position="start">
                 <MagnifierIcon fill="#002F98" />
@@ -93,122 +117,18 @@ export default function Dashboard() {
             {userdata.role_id !== 2 && <Button variant="contained" color="secondary" onClick={() => navigate("/application")}>+ Create Application</Button>}
           </div>
           <TabPanel value={selectedTab} index={0}>
-            <FilterContainer type="myapp" onChange={handleFilterChange} filterInputs={filterInputs} />
-            <div className="applicationCardContainer">
-              {myAppData.length > 0 ? myAppData.map((app, i) => (
-                // <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit} onClick={() => navigate(`/application/view/${app.id}`)}>
-                <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit}>
-                  <h2 style={{ marginTop: 16 }}>{app.project_name}</h2>
-                  <div className="statusContainer">
-                    <Button className="cardButton">{app.application_status.status}</Button>
-                  </div>
-                  <div className="cardDetails">
-                    <UserIcon />
-                    <p>{`${app.User.first_name} ${app.User.last_name}`}</p>
-                  </div>
-                  <div className="cardDetails">
-                    <CalenderIcon />
-                    <p>Edited on <b>{formatDate(app.updatedAt)}</b></p>
-                  </div>
-                  <img style={{ marginTop: 16 }} src="/images/icons/three_dot_blue.svg" alt="option" className="optionIcon" />
-                  <div className={`appCardActionContainer ${hoverCardId === i ? "hovered" : ""}`}>
-                    <img src="/images/icons/eye_round.svg" alt="view" onClick={() => navigate(`/application/view/${app.id}`)} />
-                    {userdata.role_id === 1 && (
-                      <>
-                        {<img src="/images/icons/copy_round.svg" alt="copy"/>}
-                        {app.application_status_id === 1 && <img src="/images/icons/pencil_round.svg" alt="edit" onClick={() => navigate(`/application/edit/${app.id}`)} />}
-                        {<img src="/images/icons/invite_user.svg" alt="invite" />}
-                      </>
-                    )}
-                  </div>
-                </div>
-              )) : <p>No Application Found</p>}
-            </div>
+            <MyProjectTab data={myAppData} params={myAppParams} handleParamsChange={handleMyAppFilterChange} />
           </TabPanel>
           <TabPanel value={selectedTab} index={1}>
-            <FilterContainer type="all" onChange={handleFilterChange} filterInputs={filterInputs} />
-            <div className="applicationCardContainer">
-              {appData.length > 0 ? appData?.map((app, i) => (
-                // <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit} onClick={() => navigate(`/application/view/${app.id}`)}>
-                <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit}>
-                  <h2>{app.project_name}</h2>
-                  <div className="statusContainer">
-                    <Button className="cardButton">{app.application_status.status}</Button>
-                  </div>
-                  <div className="cardDetails">
-                    <UserIcon />
-                    <p>{`${app.User.first_name} ${app.User.last_name}`}</p>
-                  </div>
-                  <div className="cardDetails">
-                    <CalenderIcon />
-                    <p>Edited on <b>{formatDate(app.updatedAt)}</b></p>
-                  </div>
-                  <img src="/images/icons/three_dot_blue.svg" alt="option" className="optionIcon" />
-                  <div className={`appCardActionContainer ${hoverCardId === i ? "hovered" : ""}`}>
-                    <img src="/images/icons/eye_round.svg" alt="view" onClick={() => navigate(`/application/view/${app.id}`)} />
-                    {userdata.role_id === 1 && <img src="/images/icons/copy_round.svg" alt="copy" onClick={() => getCopyApplication(app.id)}/>}
-                  </div>
-                </div>
-              )) : <p>No Application Found</p>}
-            </div>
+            <AllProjectTab data={allAppData} params={allAppParams} handleParamsChange={handleAllAppFilterChange} />
           </TabPanel>
+          {userdata.role_id === 1 && (
+            <TabPanel value={selectedTab} index={2}>
+              <InviteTab data={invitedAppData} params={invitedAppParams} handleParamsChange={handleinvitedAppFilterChange} />
+            </TabPanel>
+          )}
         </div>
       </div>
     </section>
   )
 }
-const APPLICATION_STATUS = ['Draft', 'Pending', 'Approved', 'Rejected'];
-const QUESTION_CATEGORY = ['Fabric clean(FCL)', 'Fabric Enhancer(FEN)', 'Home & Hygiene(H&H)'];
-
-function FilterContainer({ type = "my", onChange, filterInputs }) {
-
-  return (
-    <ErrorBoundary>
-      <div className="filterWrapper">
-        <div className="filterContainer">
-          {type !== 'all' &&
-            // <OutlinedInput placeholder="Status" name="status"/>
-            <Autocomplete
-              multiple
-              disableCloseOnSelect
-              options={APPLICATION_STATUS}
-              value={filterInputs.status ?? []}
-              popupIcon={<ArrowDownIcon />}
-              sx={{ width: 289 }}
-              onChange={(event, value, reason) => onChange(event, value, reason, "status")}
-              renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Status" />}
-              renderOption={(params, option, { selected }) => (
-                <li {...params}>
-                  <Checkbox color="secondary" name="status" checked={selected} />
-                  {option}
-                </li>
-              )}
-            />
-          }
-
-          <Autocomplete
-            options={QUESTION_CATEGORY}
-            value={filterInputs.answer ?? null}
-            popupIcon={<ArrowDownIcon />}
-            sx={{ width: 289 }}
-            onChange={(event, value, reason) => onChange(event, value, reason, "answer")}
-            renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Category" />}
-          />
-        </div>
-      </div>
-    </ErrorBoundary>
-  )
-}
-
-// function createApplicationCardData(count = 10) {
-//   let result = [];
-//   for (let i = 1; i <= count; i++) {
-//     result.push({
-//       title: `Fragrance Brief ${i}`,
-//       name: "Andrew smith",
-//       modifiedDate: "05/10/23",
-//       status: "status"
-//     })
-//   }
-//   return result;
-// }

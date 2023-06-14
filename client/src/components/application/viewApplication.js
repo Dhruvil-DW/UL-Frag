@@ -9,6 +9,9 @@ import { formatDate } from '../../utils/globalFunctions/dateFns';
 import { Button } from '@mui/material';
 import { authContext } from '../../context/authContext';
 import { promptActions, promptContext } from '../../context/promptContext';
+import LogoutArrowIcon from "../../assets/icons/logout_arrow";
+import UserAddIcon from "../../assets/icons/userAdd";
+import { collabActions, collabContext } from '../../context/collabContext';
 
 export default function ViewApplication() {
   const { appId } = useParams();
@@ -16,6 +19,7 @@ export default function ViewApplication() {
   const navigate = useNavigate();
   const { authState } = useContext(authContext);
   const { promptDispatch } = useContext(promptContext);
+  const { collabDispatch } = useContext(collabContext);
   const userdata = authState.userdata;
 
   const [appData, setAppData] = useState({});
@@ -74,8 +78,12 @@ export default function ViewApplication() {
         )}
         {userdata.role_id === 1 && (
           <>
-            <div className="buttonContainer" style={{ margin: "1rem" }}>
+            {/* <div className="buttonContainer" style={{ margin: "1rem", alignSelf: "flex-start" }}>
               <Button variant="outlined" onClick={() => navigate('/logout')}>Logout</Button>
+            </div> */}
+            <div className="buttonContainer">
+              {appData.application_status_id === 1 && <Button variant="contained" startIcon={<UserAddIcon />} onClick={() => collabDispatch({ type: collabActions.SHOW_COLLAB, payload: { app_id: appId } })}>Invite</Button>}
+              <Button variant="outlined" startIcon={<LogoutArrowIcon />} onClick={() => navigate('/logout')}>Logout</Button>
             </div>
           </>
         )}

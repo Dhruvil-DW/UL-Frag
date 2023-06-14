@@ -31,7 +31,7 @@ function CustAlert({ data }) {
   }, [data.id, data.timer, promptDispatch]);
 
   return (
-    <Alert onClose={() => promptDispatch(promptActions.HIDE_PROMPT(data.id))} severity={data.type}>
+    <Alert onClose={() => promptDispatch({ type: promptActions.HIDE_PROMPT, payload: data.id })} severity={data.type}>
       {data.message}
     </Alert>
   );

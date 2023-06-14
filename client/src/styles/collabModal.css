@@ -1,0 +1,56 @@
+.collabModalWrapper {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.collabModalContainer {
+  height: 50vh;
+  width: 50vw;
+  background-color: white;
+  padding: 2rem;
+  position: relative;
+}
+
+.collabModalTitle {
+  color: #002F98;
+  margin: 0;
+}
+
+.noAppIdMsg {
+  color: red;
+}
+
+.fieldBtnContainer {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.fieldWrapper {
+  flex-grow: 1;
+  flex-basis: 200px;
+}
+
+/* .addBtnWrapper {
+} */
+
+.emailList {
+  margin: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+
+.sbmtBtnContainer {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}

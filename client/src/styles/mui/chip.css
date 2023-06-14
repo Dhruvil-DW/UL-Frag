@@ -1,0 +1,14 @@
+.MuiChip-root.MuiChip-outlined {
+  border: 1px solid hsl(221, 100%, 30%);
+  color: hsl(221, 100%, 30%);
+}
+.MuiChip-root.MuiChip-outlined:hover {
+  border: 1px solid hsl(221, 100%, 40%);
+  color: hsl(221, 100%, 40%);
+}
+
+.MuiChip-root.MuiChip-outlined .MuiChip-deleteIcon,
+.MuiChip-root.MuiChip-outlined .MuiChip-deleteIcon:hover {
+  /* color: hsl(221, 100%, 30%); */
+  color: inherit;
+}

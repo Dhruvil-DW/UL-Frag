@@ -92,12 +92,19 @@ function submitApplication(req, res) {
       res.status(422).send({ message: "Application name already exists" });
       return;
     }
-    const appData = {
+    
+    // Data To Create or Update in Application Table
+    const appData = app_id ? {
+      project_name: req.body.project_name,
+      application_status_id: 2,
+      status: 1,
+    } : {
       project_name: req.body.project_name,
       application_status_id: 2,
       user_id: user_id,
       status: 1,
-    };
+    }
+
     if (!app_id) {
       //Create App if App not Exist
       const appRes = await seq.seqCreate(Application, appData);
@@ -192,12 +199,16 @@ function draftApplication(req, res) {
   (async () => {
 
     // Data To Create or Update in Application Table
-    const appData = {
+    const appData = app_id ? {
+      project_name: req.body.project_name,
+      application_status_id: 1,
+      status: 1,
+    } : {
       project_name: req.body.project_name,
       application_status_id: 1,
       user_id: user_id,
       status: 1,
-    };
+    }
 
     // Create Application If Not Exist
     // Update Application If Exist

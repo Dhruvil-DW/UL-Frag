@@ -1,5 +1,4 @@
-import { Autocomplete, TextField } from "@mui/material";
-import ArrowDownIcon from "../../../assets/icons/arrowDownIcon";
+import { TextField } from "@mui/material";
 import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
@@ -7,7 +6,7 @@ import TooltipIcon from "../../../assets/icons/tooltipIcon";
 import Tooltip from "@mui/material/Tooltip";
 
 export default function TextBox({ question, nav, index, value = "", onKeyUp }) {
-  const { handleNextPrevNav, handleAnswerChange } = useContext(ApplicationContext);
+  const { handleAnswerChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const defferInput = useDeferredValue(input);
 
@@ -34,14 +33,10 @@ export default function TextBox({ question, nav, index, value = "", onKeyUp }) {
       </h2>
       <TextField multiline rows={8} inputProps={{ maxLength: 100 }} variant="outlined" color="secondary" placeholder="Enter your description here" value={input} onChange={(e) => setInput(e.target.value)} />
       <div style={{ position: "absolute", bottom: 8, right: 24, color: "hsl(0, 0%, 60%)" }}>{`${input.length ?? 0} / 100`}</div>
+      
       <div className='navBtnCont'>
-
-        {/* <a href={`#${(nav)-1}`} className="navlink"> */}
         <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>
-        {/* </a> */}
-        {/* <a href={`#${(nav)+1}`} className="navlink"> */}
         <div className="nextBtn" tabIndex={-1} onClick={() => BasicExample((nav) + 1)}><ArrowLeftRoundIcon /></div>
-        {/* </a> */}
       </div>
     </div>
   )

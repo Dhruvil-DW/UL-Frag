@@ -12,8 +12,8 @@ export default function Header() {
     <>
       <header className="headerWrapper">
         <div className="headerContainer">
-          <div style={{ display: 'flex', gap: "1rem" }}>
-            <Avatar />Hello, {`${userdata.first_name} ${userdata.last_name}`}
+          <div style={{ display: 'flex', gap: "1rem", alignItems: "center", textTransform: "capitalize" }}>
+            <Avatar />Hello {`${userdata.first_name} ${userdata.last_name}`},
           </div>
           <Button variant="outlined" color="secondary" style={{ marginLeft: "auto" }} startIcon={<LogoutArrowIcon />} onClick={() => navigate("/logout")}>
             Logout

@@ -9,10 +9,12 @@ import ArrowDownIcon from "../../assets/icons/arrowDownIcon";
 import { ApplicationContext } from "./addApplication";
 import LogoutArrowIcon from "../../assets/icons/logout_arrow";
 import UserAddIcon from "../../assets/icons/userAdd";
+import { collabActions, collabContext } from "../../context/collabContext";
 
-export default function NavSideBar({ activeQue }) {
+export default function NavSideBar({ appId }) {
   const navigate = useNavigate();
   const { catWiseQues, inputs } = useContext(ApplicationContext);
+  const { collabDispatch } = useContext(collabContext);
   const [accOpen, setAccOpen] = useState({});
 
   useEffect(() => {
@@ -70,7 +72,7 @@ export default function NavSideBar({ activeQue }) {
         ))}
       </div>
       <div className="buttonContainer">
-        <Button variant="contained" startIcon={<UserAddIcon />}>Invite</Button>
+        <Button variant="contained" startIcon={<UserAddIcon />} onClick={() => collabDispatch({ type: collabActions.SHOW_COLLAB, payload: { app_id: appId } })}>Invite</Button>
         <Button variant="outlined" startIcon={<LogoutArrowIcon />} onClick={() => navigate('/logout')}>Logout</Button>
       </div>
     </aside>

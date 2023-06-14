@@ -79,38 +79,43 @@ function updateProfile(req, res) {
 }
 
 function getMyApplications(req, res) {
+    console.log("MY APPLICATION");
     const userId = req.userdata.user_id;
     const role_id = req.userdata.role_id;
     //console.log("QUERY: ", req.query);
     const searchText = req.query.search;
-    console.log(searchText);
+    // console.log(searchText);
     const filters = req.query.filters;
     //console.log("Filters-",filters);
     let filterData = [];
     const filterStatus = filters?.status ? filters.status : [];
     const filterCategory = filters?.answer ? filters.answer : '';
-    //console.log('Filtercategory', filterCategory);
+    // console.log('Filtercategory', filterCategory);
     filterStatus.length != 0 && filterData.push({ '$application_status.status$': { [Op.or]: filterStatus } });
-    filterCategory.length != 0 && filterData.push({'$app_questions.answers.answer$': {[Op.eq]: filterCategory}});
-    
-    //console.log("FilterData", filterData);
+    filterCategory.length != 0 && filterData.push({ '$app_questions.answers.answer$': { [Op.eq]: filterCategory } });
+
+    // console.log("FilterData", filterData);
     const searchCond = searchText ? {
-        [Op.and]: filterData, [Op.or] : [
-            {project_name : { [Op.like]: '%' + searchText + '%' } }
+        [Op.and]: filterData, [Op.or]: [
+            { project_name: { [Op.like]: '%' + searchText + '%' } }
         ]
-    } : filters ? {[Op.and]: filterData}: {};
+    } : filters ? { [Op.and]: filterData } : {};
+    console.log("searchCond", searchCond);
+    console.log({ userId });
+    console.log({ role_id });
     (async () => {
 
-        const whereCond = role_id === 2 ? { application_status_id: [2, 4], ...searchCond } : { user_id: userId, ...searchCond } 
-
+        const whereCond = role_id === 2 ? { application_status_id: [2, 4], ...searchCond } : { user_id: userId, ...searchCond }
+        console.log("whereCond", whereCond);
         const applRes = await seq.seqFindAll(
             Application,
-            ['id', 'project_name', 'application_status_id', 'user_id', 'status', 'updatedAt'], //Change the column updatedAt name if causes error here
-            whereCond, 
+            ['id', 'project_name', 'application_status_id', 'user_id', 'status', 'updatedAt'],
+            whereCond,
             [
                 { model: ApplicationStatus, attributes: ['id', 'status'] },
                 { model: User, attributes: ['id', 'first_name', 'last_name', 'email'] },
-                {model: AppQuestion, attributes:['id', 'app_id','question_id'], where: {question_id:3}, include: [{model: Answers, attributes:['id', 'question_id', 'answer']}]
+                {
+                    model: AppQuestion, attributes: ['id', 'app_id', 'question_id'], where: { question_id: 3 }, include: [{ model: Answers, attributes: ['id', 'question_id', 'answer'] }]
                 },
             ],
             [['updatedAt', 'DESC']]
@@ -123,30 +128,31 @@ function getMyApplications(req, res) {
 
 function getApprovedApplications(req, res) {
     const searchText = req.query.search;
-    console.log("Query-",req.query);
+    console.log("Query-", req.query);
     const filters = req.query.filters;
-    console.log("Filters-",filters);
+    console.log("Filters-", filters);
     const filterCategory = filters?.answer ? filters.answer : '';
     console.log("filterCategory", filterCategory);
     let filterData = [];
     // filterCategory.length != 0 && filterData.push({'$app_question.answers.answer$': {[Op.or]: filterCategory}});
-    filterCategory.length != 0 && filterData.push({'$app_questions.answers.answer$': {[Op.eq]: filterCategory}});
+    filterCategory.length != 0 && filterData.push({ '$app_questions.answers.answer$': { [Op.eq]: filterCategory } });
     console.log("FilterData", filterData);
     const searchCond = searchText ? {
         [Op.and]: filterData,
-        [Op.or] : [
-            {project_name : { [Op.like]: '%' + searchText + '%' } }
+        [Op.or]: [
+            { project_name: { [Op.like]: '%' + searchText + '%' } }
         ]
-    } : filters ? {[Op.and]: filterData}: {};
-    console.log("SearchCond: ",searchCond);
+    } : filters ? { [Op.and]: filterData } : {};
+    console.log("SearchCond: ", searchCond);
     (async () => {
         const approveRes = await seq.seqFindAll(Application, ['id', 'project_name', 'application_status_id', 'user_id', 'status'], { application_status_id: 3, ...searchCond },
             [
                 { model: ApplicationStatus, attributes: ['id', 'status'] },
                 { model: User, attributes: ['id', 'first_name', 'last_name', 'email'] },
-                {model: AppQuestion, attributes:['id', 'app_id','question_id'], where: {question_id:3}, include: [{model: Answers, attributes:['id', 'question_id', 'answer']}]
+                {
+                    model: AppQuestion, attributes: ['id', 'app_id', 'question_id'], where: { question_id: 3 }, include: [{ model: Answers, attributes: ['id', 'question_id', 'answer'] }]
                 },
-                
+
             ],
             [['updatedAt', 'DESC']]
         );
@@ -181,32 +187,130 @@ function viewApplications(req, res) {
         res.status(200).send({ Application: AppData, QueAns: AppQueRes });
     })();
 }
+
 function sendInviteApplication(req, res) {
-    const userId = req.userdata.user_id;
-    //console.log(userId);
+
     const app_id = req.params.app_id;
-    //console.log(app_id);
+    const emailArr = req.body;
+    // console.log({ userId });
+    // console.log({ app_id });
+    // console.log({ emailArr });
+
     (async () => {
-        const inviteRes = await seq.seqBulkCreate(ApplicationInvite, [{ app_id: app_id, user_id: userId }]);
-        //console.log("INVITERESP-", inviteRes);
-        if (inviteRes === 500) {
-            res.status(500).send({ message: 'Error while sending the invite' });
-        }
-        res.status(200).send({ message: 'Application invite sent successfully' });
+
+        //**Get Already Invited Collabrator for this App_ID
+        const existCollabrator = await seq.seqFindAll(ApplicationInvite, ["user_id"], { app_id: app_id });
+        if (existCollabrator === 500) return res.status(500).send({ message: "Error while getting Collabrator" });
+        const existCollabUserIdArr = existCollabrator.map(obj => obj.user_id);
+        // console.log("existCollabrator: ", existCollabrator);
+        // console.log("existCollabUserIdArr: ", existCollabUserIdArr);
+
+        //**Iterate on New Invited Email ID
+        await emailArr.map(async (email) => {
+            // console.log("EMAIL ID: ",email);
+            let user;
+            //**Check this Email is already User or not
+            const userExist = await seq.seqFindOne(User, ['id'], { email: email });
+            if (userExist === 500) return res.status(500).send({ message: "Error while getting EmailID" });
+
+            if (userExist) {
+                //**Yes Already User
+                // console.log("Already User");
+                if (existCollabUserIdArr.includes(userExist.id)) {
+                    //**This user already invited so skip this and continue over next Email
+                    // console.log("Already Collabrator");
+                    return null;
+                }
+                user = userExist.id;
+            } else {
+                //**New Email ID
+                // console.log("New User");
+                const newUser = { email: email, role_id: 0 };
+                const addUserRes = await seq.seqCreate(User, newUser);
+                if (addUserRes === 500) return res.status(500).send({ message: "Error while creating User" });
+
+                user = addUserRes.id;
+            }
+
+            //**add Entry in App_Invite
+            const newAppInviteData = { app_id: app_id, user_id: user };
+            const appInviteRes = await seq.seqCreate(ApplicationInvite, newAppInviteData);
+            if (appInviteRes === 500) return res.status(500).send({ message: "Error while creating Invite" });
+            // sendEmail([email], `OTP for Your Fragrance Login`, `Your One Time Password (OTP) is <b>${otp}</b>.`)
+        });
+
+        res.status(200).send({ message: "Collabrator added successfully" });
     })();
 }
 
 function getInvitedApplications(req, res) {
-    const user_id = req.userdata.user_id;
-    //console.log(user_id);
+    console.log("GET_INVITED_APP");
+    const userId = req.userdata.user_id;
+    const role_id = req.userdata.role_id;
+    if (role_id !== 1) return res.status(401).send({ message: "Unauthorized User" });
+    //console.log("QUERY: ", req.query);
+    const searchText = req.query.search;
+    console.log(searchText);
+    const filters = req.query.filters;
+    //console.log("Filters-",filters);
+    let filterData = [];
+    // const filterStatus = filters?.status ? filters.status : [];
+    const filterCategory = filters?.answer ? filters.answer : '';
+    //console.log('Filtercategory', filterCategory);
+    // filterStatus.length != 0 && filterData.push({ '$application_status.status$': { [Op.or]: filterStatus } });
+    filterCategory.length != 0 && filterData.push({ '$app_questions.answers.answer$': { [Op.eq]: filterCategory } });
+
+    //console.log("FilterData", filterData);
+    const searchCond = searchText ? {
+        [Op.and]: filterData,
+        [Op.or]:
+            [
+                { project_name: { [Op.like]: '%' + searchText + '%' } }
+            ]
+    } : filters ? { [Op.and]: filterData } : {};
     (async () => {
-        const getInviteRes = await seq.seqFindAll(ApplicationInvite, ['id', 'app_id', 'user_id'], { user_id: user_id }, { model: User, attributes: ['id', 'first_name', 'last_name', 'email'] });
-        //console.log(getInviteRes);
-        if (getInviteRes === 500) {
-            res.status(500).send({ message: "Error while retrieving invited applications" });
-        }
-        res.status(200).send(getInviteRes);
+
+        //**Get Already Invited Collabrator for this App_ID
+        const invitedApp = await seq.seqFindAll(ApplicationInvite, ["app_id", "user_id"], { user_id: userId });
+        if (invitedApp === 500) return res.status(500).send({ message: "Error while getting Collabrator" });
+        const invitedAppIdArr = invitedApp.map(obj => obj.app_id);
+        console.log("invitedAppIdArr: ", invitedAppIdArr);
+        const whereCond = { id: invitedAppIdArr, ...searchCond }
+
+        const applRes = await seq.seqFindAll(
+            Application,
+            ['id', 'project_name', 'application_status_id', 'user_id', 'status', 'updatedAt'], //Change the column updatedAt name if causes error here
+            whereCond,
+            [
+                { model: ApplicationStatus, attributes: ['id', 'status'] },
+                { model: User, attributes: ['id', 'first_name', 'last_name', 'email'] },
+                {
+                    model: AppQuestion, attributes: ['id', 'app_id', 'question_id'], where: { question_id: 3 }, include: [{ model: Answers, attributes: ['id', 'question_id', 'answer'] }]
+                },
+            ],
+            [['updatedAt', 'DESC']]
+        );
+        if (applRes === 500) return res.status(500).send({ message: 'Error while retrieving applications' });
+
+        res.status(200).send(applRes);
     })();
+
+    //**Old
+    // const user_id = req.userdata.user_id;
+    //console.log(user_id);
+    // (async () => {
+    //     const getInviteRes = await seq.seqFindAll(ApplicationInvite, ['id', 'app_id', 'user_id'], { user_id: user_id },
+    //         [
+    //             { model: User, attributes: ['id', 'first_name', 'last_name', 'email'] },
+    //             { model: Application, attributes: ['id'] },
+    //         ]
+    //     )
+    //     //console.log(getInviteRes);
+    //     if (getInviteRes === 500) {
+    //         res.status(500).send({ message: "Error while retrieving invited applications" });
+    //     }
+    //     res.status(200).send(getInviteRes);
+    // })();
 }
 
 module.exports = {

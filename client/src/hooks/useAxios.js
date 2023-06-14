@@ -36,8 +36,8 @@ export function useAxios() {
         .post(API, data, { headers: { Authorization: "Bearer " + token } })
         .then((res) => {
           console.debug(API, { DATA: res.data });
-          // const msg = res.data?.message ?? "Added succesfully";
-          // dispatch(promptShow({ type: 'success', message: msg }));
+          const msg = res.data?.message ?? "Added succesfully";
+          promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { type: 'success', message: msg } });
           thenFn && thenFn(res.data);
         })
         .catch((err) => {

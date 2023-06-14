@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import { Fragment, createContext, useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import QuestionType from "./questionTypes";
 import NavSideBar from "./navSideBar";
 import debounce from "../../utils/globalFunctions/debounce";
@@ -9,10 +9,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import ErrorBoundary from "../../config/errorBoundary/ErrorBoundary";
 import WelcomeScreen from "./welcomeScreen/welcomeScreen";
 import { useAxios } from "../../hooks/useAxios";
+import { promptActions, promptContext } from "../../context/promptContext";
 export const ApplicationContext = createContext();
 
 export default function AddApplication() {
   const { appId } = useParams();
+  const { promptDispatch } = useContext(promptContext);
   const navigate = useNavigate();
   const [catWiseQues, setCatWiseQues] = useState([]);
   const [inputs, setInputs] = useState({});
@@ -140,6 +142,10 @@ export default function AddApplication() {
 
   const handleSubmit = () => {
     // console.log({ inputs });
+    if (!Boolean(inputs[3])) {
+      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Category" } });
+      return;
+    }
     const project_name = inputs[1]?.projectName ?? "Fragrance Brief";
     const final_inputs = {
       project_name: project_name,
@@ -149,28 +155,16 @@ export default function AddApplication() {
     console.log(final_inputs);
 
     postData(`/application/submit?app_id=${appId ?? ""}`, final_inputs, (data) => { navigate("/application/summary", { state: { app_id: data.app_id } }) });
-
-    //API CALLS
-    //Temp Save to Local
-    // const submitApp = JSON.parse(localStorage.getItem("submitApp")); //Get App from Local
-    // console.log({ submitApp });
-    // let newSubmitApp;
-    // const dateTime = new Date();
-    // const dateStr = `${dateTime.getDate()}/${dateTime.getMonth() + 1}/${dateTime.getFullYear()}`
-    // const randomNum = Math.floor(1000 + Math.random() * 9000);
-    // if (submitApp) {
-    //   newSubmitApp = [{ app_id: `app-${randomNum}`, title: `${inputs[1]?.projectName ?? "Fragrance Brief"} ${randomNum}`, name: 'Andrew smith', modifiedDate: dateStr, inputs: inputs }, ...submitApp];
-    // } else {
-    //   newSubmitApp = [{ app_id: `app-${randomNum}`, title: `${inputs[1]?.projectName ?? "Fragrance Brief"} ${randomNum}`, name: 'Andrew smith', modifiedDate: dateStr, inputs: inputs }];
-    // }
-
-    // localStorage.setItem("submitApp", JSON.stringify(newSubmitApp)); //Set New App to Local
-    // navigate("/application/summary", { state: { app_id: `app-${randomNum}` } });
+    
   }
 
   function handleDraft() {
     // console.log({ inputs });
     console.log("DRAFTING...");
+    if (!Boolean(inputs[3])) {
+      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Category" } });
+      return;
+    }
     const project_name = `Draft_${inputs[1]?.projectName ?? "Fragrance Brief"}`;
     const final_inputs = {
       project_name: project_name,
@@ -188,7 +182,7 @@ export default function AddApplication() {
     <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleNextPrevNav, handleAnswerChange, regions, country, resetInputCountry }}>
       <main className="appFormContainer">
         <ErrorBoundary>
-          <NavSideBar formRef={containerRef} activeQue={currentQue} />
+          <NavSideBar formRef={containerRef} activeQue={currentQue} appId={appId} />
         </ErrorBoundary>
 
         <div className="formRelative">

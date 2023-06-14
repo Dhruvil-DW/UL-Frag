@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import CategoryIcon from "../../assets/icons/categoryIcon";
-import { Fragment, useContext, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { Button, Divider, Step, StepButton, StepIcon, Stepper } from "@mui/material";
 import CheckBoxRoundUnchecked from "../../assets/icons/checkBoxRoundUnchecked";
 import CheckBoxRoundChecked from "../../assets/icons/checkBoxRoundChecked";
@@ -12,10 +12,14 @@ import UserAddIcon from "../../assets/icons/userAdd";
 
 export default function NavSideBar({ activeQue }) {
   const navigate = useNavigate();
-  const { catWiseQues, inputs, handleNextPrevNav } = useContext(ApplicationContext);
-  const [accOpen, setAccOpen] = useState(() => getInitialState(catWiseQues));
+  const { catWiseQues, inputs } = useContext(ApplicationContext);
+  const [accOpen, setAccOpen] = useState({});
+
+  useEffect(() => {
+    setAccOpen(getInitialState(catWiseQues));
+  }, [catWiseQues]);
   // const [lastQueNo, setLastQueNo] = useState(() => getLastQue(catWiseQues));
-  
+
   const handleAccToggle = (e) => {
     const { name } = e.target;
     setAccOpen(prevState => ({ ...prevState, [name]: !prevState[name] }))
@@ -28,7 +32,7 @@ export default function NavSideBar({ activeQue }) {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
-}
+  }
   // console.log("accOpen: ", accOpen);
   let count = 0;
   return (
@@ -54,9 +58,9 @@ export default function NavSideBar({ activeQue }) {
                       <div className="sidebarQueText">{que.question}</div>
                     </StepButton> */}
                     <a href={`#${count}`} className="navlink">
-                    <StepButton className={`navLink`} onClick={() => BasicExample(count)} data-id={count} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
-                      <div data-id={count++} data-que-id={que.id} className="sidebarQueText">{que.question}</div>
-                    </StepButton>
+                      <StepButton className={`navLink`} onClick={() => BasicExample(count)} data-id={count} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
+                        <div data-id={count++} data-que-id={que.id} className="sidebarQueText">{que.question}</div>
+                      </StepButton>
                     </a>
                   </Step>
                 ))}
@@ -88,18 +92,18 @@ export default function NavSideBar({ activeQue }) {
 //   return result;
 // }
 
-function getSidebarData(questions) {
-  const result = [];
-  questions.forEach((que, index) => {
-    if (result[que.Category.id - 1]) {
-      result[que.Category.id - 1].questions = [...result[que.Category.id - 1].questions, que];
-    } else {
-      result[que.Category.id - 1] = { category_id: que.Category.id, category_name: que.Category.name, questions: [que] }
-    }
-  });
-  // console.log("Sidebar_CatWiseData: ", result);
-  return result;
-}
+// function getSidebarData(questions) {
+//   const result = [];
+//   questions.forEach((que, index) => {
+//     if (result[que.Category.id - 1]) {
+//       result[que.Category.id - 1].questions = [...result[que.Category.id - 1].questions, que];
+//     } else {
+//       result[que.Category.id - 1] = { category_id: que.Category.id, category_name: que.Category.name, questions: [que] }
+//     }
+//   });
+//   // console.log("Sidebar_CatWiseData: ", result);
+//   return result;
+// }
 
 function getInitialState(catQue) {
   const result = {};

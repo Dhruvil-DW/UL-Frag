@@ -5,7 +5,7 @@ import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 
 export default function SelectSingleWithTextStatic({ question, nav, index, value = {}, onKeyUp }) {
-  const { handleNextPrevNav, handleAnswerChange } = useContext(ApplicationContext);
+  const { handleAnswerChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const defferedInput = useDeferredValue(input);
 
@@ -27,7 +27,7 @@ export default function SelectSingleWithTextStatic({ question, nav, index, value
       // 👇 Will scroll smoothly to the top of the next section
       element.scrollIntoView({ behavior: 'smooth' });
     }
-}
+  }
 
   return (
     <div className="questionContainer fixWidth">
@@ -42,13 +42,10 @@ export default function SelectSingleWithTextStatic({ question, nav, index, value
         onKeyUp={onKeyUp}
       />
       <TextField variant="outlined" color="secondary" placeholder="Enter Project Name" name="projectName" value={input.projectName ?? ""} onChange={(e) => setInput(prevInput => ({ ...prevInput, [e.target.name]: e.target.value }))} disabled={!Boolean(input.option)} onKeyUp={onKeyUp} />
+
       <div className='navBtnCont'>
-        {/* <a href={`#${(nav) - 1}`} className="navlink"> */}
-          <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>
-        {/* </a> */}
-        {/* <a href={`#${(nav) + 1}`} className="navlink"> */}
-          <div className="nextBtn" tabIndex={-1} onClick={() => BasicExample((nav) + 1)}><ArrowLeftRoundIcon /></div>
-        {/* </a> */}
+        {question.id !== 1 && <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>}
+        <div className="nextBtn" tabIndex={-1} onClick={() => BasicExample((nav) + 1)}><ArrowLeftRoundIcon /></div>
       </div>
     </div>
   )

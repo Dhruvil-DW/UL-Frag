@@ -4,7 +4,7 @@ import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 
 export default function CheckBoxImage({ question, nav, index, value = [], onKeyUp }) {
-  const { handleNextPrevNav, handleAnswerChange } = useContext(ApplicationContext);
+  const { handleAnswerChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const defferInput = useDeferredValue(input);
 
@@ -46,7 +46,7 @@ export default function CheckBoxImage({ question, nav, index, value = [], onKeyU
       </div>
       <div className='navBtnCont'>
           <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>
-          <div className="nextBtn" tabIndex={-1} onClick={() => BasicExample((nav) + 1)}><ArrowLeftRoundIcon /></div>
+          {question.id !== 31 && <div className="nextBtn" tabIndex={-1} onClick={() => BasicExample((nav) + 1)}><ArrowLeftRoundIcon /></div>}
       </div>
     </div>
   )

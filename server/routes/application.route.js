@@ -10,5 +10,5 @@ router.get('/getcountry/:region_id', authMiddleware.checkAuth, applicationContro
 router.get('/getdraft/:app_id', authMiddleware.checkAuth, applicationController.getDraftedApp);
 router.post('/submit', authMiddleware.checkAuth, applicationController.submitApplication)
 router.post('/draft', authMiddleware.checkAuth, applicationController.draftApplication);
-
+router.get('/copy/:app_id', authMiddleware.checkAuth, applicationController.copyApplication);
 module.exports = router;

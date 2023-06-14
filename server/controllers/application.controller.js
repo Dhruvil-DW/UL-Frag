@@ -347,6 +347,68 @@ function getDraftedApp(req, res) {
 
   })();
 }
+function copyApplication(req,res){
+  const appId = req.params.app_id;
+  const user_id = req.userdata.user_id;
+  //console.log(app_id);
+  (async () => {
+    const copyAppData = await seq.seqFindByPk(Application, appId, ["id", "project_name", "application_status_id", "updated_at"],
+      [
+        { model: User, attributes: ['id', 'unique_id', "first_name", "last_name", "email", "contact_no"] },
+        { model: ApplicationStatus, attributes: ['id', 'status'] },
+      ]
+    );
+    //console.log("copyApp-", copyAppData.project_name);
+    if (copyAppData === 500) return res.status(500).send({ message: "Error while getting application" });
+    //console.log(newAppId);
+    const copyAppQueRes = await seq.seqFindAll(AppQuestion, ["question_id"], { app_id: appId },
+    [
+      { model: Question, attributes: ["question_type_id"] },
+      { model: Answers, attributes: ["id", "app_question_id", "answer"] },
+    ]
+    );
+    //console.log("AppQueRes: ", copyAppQueRes);
+    if (copyAppQueRes === 500) return res.status(500).send({ message: "Error while getting question answers" });
+
+    const newAppCount = (await seq.seqCount(Application, {project_name:copyAppData.project_name})) + 1;
+    console.log("count",newAppCount);
+    const copyNewData = {
+      // project_name: "Copy_of_" + copyAppData.project_name + "_"+ newAppCount,
+      project_name: `Copy_of_${copyAppData.project_name}_${newAppCount}`,
+      application_status_id: 1,
+      user_id: user_id,
+      status: 1,
+    }
+    // Create application after copying the application
+    const appNewCreate = await seq.seqCreate(Application, copyNewData);
+    if(appNewCreate === 500) return res.status(500).send({ message: "Error while creating new application"});
+    const newAppId = appNewCreate.id;
+
+    copyAppQueRes.forEach(async(queAns) => {
+     //console.log("QuestionAns", queAns.answers);
+     const newAppQues = await seq.seqCreate(AppQuestion, {app_id:newAppId, question_id:queAns.question_id});
+     //console.log("newAppQues", newAppQues);
+     if (newAppQues === 500) return res.status(500).send({ message: "Error while copying applications" });
+     const app_question_id = newAppQues.id;
+     const newAnswers = queAns.answers;
+     newAnswers.forEach(async(ans)=> {
+      //console.log("ANS", ans.id);
+      //newResp.push()
+      const newAnswerResp = await seq.seqCreate(Answers, 
+        {
+          question_id:queAns.question_id, 
+          app_question_id:app_question_id, 
+          answer:ans.answer
+        }
+        );
+        //console.log("NewAns-", newAnswerResp);
+        if(newAnswerResp === 500) return res.status(500).send({message:"Error while copying answers"});
+      })
+      // const newAnswerResp = await seq.seqCreate(Answers, {question_id:queAns.question_id, app_question_id:app_question_id})
+    })
+    res.status(200).send({message:'Application copied successfully', app_id:newAppId});
+  })();
+}
 module.exports = {
   getAllQuestions,
   getRegionNames,
@@ -354,4 +416,5 @@ module.exports = {
   submitApplication,
   draftApplication,
   getDraftedApp,
+  copyApplication
 };

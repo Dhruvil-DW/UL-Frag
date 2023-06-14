@@ -61,7 +61,13 @@ export default function Dashboard() {
     getData('user/getall/approve/applications', { params }, setAppData);
   }
   useEffect(getApprovedApplication, [getData, debouncedSearch, filterInputs]);
-
+  
+  function getCopyApplication(app_id){
+    getData(`application/copy/${app_id}`,{}, 
+    (data) => {
+      navigate(`/application/edit/${data.app_id}`)
+    });
+  }
   return (
     <section className="dashboardWrapper">
       <div className="dashboardContainer">
@@ -90,7 +96,8 @@ export default function Dashboard() {
             <FilterContainer type="myapp" onChange={handleFilterChange} filterInputs={filterInputs} />
             <div className="applicationCardContainer">
               {myAppData.length > 0 ? myAppData.map((app, i) => (
-                <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit} onClick={() => navigate(`/application/view/${app.id}`)}>
+                // <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit} onClick={() => navigate(`/application/view/${app.id}`)}>
+                <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit}>
                   <h2 style={{ marginTop: 16 }}>{app.project_name}</h2>
                   <div className="statusContainer">
                     <Button className="cardButton">{app.application_status.status}</Button>
@@ -108,7 +115,7 @@ export default function Dashboard() {
                     <img src="/images/icons/eye_round.svg" alt="view" onClick={() => navigate(`/application/view/${app.id}`)} />
                     {userdata.role_id === 1 && (
                       <>
-                        {<img src="/images/icons/copy_round.svg" alt="copy" />}
+                        {<img src="/images/icons/copy_round.svg" alt="copy"/>}
                         {app.application_status_id === 1 && <img src="/images/icons/pencil_round.svg" alt="edit" onClick={() => navigate(`/application/edit/${app.id}`)} />}
                         {<img src="/images/icons/invite_user.svg" alt="invite" />}
                       </>
@@ -122,7 +129,8 @@ export default function Dashboard() {
             <FilterContainer type="all" onChange={handleFilterChange} filterInputs={filterInputs} />
             <div className="applicationCardContainer">
               {appData.length > 0 ? appData?.map((app, i) => (
-                <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit} onClick={() => navigate(`/application/view/${app.id}`)}>
+                // <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit} onClick={() => navigate(`/application/view/${app.id}`)}>
+                <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit}>
                   <h2>{app.project_name}</h2>
                   <div className="statusContainer">
                     <Button className="cardButton">{app.application_status.status}</Button>
@@ -138,7 +146,7 @@ export default function Dashboard() {
                   <img src="/images/icons/three_dot_blue.svg" alt="option" className="optionIcon" />
                   <div className={`appCardActionContainer ${hoverCardId === i ? "hovered" : ""}`}>
                     <img src="/images/icons/eye_round.svg" alt="view" onClick={() => navigate(`/application/view/${app.id}`)} />
-                    {userdata.role_id === 1 && <img src="/images/icons/copy_round.svg" alt="copy" />}
+                    {userdata.role_id === 1 && <img src="/images/icons/copy_round.svg" alt="copy" onClick={() => getCopyApplication(app.id)}/>}
                   </div>
                 </div>
               )) : <p>No Application Found</p>}

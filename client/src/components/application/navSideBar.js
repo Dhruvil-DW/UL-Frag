@@ -11,7 +11,7 @@ import LogoutArrowIcon from "../../assets/icons/logout_arrow";
 import UserAddIcon from "../../assets/icons/userAdd";
 import { collabActions, collabContext } from "../../context/collabContext";
 
-export default function NavSideBar({ appId }) {
+export default function NavSideBar({ appId, activeQue }) {
   const navigate = useNavigate();
   const { catWiseQues, inputs } = useContext(ApplicationContext);
   const { collabDispatch } = useContext(collabContext);
@@ -60,7 +60,7 @@ export default function NavSideBar({ appId }) {
                       <div className="sidebarQueText">{que.question}</div>
                     </StepButton> */}
                     <a href={`#${count}`} className="navlink">
-                      <StepButton className={`navLink`} onClick={() => BasicExample(count)} data-id={count} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
+                      <StepButton active = {activeQue == count} className={`navLink`} onClick={() => BasicExample(count)} data-id={count} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
                         <div data-id={count++} data-que-id={que.id} className="sidebarQueText">{que.question}</div>
                       </StepButton>
                     </a>

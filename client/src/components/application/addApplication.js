@@ -54,13 +54,13 @@ export default function AddApplication() {
   const [currentQue, setCurrentQue] = useState(0);
   // const [activeSection, setActiveSection] = useState(0);
 
-  // const handleScroll = useCallback((e) => {
-  //   const { clientHeight, scrollTop } = e.target;
-  //   console.log("SCROLLING...", { clientHeight, scrollTop });
-  //   setCurrentQue(Math.round(scrollTop / clientHeight));
-  // }, [])
+  const handleScroll = useCallback((e) => {
+    const { clientHeight, scrollTop } = e.target;
+    console.log("SCROLLING...", { clientHeight, scrollTop });
+    setCurrentQue(Math.round(scrollTop / clientHeight) + 1);
+  }, [])
 
-  // const debouncedHandleScroll = debounce(handleScroll, 500);
+  const debouncedHandleScroll = debounce(handleScroll, 500);
 
   const handleNextPrevNav = (queNo, type) => {
     //   console.log('Questions = ',queNo);
@@ -187,8 +187,8 @@ export default function AddApplication() {
 
         <div className="formRelative">
           <ErrorBoundary>
-            {/* <section id="form" ref={containerRef} onScroll={debouncedHandleScroll}> */}
-            <section id="form" ref={containerRef} >
+            <section id="form" ref={containerRef} onScroll={debouncedHandleScroll}>
+            {/* <section id="form" ref={containerRef} > */}
               {catWiseQues.map((cat, catIndex) => (
                 <Fragment key={cat.category_id}>
 

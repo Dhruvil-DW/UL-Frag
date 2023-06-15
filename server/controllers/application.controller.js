@@ -10,7 +10,7 @@ const AppQuestion = db.app_question;
 const ApplicationStatus = db.application_status;
 const seq = require("../config/sequelize.config");
 const { Op } = require("sequelize");
-const { ifError } = require("assert");
+const dayjs = require("dayjs");
 
 function getAllQuestions(req, res) {
   (async () => {
@@ -92,7 +92,7 @@ function submitApplication(req, res) {
       res.status(422).send({ message: "Application name already exists" });
       return;
     }
-    
+
     // Data To Create or Update in Application Table
     const appData = app_id ? {
       project_name: req.body.project_name,
@@ -120,6 +120,21 @@ function submitApplication(req, res) {
       // console.log(appDataRes);
       if (appDataRes.application_status_id !== 1) return res.status(500).send({ message: "This Application is already submitted." });
 
+      // Delete All Existing Application Entry inside App_Question & Answer Table
+      const data = await seq.seqFindAll(AppQuestion, ["id"], { app_id: app_id });
+      const toBeDltAppQue = [];
+      if (data !== 500) {
+        data.forEach(obj => {
+          toBeDltAppQue.push(obj.id);
+        });
+      }
+      const dltedAppQueRes = await seq.seqDestroy(AppQuestion, { app_id: app_id });
+      const dltedAnsRes = await seq.seqDestroy(Answers, { app_question_id: toBeDltAppQue });
+
+      // console.log("toBeDltAppQue: ", toBeDltAppQue);
+      // console.log("dltedAnsRes: ", dltedAnsRes);
+      // console.log("dltedAppQue: ", dltedAppQueRes);
+
     }
 
     //Update App Data
@@ -144,48 +159,30 @@ function submitApplication(req, res) {
       if (Array.isArray(answer)) {
         answer.forEach(async (arrayItem) => {
           console.log("ARRAYITEM-", arrayItem);
-          const ansRes = await seq.seqCreate(Answers, {
-            answer: arrayItem,
-            question_id: question_id,
-            app_question_id: app_question_id,
-          });
+          const ansRes = await seq.seqCreate(Answers, { answer: arrayItem, question_id: question_id, app_question_id: app_question_id });
           //console.log("ANS_res-", ansRes);
           if (ansRes === 500) {
             isError = true;
-            res
-              .status(500)
-              .send({ message: "Error while fetching answer type of array" });
+            return res.status(500).send({ message: "Error while fetching answer type of array" });
           }
         });
       } else if (typeof answer === "string") {
-        const ansRes = await seq.seqCreate(Answers, {
-          answer: answer,
-          question_id: question_id,
-          app_question_id: app_question_id,
-        });
+        const ansRes = await seq.seqCreate(Answers, { answer: answer, question_id: question_id, app_question_id: app_question_id });
         if (ansRes === 500) {
           isError = true;
-          res
-            .status(500)
-            .send({ message: "Error while fetching answer type of string" });
+          return res.status(500).send({ message: "Error while fetching answer type of string" });
         }
       } else if (typeof answer === "object" && answer !== null) {
         //console.log("yes");
-        const ansRes = await seq.seqCreate(Answers, {
-          answer: JSON.stringify(answer),
-          question_id: question_id,
-          app_question_id: app_question_id,
-        });
+        const ansRes = await seq.seqCreate(Answers, { answer: JSON.stringify(answer), question_id: question_id, app_question_id: app_question_id });
         if (ansRes === 500) {
           isError = true;
-          res
-            .status(500)
-            .send({
-              message: "Error while fetching answer type of object or null",
-            });
+          return res.status(500).send({ message: "Error while fetching answer type of object or null" });
         }
       }
     }
+
+    await seq.seqUpdate(Application, { last_edit_by: null, last_edit_time: null }, { id: app_id });
     res.status(200).send({ message: "Application successfully submitted", app_id: app_id });
   })();
 }
@@ -237,11 +234,10 @@ function draftApplication(req, res) {
       }
       const dltedAppQueRes = await seq.seqDestroy(AppQuestion, { app_id: app_id });
       const dltedAnsRes = await seq.seqDestroy(Answers, { app_question_id: toBeDltAppQue });
-      // const dltedAnsRes = await seq.seqDestroy(AppQuestion, { app_question_id: { [Op.eq]: toBeDltAppQue } });
 
-      console.log("toBeDltAppQue: ", toBeDltAppQue);
-      console.log("dltedAnsRes: ", dltedAnsRes);
-      console.log("dltedAppQue: ", dltedAppQueRes);
+      // console.log("toBeDltAppQue: ", toBeDltAppQue);
+      // console.log("dltedAnsRes: ", dltedAnsRes);
+      // console.log("dltedAppQue: ", dltedAppQueRes);
     }
 
     let isError = false;
@@ -303,6 +299,8 @@ function draftApplication(req, res) {
       }
     }
     if (isError) return;
+    //**Update Appp so other User can Edit Application */
+    await seq.seqUpdate(Application, { last_edit_by: null, last_edit_time: null }, { id: app_id });
     res.status(200).send({ message: "Application successfully drafted", app_id: app_id });
   })();
 }
@@ -358,7 +356,7 @@ function getDraftedApp(req, res) {
 
   })();
 }
-function copyApplication(req,res){
+function copyApplication(req, res) {
   const appId = req.params.app_id;
   const user_id = req.userdata.user_id;
   //console.log(app_id);
@@ -373,67 +371,104 @@ function copyApplication(req,res){
     if (copyAppData === 500) return res.status(500).send({ message: "Error while getting application" });
     //console.log(newAppId);
     const copyAppQueRes = await seq.seqFindAll(AppQuestion, ["question_id"], { app_id: appId },
-    [
-      { model: Question, attributes: ["question_type_id"] },
-      { model: Answers, attributes: ["id", "app_question_id", "answer"] },
-    ]
+      [
+        { model: Question, attributes: ["question_type_id"] },
+        { model: Answers, attributes: ["id", "app_question_id", "answer"] },
+      ]
     );
     //console.log("AppQueRes: ", copyAppQueRes);
     if (copyAppQueRes === 500) return res.status(500).send({ message: "Error while getting question answers" });
-    
+
     let prjStr = copyAppData.project_name;
     //console.log(prjStr);
-    if(prjStr.startsWith('Copy_of')){
+    if (prjStr.startsWith('Copy_of')) {
       //console.log('yes');
       const countMatch = prjStr.match(/^Copy_of_(.+)_(\d+)$/);
       console.log("countMatch-", countMatch[1]);
       prjStr = countMatch[1];
-    } 
-      const newAppCount = await seq.seqCount(Application, {project_name:{
+    }
+    const newAppCount = await seq.seqCount(Application, {
+      project_name: {
         [Op.regexp]: `^Copy_of_(${prjStr})_(\\d+)$`
-      }});
-      console.log("NewApp", newAppCount);
-      
-        let newCount = `Copy_of_${prjStr}_${newAppCount + 1}`
-        console.log("NewCount", newCount);
+      }
+    });
 
-      const newData= {
-            project_name: newCount,
-            application_status_id: 1,
-            user_id: user_id,
-            status: 1,
-         }
-      console.log("NewData", newData);  
-      const appCreate = await seq.seqCreate(Application, newData);
-       if(appCreate === 500) return res.status(500).send({ message: "Error while creating new application"});
-  
-     // Create application after copying the application
+    let newCount = `Copy_of_${prjStr}_${newAppCount + 1}`
+    console.log("NewCount", newCount);
+
+    const newData = {
+      project_name: newCount,
+      application_status_id: 1,
+      user_id: user_id,
+      status: 1,
+    }
+    console.log("NewData", newData);
+    const appCreate = await seq.seqCreate(Application, newData);
+    if (appCreate === 500) return res.status(500).send({ message: "Error while creating new application" });
+
+    // Create application after copying the application
     const newAppId = appCreate.id;
 
-    copyAppQueRes.forEach(async(queAns) => {
-     //console.log("QuestionAns", queAns.answers);
-     const newAppQues = await seq.seqCreate(AppQuestion, {app_id:newAppId, question_id:queAns.question_id});
-     //console.log("newAppQues", newAppQues);
-     if (newAppQues === 500) return res.status(500).send({ message: "Error while copying applications" });
-     const app_question_id = newAppQues.id;
-     const newAnswers = queAns.answers;
-     newAnswers.forEach(async(ans)=> {
-      //console.log("ANS", ans.id);
-      //newResp.push()
-      const newAnswerResp = await seq.seqCreate(Answers, 
-        {
-          question_id:queAns.question_id, 
-          app_question_id:app_question_id, 
-          answer:ans.answer
-        }
+    copyAppQueRes.forEach(async (queAns) => {
+      //console.log("QuestionAns", queAns.answers);
+      const newAppQues = await seq.seqCreate(AppQuestion, { app_id: newAppId, question_id: queAns.question_id });
+      //console.log("newAppQues", newAppQues);
+      if (newAppQues === 500) return res.status(500).send({ message: "Error while copying applications" });
+      const app_question_id = newAppQues.id;
+      const newAnswers = queAns.answers;
+      newAnswers.forEach(async (ans) => {
+        //console.log("ANS", ans.id);
+        //newResp.push()
+        const newAnswerResp = await seq.seqCreate(Answers,
+          {
+            question_id: queAns.question_id,
+            app_question_id: app_question_id,
+            answer: ans.answer
+          }
         );
         //console.log("NewAns-", newAnswerResp);
-        if(newAnswerResp === 500) return res.status(500).send({message:"Error while copying answers"});
+        if (newAnswerResp === 500) return res.status(500).send({ message: "Error while copying answers" });
       })
     })
-    res.status(200).send({message:'Application copied successfully', app_id:newAppId});
+    res.status(200).send({ message: 'Application copied successfully', app_id: newAppId });
   })();
 }
+
+function editApplication(req, res) {
+  const app_id = req.params.app_id;
+  const user_id = req.userdata.user_id;
+  const currentTime = dayjs();
+
+  // console.log({ app_id, user_id });
+
+  (async () => {
+    const appRes = await seq.seqFindByPk(Application, app_id, ["id", "last_edit_by", "last_edit_time"]);
+    if (appRes === 500) return res.status(500).send({ message: "Error while getting Application data" });
+
+    const last_edit_by = appRes.last_edit_by;
+    const last_edit_time = appRes.last_edit_time;
+    console.log({ last_edit_by, last_edit_time });
+
+    if (last_edit_by && last_edit_time) {
+      //** Last Edit By & Last Edit Time Exist;
+      if (last_edit_by !== user_id) {
+        //** Request user is not Last Editor
+        const diff = currentTime.diff(dayjs(appRes.last_edit_time), "minute");
+        console.log("Minute: ", diff);
+        if (diff < 15) {
+          //** Editing started withing 15 minutes
+          res.status(200).send({ canEdit: false, message: "Editing is in-progress by other user" });
+          return;
+        }
+      }
+    }
+    //** Update App with new User and Time
+    const updateApp = await seq.seqUpdate(Application, { last_edit_by: user_id, last_edit_time: new Date() }, { id: app_id });
+    if (updateApp === 500) return res.status(500).send({ message: "Error while updating Application data" });
+    res.status(200).send({ canEdit: true });
+  })();
+}
+
 module.exports = {
   getAllQuestions,
   getRegionNames,
@@ -441,5 +476,6 @@ module.exports = {
   submitApplication,
   draftApplication,
   getDraftedApp,
-  copyApplication
+  copyApplication,
+  editApplication
 };

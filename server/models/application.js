@@ -28,6 +28,8 @@ module.exports = (sequelize, DataTypes) => {
   Application.init({
     project_name: DataTypes.STRING,
     user_id: DataTypes.INTEGER,
+    last_edit_by: DataTypes.INTEGER,
+    last_edit_time: DataTypes.DATE,
     status: DataTypes.INTEGER,
     application_status_id: DataTypes.INTEGER
   }, {

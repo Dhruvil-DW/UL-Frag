@@ -9,11 +9,13 @@ import { authContext } from "../../context/authContext";
 import MyProjectTab from "./tabs/myProjectTab";
 import AllProjectTab from "./tabs/allProjectTab";
 import InviteTab from "./tabs/inviteTab";
+import { promptActions, promptContext } from "../../context/promptContext";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { authState } = useContext(authContext);
   const userdata = authState.userdata;
+  const { promptDispatch } = useContext(promptContext);
   const { getData } = useAxios();
   const [selectedTab, setSelectedTab] = useState(0);
   const handleChangeTab = (__event, newTab) => setSelectedTab(newTab);
@@ -91,6 +93,17 @@ export default function Dashboard() {
     if (selectedTab === 2) setInvitedAppParams((prevSearch) => ({ ...prevSearch, search: e.target.value }))
   };
 
+  const handleEditApp = (appId) => {
+    getData(`application/edit/${appId}`, {},
+      (data) => {
+        if (data.canEdit) {
+          navigate(`/application/edit/${appId}`);
+        } else {
+          promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: data.message } });
+        }
+      }
+    );
+  }
   return (
     <section className="dashboardWrapper">
       <div className="dashboardContainer">
@@ -117,14 +130,14 @@ export default function Dashboard() {
             {userdata.role_id !== 2 && <Button variant="contained" color="secondary" onClick={() => navigate("/application")}>+ Create Application</Button>}
           </div>
           <TabPanel value={selectedTab} index={0}>
-            <MyProjectTab data={myAppData} params={myAppParams} handleParamsChange={handleMyAppFilterChange} />
+            <MyProjectTab data={myAppData} params={myAppParams} handleParamsChange={handleMyAppFilterChange} handleEditApp={handleEditApp} />
           </TabPanel>
           <TabPanel value={selectedTab} index={1}>
             <AllProjectTab data={allAppData} params={allAppParams} handleParamsChange={handleAllAppFilterChange} />
           </TabPanel>
           {userdata.role_id === 1 && (
             <TabPanel value={selectedTab} index={2}>
-              <InviteTab data={invitedAppData} params={invitedAppParams} handleParamsChange={handleinvitedAppFilterChange} />
+              <InviteTab data={invitedAppData} params={invitedAppParams} handleParamsChange={handleinvitedAppFilterChange} handleEditApp={handleEditApp} />
             </TabPanel>
           )}
         </div>

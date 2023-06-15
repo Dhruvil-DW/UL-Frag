@@ -9,7 +9,7 @@ import { useContext, useState } from "react";
 import { authContext } from "../../../context/authContext";
 import { QUESTION_CATEGORY } from "./commonData";
 
-export default function InviteTab({ data, params, handleParamsChange }) {
+export default function InviteTab({ data, params, handleParamsChange, handleEditApp }) {
   const navigate = useNavigate();
   const { authState } = useContext(authContext);
   const userdata = authState.userdata;
@@ -42,7 +42,7 @@ export default function InviteTab({ data, params, handleParamsChange }) {
               <img src="/images/icons/eye_round.svg" alt="view" onClick={() => navigate(`/application/view/${app.id}`)} />
               {userdata.role_id === 1 && (
                 <>
-                  {app.application_status_id === 1 && <img src="/images/icons/pencil_round.svg" alt="edit" onClick={() => navigate(`/application/edit/${app.id}`)} />}
+                  {app.application_status_id === 1 && <img src="/images/icons/pencil_round.svg" alt="edit" onClick={() => handleEditApp(app.id)} />}
                 </>
               )}
             </div>

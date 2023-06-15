@@ -11,7 +11,7 @@ import { APPLICATION_STATUS, QUESTION_CATEGORY } from "./commonData";
 import { collabActions, collabContext } from "../../../context/collabContext";
 import { useAxios } from "../../../hooks/useAxios";
 
-export default function MyProjectTab({ data, params, handleParamsChange }) {
+export default function MyProjectTab({ data, params, handleParamsChange, handleEditApp }) {
   const navigate = useNavigate();
   const { getData } = useAxios();
   const { authState } = useContext(authContext);
@@ -54,7 +54,7 @@ export default function MyProjectTab({ data, params, handleParamsChange }) {
               {userdata.role_id === 1 && (
                 <>
                   {[3, 4].includes(app.application_status_id) && <img src="/images/icons/copy_round.svg" alt="copy" onClick={() => getCopyApplication(app.id)} />}
-                  {app.application_status_id === 1 && <img src="/images/icons/pencil_round.svg" alt="edit" onClick={() => navigate(`/application/edit/${app.id}`)} />}
+                  {app.application_status_id === 1 && <img src="/images/icons/pencil_round.svg" alt="edit" onClick={() => handleEditApp(app.id)} />}
                   {app.application_status_id === 1 && <img src="/images/icons/invite_user.svg" alt="invite" onClick={() => collabDispatch({ type: collabActions.SHOW_COLLAB, payload: { app_id: app.id } })} />}
                 </>
               )}

@@ -12,4 +12,5 @@ router.get('/getdraft/:app_id', authMiddleware.checkAuth, applicationController.
 router.post('/submit', authMiddleware.checkAuth, applicationController.submitApplication)
 router.post('/draft', authMiddleware.checkAuth, applicationController.draftApplication);
 router.get('/copy/:app_id', authMiddleware.checkAuth, applicationController.copyApplication);
+router.get('/edit/:app_id', authMiddleware.checkAuth, applicationController.editApplication);
 module.exports = router;

@@ -9,9 +9,10 @@ const ApplicationInvite = db.application_invite;
 const generateToken = require('../config/jwt.config');
 const seq = require('../config/sequelize.config');
 const { Op } = require("sequelize");
+const sendEmail = require('../config/mail.config');
 
 function addProfileDetails(req, res) {
-    //console(req.body);
+    // console.log(req.body);
     const userId = req.userdata.user_id;
     //console.log(userId);
     (async () => {
@@ -21,8 +22,8 @@ function addProfileDetails(req, res) {
             unique_id: "frag_usr_" + userId,
             role_id: 1,
             email: req.userdata.email,
-            first_name: req.userdata.first_name,
-            last_name: req.userdata.last_name
+            first_name: req.body.first_name,
+            last_name: req.body.last_name
         };
         console.log('token data - ', tokenData);
         const token = await generateToken(tokenData);
@@ -192,11 +193,14 @@ function sendInviteApplication(req, res) {
 
     const app_id = req.params.app_id;
     const emailArr = req.body;
+    const user_id = req.userdata.user_id;
     // console.log({ userId });
     // console.log({ app_id });
     // console.log({ emailArr });
 
     (async () => {
+
+        const applicationRes = await seq.seqFindByPk(Application, app_id, ["id", "project_name"], { model: User, attributes: ["id", "first_name", "last_name"] });
 
         //**Get Already Invited Collabrator for this App_ID
         const existCollabrator = await seq.seqFindAll(ApplicationInvite, ["user_id"], { app_id: app_id });
@@ -216,8 +220,8 @@ function sendInviteApplication(req, res) {
             if (userExist) {
                 //**Yes Already User
                 // console.log("Already User");
-                if (existCollabUserIdArr.includes(userExist.id)) {
-                    //**This user already invited so skip this and continue over next Email
+                if (existCollabUserIdArr.includes(userExist.id) || userExist.id === user_id) {
+                    //**This user already invited or User itself so skip this and continue over next Email
                     // console.log("Already Collabrator");
                     return null;
                 }
@@ -236,7 +240,28 @@ function sendInviteApplication(req, res) {
             const newAppInviteData = { app_id: app_id, user_id: user };
             const appInviteRes = await seq.seqCreate(ApplicationInvite, newAppInviteData);
             if (appInviteRes === 500) return res.status(500).send({ message: "Error while creating Invite" });
-            // sendEmail([email], `OTP for Your Fragrance Login`, `Your One Time Password (OTP) is <b>${otp}</b>.`)
+
+            //**Send Email */
+            const fullName = `${applicationRes.User?.first_name ?? ""} ${applicationRes.User?.last_name ?? ""}`;
+            const projectName = `${applicationRes.project_name ?? ""}`;
+            sendEmail([email], `You have been Invited`,
+                `<p>Hello,</p>
+                <section>
+                    <div>You have been invited to collabrate with <b>${fullName}</b> for project <b>${projectName}</b>.</div>
+                    <div>Click on below button to Login.</div>
+                    <a target="_blank" href="http://13.235.224.103/login">
+                        <button style="
+                            cursor: pointer;
+                            background-color:transparent;
+                            border: 1px solid blue;
+                            color: blue;
+                            border-radius: 16px;
+                            padding: 8px 16px;
+                            margin: 8px;
+                        ">Click to Login</button>
+                    </a>
+                </section>`
+            )
         });
 
         res.status(200).send({ message: "Collabrator added successfully" });

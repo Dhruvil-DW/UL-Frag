@@ -380,20 +380,35 @@ function copyApplication(req,res){
     );
     //console.log("AppQueRes: ", copyAppQueRes);
     if (copyAppQueRes === 500) return res.status(500).send({ message: "Error while getting question answers" });
+    
+    let prjStr = copyAppData.project_name;
+    //console.log(prjStr);
+    if(prjStr.startsWith('Copy_of')){
+      //console.log('yes');
+      const countMatch = prjStr.match(/^Copy_of_(.+)_(\d+)$/);
+      console.log("countMatch-", countMatch[1]);
+      prjStr = countMatch[1];
+    } 
+      const newAppCount = await seq.seqCount(Application, {project_name:{
+        [Op.regexp]: `^Copy_of_(${prjStr})_(\\d+)$`
+      }});
+      console.log("NewApp", newAppCount);
+      
+        let newCount = `Copy_of_${prjStr}_${newAppCount + 1}`
+        console.log("NewCount", newCount);
 
-    const newAppCount = (await seq.seqCount(Application, {project_name:copyAppData.project_name})) + 1;
-    console.log("count",newAppCount);
-    const copyNewData = {
-      // project_name: "Copy_of_" + copyAppData.project_name + "_"+ newAppCount,
-      project_name: `Copy_of_${copyAppData.project_name}_${newAppCount}`,
-      application_status_id: 1,
-      user_id: user_id,
-      status: 1,
-    }
-    // Create application after copying the application
-    const appNewCreate = await seq.seqCreate(Application, copyNewData);
-    if(appNewCreate === 500) return res.status(500).send({ message: "Error while creating new application"});
-    const newAppId = appNewCreate.id;
+      const newData= {
+            project_name: newCount,
+            application_status_id: 1,
+            user_id: user_id,
+            status: 1,
+         }
+      console.log("NewData", newData);  
+      const appCreate = await seq.seqCreate(Application, newData);
+       if(appCreate === 500) return res.status(500).send({ message: "Error while creating new application"});
+  
+     // Create application after copying the application
+    const newAppId = appCreate.id;
 
     copyAppQueRes.forEach(async(queAns) => {
      //console.log("QuestionAns", queAns.answers);
@@ -415,7 +430,6 @@ function copyApplication(req,res){
         //console.log("NewAns-", newAnswerResp);
         if(newAnswerResp === 500) return res.status(500).send({message:"Error while copying answers"});
       })
-      // const newAnswerResp = await seq.seqCreate(Answers, {question_id:queAns.question_id, app_question_id:app_question_id})
     })
     res.status(200).send({message:'Application copied successfully', app_id:newAppId});
   })();

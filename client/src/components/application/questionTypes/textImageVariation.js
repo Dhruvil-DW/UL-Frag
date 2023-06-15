@@ -8,7 +8,7 @@ import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 
 export default function TextBoxVariationImage({ question, nav, index, value = [{ variation: '', files: [] }], onKeyUp }) {
-  const { handleNextPrevNav, handleAnswerChange, handleFilesChange, handleRemoveFilesChange } = useContext(ApplicationContext);
+  const { handleNextPrevNav, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, handleRemoveFiles } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const [count, setSectionCount] = useState(1);
   const defferInput = useDeferredValue(input);
@@ -51,18 +51,20 @@ export default function TextBoxVariationImage({ question, nav, index, value = [{
   };
 
   const addVariation = () => {
-    let inputsArr = [...input];
-    inputsArr.push({ variation: '', files: [] });
-    setInput(inputsArr);
+    // let inputsArr = [...input];
+    // inputsArr.push({ variation: '', files: [] });
+    setInput((inputsArr) => [...inputsArr, { variation: '', files: [] }]);
   }
 
   const removeVariation = (i) => {
     // console.log(input);
     // console.log(i)
     const remove_images = input[i];
+    console.log('remove images',remove_images.files);
     remove_images.files.map((f, i) => (
       setFiles((prevState) => prevState.filter((file) => file.name !== f))
     ));
+    setRemoveUploadedFiles((prevState) => [...prevState , ...remove_images.files]);
     input.splice(i, 1);
     variantFiles.splice(i, 1);
     setInput([...input]);
@@ -139,6 +141,13 @@ export default function TextBoxVariationImage({ question, nav, index, value = [{
     }
   }, [handleRemoveFilesChange, question.id, defferRemoveFiles]);
 
+  useEffect(() => {
+    if (defferRemoveFiles.length != 0) {
+      console.debug('defur remove files',defferRemoveFiles);
+      handleRemoveFiles(question.id, defferRemoveFiles);
+    }
+  }, [handleRemoveFiles, question.id, defferRemoveFiles]);
+
   function BasicExample(nav) {
     const element = document.getElementById(nav);
     if (element) {
@@ -157,7 +166,7 @@ export default function TextBoxVariationImage({ question, nav, index, value = [{
             <div key={index} style={{ display: "flex", gap: "3rem" }}>
               <div style={{ display: "grid", gap: "15rem" }}>
               <TextField variant="outlined" name="variation" color="secondary" placeholder="Variation name" value={element.variation ?? ""} onChange={(e) => handleChange(index, e)} />
-              <Button variant="outlined" color="secondary" style={{ width: 'auto' }} onClick={() => removeVariation(index)}>remove Variation</Button>
+              {input.length > 1 && (<Button variant="outlined" color="secondary" style={{ width: 'auto' }} onClick={() => removeVariation(index)}>remove Variation</Button>)}
               </div>
               <div className="uploadContainer">
                 <UploadDocVariation que_id={question.id} label='Upload Cabin Photos' files={variantFiles[index] ?? []} uploadedFiles={element.files} onUpload={(e) => onUpload(index, e)} onRemove={(e, i) => onRemove(index, e, i)} onRemoveUploaded={onRemoveUploaded} required={false} />

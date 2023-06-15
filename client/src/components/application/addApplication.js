@@ -144,19 +144,6 @@ export default function AddApplication() {
   const handleRemoveFilesChange = useCallback((name, value)=> setRemoveFiles((prevState) => [...prevState, ...value]), [])
 
   const handleFilesChange = useCallback((name, value) => {
-    // debugger;
-    // console.debug('handleFilesChange_files', allFiles);
-    // console.debug('handleFilesChange_value', value);
-    // if (value && value.length !== 0) {
-    //   debugger;
-    //     setAllFiles(prevState => ([ ...prevState, ...value ]));
-      
-    //   console.debug('file divayraj',allFiles)
-    // }
-    //  else {
-    //   debugger;
-    //   setAllFiles([...value]);
-    // }
     setAllFiles((prevFiles) => {
       if (value && value.length !== 0) {
         const filtered_file = prevFiles.filter((file) =>{
@@ -178,7 +165,28 @@ export default function AddApplication() {
     })
   }, []);
 
+  const handleRemoveFiles = useCallback((name, value) => {
+    let remove_files_array = [];
+    setAllFiles((prevFiles) => {
+      if (value && value.length !== 0) {
+        const filtered_file = prevFiles.filter((file) =>{
+          console.debug('filtered_file', file);
+          console.debug('value',value);
+          const found = value.find((value_file)=> value_file == file.name);
+          if(found){
+            return false
+          }else{
+            return true;
+          }
+        } );
+        // console.debug('all remove files',filtered_file);
+        return filtered_file;
+      }
+    })
+  }, []);
+
   console.log('divyaraj_files',allFiles);
+  console.debug('divyaraj_files',allFiles);
   const handleSubmit = () => {
     // console.log({ inputs });
     const project_name = inputs[1]?.projectName ?? "Fragrance Brief";
@@ -235,7 +243,7 @@ export default function AddApplication() {
   console.log("QUESTIONS: ", catWiseQues);
   let count = 1;
   return (
-    <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleNextPrevNav, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, regions, country, resetInputCountry }}>
+    <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleNextPrevNav, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, handleRemoveFiles, regions, country, resetInputCountry }}>
       <main className="appFormContainer">
         <ErrorBoundary>
           <NavSideBar formRef={containerRef} activeQue={currentQue} />

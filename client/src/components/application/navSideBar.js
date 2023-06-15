@@ -12,6 +12,7 @@ import UserAddIcon from "../../assets/icons/userAdd";
 import { collabActions, collabContext } from "../../context/collabContext";
 
 export default function NavSideBar({ appId, activeQue }) {
+  console.log(activeQue)
   const navigate = useNavigate();
   const { catWiseQues, inputs } = useContext(ApplicationContext);
   const { collabDispatch } = useContext(collabContext);
@@ -55,12 +56,12 @@ export default function NavSideBar({ appId, activeQue }) {
             <div data-id={count++} className={`panel ${accOpen[cat.category_id] ? 'open' : 'close'}`}>
               <Stepper nonLinear orientation="vertical">
                 {cat.questions.map((que) => (
-                  <Step key={que.id}>
+                  <Step active={(count == activeQue)} key={que.id}>
                     {/* <StepButton className={`navLink`} onClick={() => handleNextPrevNav(que.id, "fixed")} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
                       <div className="sidebarQueText">{que.question}</div>
                     </StepButton> */}
                     <a href={`#${count}`} className="navlink">
-                      <StepButton active = {activeQue == count} className={`navLink`} onClick={() => BasicExample(count)} data-id={count} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
+                      <StepButton className={`navLink`} onClick={() => BasicExample(count)} data-id={count} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
                         <div data-id={count++} data-que-id={que.id} className="sidebarQueText">{que.question}</div>
                       </StepButton>
                     </a>

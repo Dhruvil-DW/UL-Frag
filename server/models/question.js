@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.category, {foreignKey: 'category_id' });
+      this.belongsTo(models.category, { foreignKey: 'category_id' });
       this.hasMany(models.answers);
       this.hasMany(models.app_question);
       this.belongsToMany(models.Application, {
@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     question_type_id: DataTypes.INTEGER,
     question: DataTypes.STRING,
     question_opt: DataTypes.STRING,
+    require: DataTypes.BOOLEAN,
     status: DataTypes.INTEGER,
   }, {
     sequelize,

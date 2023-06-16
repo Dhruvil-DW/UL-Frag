@@ -5,7 +5,7 @@ import NavSideBar from "./navSideBar";
 import debounce from "../../utils/globalFunctions/debounce";
 // import { useParams } from "react-router";
 import UnileverIcon from "../../assets/icons/unileverIcon";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ErrorBoundary from "../../config/errorBoundary/ErrorBoundary";
 import WelcomeScreen from "./welcomeScreen/welcomeScreen";
 import { useAxios } from "../../hooks/useAxios";
@@ -146,6 +146,10 @@ export default function AddApplication() {
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Category" } });
       return;
     }
+    if (!Boolean(inputs[6])) {
+      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Country" } });
+      return;
+    }
     const project_name = inputs[1]?.projectName ?? "Fragrance Brief";
     const final_inputs = {
       project_name: project_name,
@@ -205,9 +209,11 @@ export default function AddApplication() {
                     <div className="pageWrapper" key={que.id} data-que-type={que.question_type_id} data-que-id={que.id} id={count}>
                       <div className="pageContainer">
                         <QuestionType question={que} nav={count++} index={questionIndex} inputs={inputs} onKeyUp={handleFocusNext} />
+                          <Link to='/dashboard'>
                         <div className="unilever-icon questionPage">
-                          <UnileverIcon width="64px" />
+                          <UnileverIcon width="64px"/>
                         </div>
+                          </Link>
                         <div className="assets bg_images">
                           {que.imgData?.map((e) => (
                             <img key={e.path} src={`/images/${e.path}`} style={{ position: 'absolute', right: 0, bottom: 0, ...e.style }} alt={e.path} />

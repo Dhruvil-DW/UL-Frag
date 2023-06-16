@@ -36,11 +36,11 @@ export default function AllProjectTab({ data, params, handleParamsChange }) {
             {/* <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit} onClick={() => navigate(`/application/view/${app.id}`)}> */}
             <h2 style={{ marginTop: 16 }}>{app.project_name}</h2>
             <div className="statusContainer">
-              <Button className="cardButton">{app.application_status.status}</Button>
+            <p>{app.application_status.status} | {app.app_questions[0].answers[0].answer}</p>
             </div>
             <div className="cardDetails">
               <UserIcon />
-              <p>{`${app.User.first_name} ${app.User.last_name}`}</p>
+              <p style={{ lineHeight: '26px'}}>{`${app.User.first_name} ${app.User.last_name}`}</p>
             </div>
             <div className="cardDetails">
               <CalenderIcon />
@@ -73,9 +73,10 @@ function FilterContainer({ onChange, filterInputs }) {
             options={QUESTION_CATEGORY}
             value={filterInputs.answer ?? null}
             popupIcon={<ArrowDownIcon />}
-            sx={{ width: 289 }}
+            sx={{ width: 285 }}
             onChange={(event, value, reason) => onChange(event, value, reason, "answer")}
-            renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Category" />}
+            renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Category wise" 
+            sx={{"& ::placeholder" : { fontSize:18, color: '#545454'}}}/>}
           />
         </div>
       </div>

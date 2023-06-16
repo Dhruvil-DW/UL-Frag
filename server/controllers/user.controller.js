@@ -87,15 +87,20 @@ function getMyApplications(req, res) {
     const searchText = req.query.search;
     // console.log(searchText);
     const filters = req.query.filters;
-    //console.log("Filters-",filters);
+    console.log("Filters-",filters);
     let filterData = [];
     const filterStatus = filters?.status ? filters.status : [];
-    const filterCategory = filters?.answer ? filters.answer : '';
-    // console.log('Filtercategory', filterCategory);
+    let filterCategory;
+    if(filters?.answer) {
+        if(filters.answer === "Other") {
+            filterCategory = { [Op.not]: ['Fabric clean(FCL)', 'Fabric Enhancer(FEN)', 'Home & Hygiene(H&H)']};
+        } else {
+            filterCategory = { [Op.eq]: filters.answer};
+        }
+        filterData.push({ '$app_questions.answers.answer$': filterCategory });
+    }
     filterStatus.length != 0 && filterData.push({ '$application_status.status$': { [Op.or]: filterStatus } });
-    filterCategory.length != 0 && filterData.push({ '$app_questions.answers.answer$': { [Op.eq]: filterCategory } });
-
-    // console.log("FilterData", filterData);
+     console.log("FilterData", filterData);
     const searchCond = searchText ? {
         [Op.and]: filterData, [Op.or]: [
             { project_name: { [Op.like]: '%' + searchText + '%' } }

@@ -100,11 +100,11 @@ function submitApplication(req, res) {
 
     // Data To Create or Update in Application Table
     const appData = app_id ? {
-      project_name: data.project_name,
+      project_name: inputs.project_name,
       application_status_id: 2,
       status: 1,
     } : {
-      project_name: data.project_name,
+      project_name: inputs.project_name,
       application_status_id: 2,
       user_id: user_id,
       status: 1,
@@ -206,11 +206,11 @@ function draftApplication(req, res) {
 
     // Data To Create or Update in Application Table
     const appData = app_id ? {
-      project_name: data.project_name,
+      project_name: inputs.project_name,
       application_status_id: 1,
       status: 1,
     } : {
-      project_name: data.project_name,
+      project_name: inputs.project_name,
       application_status_id: 1,
       user_id: user_id,
       status: 1,

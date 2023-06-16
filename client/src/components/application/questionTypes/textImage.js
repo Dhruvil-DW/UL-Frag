@@ -6,13 +6,15 @@ import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 
-export default function TextBoxImage({ question, nav, index, value = {desc: '', files: []}, onKeyUp }) {
-  const { handleNextPrevNav, handleAnswerChange, handleFilesChange } = useContext(ApplicationContext);
-  const [input, setInput] = useState(value);
+export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
+  const { handleNextPrevNav, handleAnswerChange, handleFilesChange, handleImageInputChange } = useContext(ApplicationContext);
+  const [input, setInput] = useState(value ? value : {desc: '', files: []});
   const defferInput = useDeferredValue(input);
   const [files, setFiles] = useState([]);
   const defferFiles = useDeferredValue(files);
   const [removeUploadedFiles, setRemoveUploadedFiles] = useState([]);
+  const [imageInput, setImageInput] = useState([]);
+  const defferImageInput = useDeferredValue(imageInput);
 
   const imageFileNames = [];
   function newFilesUpload(files){
@@ -25,15 +27,9 @@ export default function TextBoxImage({ question, nav, index, value = {desc: '', 
         name.forEach(e => {
             name[0] = name[0] + `_` + uuidv4();
         })
-        console.log(element.name);
-        console.log(i);
         imageFileNames.push(name[0] + `.` + name[1]);
         const myRenamedFile = new File([element], name[0] + `.` + name[1],{ type: element.type});
         newFiles.push(myRenamedFile);
-        // console.log(myRenamedFile);
-        // Files[i].name = name[0]+`.`+name[1];
-        console.log('newFiles :', newFiles);
-        console.log('newFilesNames :', imageFileNames);
       });
       return newFiles;
   }
@@ -49,15 +45,21 @@ export default function TextBoxImage({ question, nav, index, value = {desc: '', 
     const updatedFiles = newFilesUpload(files);
     console.log('ipdate',updatedFiles);
     setFiles((prevState) => [...prevState, ...updatedFiles]);
-    setInput((prevState) => ({...prevState, files: [...prevState.files, ...imageFileNames]}));
+    // setInput((prevState) => ({...prevState, files: [...prevState.files, ...imageFileNames]}));
+    setImageInput((prevState) => ([...prevState, ...imageFileNames]));
   };
 
   // const onUpload = (files) => setInput((prevState) => [...prevState, ...files]);
   const onRemove = (removeFile) => {
     // newFilesUpload(removeFile);
     setFiles((prevState) => prevState.filter((file) => file !== removeFile));
-    setInput((prevState) => ({...prevState, files: prevState.files.filter((file) => file !== removeFile)}));
+    // setInput((prevState) => ({...prevState, files: prevState.files.filter((file) => file !== removeFile)}));
+    let inputsImageArr = [...imageInput];
+    const newRemoveArr = inputsImageArr.filter((file) => file !== removeFile.name);
+    setImageInput(newRemoveArr);
+    // setImageInput((prevState) => ({...prevState, files: prevState.files.filter((file) => file !== removeFile)}));
   };
+  console.debug('imageInput', imageInput)
   const onRemoveUploaded = (removeFile) => {
     setRemoveUploadedFiles((prevState) => [...prevState, removeFile]);
     setInput((prevState) => ({ ...prevState, Images: prevState.Images.filter((file) => file.image_name !== removeFile) }));
@@ -68,6 +70,11 @@ export default function TextBoxImage({ question, nav, index, value = {desc: '', 
     handleAnswerChange(question.id, defferInput);
   }, [handleAnswerChange, question.id, defferInput]);
 
+  useEffect(() => {
+    if (defferImageInput.length != 0) {
+      handleImageInputChange(question.id, defferImageInput, question.question_type_id);
+    }
+  }, [handleImageInputChange, question.id, defferImageInput, question.question_type_id]);
 
   useEffect(() => {
     if(defferFiles.length != 0){

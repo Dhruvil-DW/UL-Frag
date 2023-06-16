@@ -107,7 +107,7 @@ export default function TextBoxVariationImage({ question, nav, index, value, onK
   console.log('hey files', files);
   // const onUpload = (files) => setInput((prevState) => [...prevState, ...files]);
   const onRemove = (index, removeFile, inner_index) => {
-
+console.log(index, removeFile, inner_index)
     setFiles((prevState) => prevState.filter((file) => file !== removeFile));
     setVariantFiles((prevState) => {
       const newState = [...prevState];
@@ -158,6 +158,12 @@ export default function TextBoxVariationImage({ question, nav, index, value, onK
       handleRemoveFilesChange(question.id, defferRemoveFiles);
     }
   }, [handleRemoveFilesChange, question.id, defferRemoveFiles]);
+
+  useEffect(() => {
+    if (defferFiles.length != 0) {;
+      handleRemoveFiles(question.id, defferFiles);
+    }
+  }, [handleRemoveFiles, question.id, defferFiles]);
 
   useEffect(() => {
     if (defferImageInput.length != 0) {

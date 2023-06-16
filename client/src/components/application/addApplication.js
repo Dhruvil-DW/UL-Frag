@@ -219,6 +219,24 @@ console.debug('on image inputs',imageInputs);
   console.log('divyaraj_files',allFiles);
   console.debug('divyaraj_files',allFiles);
   const handleSubmit = () => {
+    for (var key in inputs) {
+      console.debug('key', key)
+      if(key == 27 || key == 28){
+        inputs[key].map((e, i) => {
+        console.debug('que files', e['files'])
+          console.log(imageInputs[`${key}`][`${i}`]?.['files'])
+          if(imageInputs[`${key}`][`${i}`]?.['files'] !== undefined){
+            e.files.push(...imageInputs[`${key}`][`${i}`]?.['files'])
+          }
+        })
+      }
+      if(key == 29){
+        console.log('29',inputs[key])
+        if(imageInputs[`${key}`].length > 0){
+          inputs[key].files.push(...imageInputs[`${key}`]); 
+        }
+      }
+    }
     // console.log({ inputs });
     const project_name = inputs[1]?.projectName ?? "Fragrance Brief";
     const final_inputs = {
@@ -245,20 +263,22 @@ console.debug('on image inputs',imageInputs);
 
   function handleDraft() {
     // console.log({ inputs });
-    console.log("DRAFTING...");
-    console.debug('drafting image',imageInputs)
-    console.debug('drafting inputs',inputs)
-    console.debug('inputs',inputs['27'])
-
     for (var key in inputs) {
       console.debug('key', key)
-      if(key == 27){
+      if(key == 27 || key == 28){
         inputs[key].map((e, i) => {
         console.debug('que files', e['files'])
-          console.log(imageInputs[`${key}`][`${i}`]['files'])
-
-          e.files.push(imageInputs[`${key}`][`${i}`]['files'])
+          console.log(imageInputs[`${key}`][`${i}`]?.['files'])
+          if(imageInputs[`${key}`][`${i}`]?.['files'] !== undefined){
+            e.files.push(...imageInputs[`${key}`][`${i}`]?.['files'])
+          }
         })
+      }
+      if(key == 29){
+        console.log('29',inputs[key])
+        if(imageInputs[`${key}`]?.length > 0){
+          inputs[key].files.push(...imageInputs[`${key}`]); 
+        } 
       }
     }
     console.debug('drafting after inputs',inputs)
@@ -268,23 +288,23 @@ console.debug('on image inputs',imageInputs);
       inputs: inputs
     };
 
-    // console.log(final_inputs);
-    // console.log('divyaraj_files_1',allFiles);
+    console.log(final_inputs);
+    console.log('divyaraj_files_1',allFiles);
 
-    // const formData = new FormData();
-    // for( const f in allFiles){
-    //   formData.append('filename', allFiles[f]);
-    // }
-    //   // files.forEach((elem) => {
-    //   //   formData.append('filename', elem);
-    //   // });
-    //   formData.append('inputs', JSON.stringify(final_inputs));
-    //   formData.append('removeFiles', JSON.stringify(removeFiles));
-    //   // formData.append('removeUploadedFiles', JSON.stringify(removeUploadedFiles));
+    const formData = new FormData();
+    for( const f in allFiles){
+      formData.append('filename', allFiles[f]);
+    }
+      // files.forEach((elem) => {
+      //   formData.append('filename', elem);
+      // });
+      formData.append('inputs', JSON.stringify(final_inputs));
+      formData.append('removeFiles', JSON.stringify(removeFiles));
+      // formData.append('removeUploadedFiles', JSON.stringify(removeUploadedFiles));
 
-    // console.log(final_inputs);
+    console.log(final_inputs);
 
-    // postData(`/application/draft?app_id=${appId ?? ""}`, formData, (data) => { navigate(`/application/drafted`, { state: { app_id: data.app_id } }) });
+    postData(`/application/draft?app_id=${appId ?? ""}`, formData, (data) => { navigate(`/application/drafted`, { state: { app_id: data.app_id } }) });
   }
 
   console.log("QUESTIONS: ", catWiseQues);

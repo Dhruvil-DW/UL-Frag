@@ -18,6 +18,9 @@ export default function AddApplication() {
   const navigate = useNavigate();
   const [catWiseQues, setCatWiseQues] = useState([]);
   const [inputs, setInputs] = useState({});
+  const [imageInputs, setImageInputs] = useState({});
+  const [allFiles, setAllFiles] = useState([]);
+  const [removeFiles, setRemoveFiles] = useState([]);
   const [regions, setRegions] = useState([]);
   const [country, setCountry] = useState([]);
   const containerRef = useRef(null);
@@ -140,7 +143,102 @@ export default function AddApplication() {
     }
   }, []);
 
+  const handleImageInputChange = useCallback((name, value, type) => {
+    console.debug('type', type)
+    console.debug('image value', value)
+    
+    if (value && value.length !== 0) {
+      setImageInputs(prevState => {
+        const oldInput = { ...prevState };
+        // if (name === 5) {
+        //   toBeDltQueId.forEach(id => {
+        //     oldInput[id] && delete oldInput[id];
+        //   })
+        // };
+        
+        return { ...oldInput, [name]: value }
+      });
+    } else {
+      
+      setImageInputs(prevState => {
+        const oldInput = { ...prevState };
+        // if (name === 5) {
+        //   toBeDltQueId.forEach(id => {
+        //     oldInput[id] && delete oldInput[id];
+        //   });
+        // };
+        delete oldInput[name];
+        return oldInput;
+      })
+    }
+  }, []);
+console.debug('on image inputs',imageInputs);
+
+  const handleRemoveFilesChange = useCallback((name, value)=> setRemoveFiles((prevState) => [...prevState, ...value]), [])
+
+  const handleFilesChange = useCallback((name, value) => {
+    setAllFiles((prevFiles) => {
+      if (value && value.length !== 0) {
+        const filtered_file = prevFiles.filter((file) =>{
+          const found = value.find((value_file)=> value_file.name == file.name);
+          if(found){
+            return false
+          }else{
+            return true;
+          }
+        } );
+        console.debug('value',value);
+        console.debug('all pre files',prevFiles);
+        return [...filtered_file, ...value];
+      }
+      else{
+        return [...value];
+      }
+      
+    })
+  }, []);
+
+  const handleRemoveFiles = useCallback((name, value) => {
+    let remove_files_array = [];
+    setAllFiles((prevFiles) => {
+      if (value && value.length !== 0) {
+        const filtered_file = prevFiles.filter((file) =>{
+          console.debug('filtered_file', file);
+          console.debug('value',value);
+          const found = value.find((value_file)=> value_file == file.name);
+          if(found){
+            return false
+          }else{
+            return true;
+          }
+        } );
+        // console.debug('all remove files',filtered_file);
+        return filtered_file;
+      }
+    })
+  }, []);
+
+  console.log('divyaraj_files',allFiles);
+  console.debug('divyaraj_files',allFiles);
   const handleSubmit = () => {
+    for (var key in inputs) {
+      console.debug('key', key)
+      if(key == 27 || key == 28){
+        inputs[key].map((e, i) => {
+        console.debug('que files', e['files'])
+          console.log(imageInputs[`${key}`][`${i}`]?.['files'])
+          if(imageInputs[`${key}`][`${i}`]?.['files'] !== undefined){
+            e.files.push(...imageInputs[`${key}`][`${i}`]?.['files'])
+          }
+        })
+      }
+      if(key == 29){
+        console.log('29',inputs[key])
+        if(imageInputs[`${key}`].length > 0){
+          inputs[key].files.push(...imageInputs[`${key}`]); 
+        }
+      }
+    }
     // console.log({ inputs });
     if (!Boolean(inputs[3])) {
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Category" } });
@@ -155,16 +253,45 @@ export default function AddApplication() {
       project_name: project_name,
       inputs: inputs
     };
+    console.log('divyaraj_files_1',allFiles);
+
+    const formData = new FormData();
+    for( const f in allFiles){
+      formData.append('filename', allFiles[f]);
+    }
+      // files.forEach((elem) => {
+      //   formData.append('filename', elem);
+      // });
+      formData.append('inputs', JSON.stringify(final_inputs));
+      // formData.append('removeUploadedFiles', JSON.stringify(removeUploadedFiles));
 
     console.log(final_inputs);
 
-    postData(`/application/submit?app_id=${appId ?? ""}`, final_inputs, (data) => { navigate("/application/summary", { state: { app_id: data.app_id } }) });
-    
+    postData(`/application/submit?app_id=${appId ?? ""}`, formData, (data) => { navigate("/application/summary", { state: { app_id: data.app_id } }) });
+
   }
 
   function handleDraft() {
     // console.log({ inputs });
-    console.log("DRAFTING...");
+    for (var key in inputs) {
+      console.debug('key', key)
+      if(key == 27 || key == 28){
+        inputs[key].map((e, i) => {
+        console.debug('que files', e['files'])
+          console.log(imageInputs[`${key}`][`${i}`]?.['files'])
+          if(imageInputs[`${key}`][`${i}`]?.['files'] !== undefined){
+            e.files.push(...imageInputs[`${key}`][`${i}`]?.['files'])
+          }
+        })
+      }
+      if(key == 29){
+        console.log('29',inputs[key])
+        if(imageInputs[`${key}`]?.length > 0){
+          inputs[key].files.push(...imageInputs[`${key}`]); 
+        } 
+      }
+    }
+    console.debug('drafting after inputs',inputs)
     if (!Boolean(inputs[3])) {
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Category" } });
       return;
@@ -176,14 +303,28 @@ export default function AddApplication() {
     };
 
     console.log(final_inputs);
+    console.log('divyaraj_files_1',allFiles);
 
-    postData(`/application/draft?app_id=${appId ?? ""}`, final_inputs, (data) => { navigate(`/application/drafted`, { state: { app_id: data.app_id } }) });
+    const formData = new FormData();
+    for( const f in allFiles){
+      formData.append('filename', allFiles[f]);
+    }
+      // files.forEach((elem) => {
+      //   formData.append('filename', elem);
+      // });
+      formData.append('inputs', JSON.stringify(final_inputs));
+      formData.append('removeFiles', JSON.stringify(removeFiles));
+      // formData.append('removeUploadedFiles', JSON.stringify(removeUploadedFiles));
+
+    console.log(final_inputs);
+
+    postData(`/application/draft?app_id=${appId ?? ""}`, formData, (data) => { navigate(`/application/drafted`, { state: { app_id: data.app_id } }) });
   }
 
   console.log("QUESTIONS: ", catWiseQues);
   let count = 1;
   return (
-    <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleNextPrevNav, handleAnswerChange, regions, country, resetInputCountry }}>
+    <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleNextPrevNav, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, handleRemoveFiles, handleImageInputChange, regions, country, resetInputCountry }}>
       <main className="appFormContainer">
         <ErrorBoundary>
           <NavSideBar formRef={containerRef} activeQue={currentQue} appId={appId} />

@@ -7,6 +7,7 @@ import SelectMultiStatic from "./selectMultiStatic";
 import SelectSingleStatic from "./selectSingleStatic";
 import SelectSingleWithTextStatic from "./selectSingleTextField";
 import TextBoxImage from "./textImage";
+import TextBoxVariationImage from "./textImageVariation";
 import TextBox from "./textBox";
 import SelectCategory from "./selectCategory";
 import RadioTextInvestment from "./radioTextInvestment";
@@ -48,12 +49,14 @@ export default function QuestionType({ question, nav, index, inputs, onKeyUp }) 
 
     case 14: //Select (RadioButton) with TextBox
       return <SelectSingleWithTextStatic question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
-
+      
     case 13: //Add multiple image (uploadDoc) with TextBox
       return <TextBoxImage question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
 
-    case 2: // Date
     case 9: // Add Multiple section Image Upload
+      return <TextBoxVariationImage question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
+
+    case 2: // Date
     default:
       return null;
   }

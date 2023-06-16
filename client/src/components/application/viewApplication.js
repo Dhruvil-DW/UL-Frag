@@ -9,6 +9,7 @@ import { formatDate } from '../../utils/globalFunctions/dateFns';
 import { Button } from '@mui/material';
 import { authContext } from '../../context/authContext';
 import { promptActions, promptContext } from '../../context/promptContext';
+import { LazyImage } from '../../assets/image/lazyImage';
 import LogoutArrowIcon from "../../assets/icons/logout_arrow";
 import UserAddIcon from "../../assets/icons/userAdd";
 import { collabActions, collabContext } from '../../context/collabContext';
@@ -158,13 +159,44 @@ function GetAnswer({ qa }) {
           </Fragment>)
       });
 
+    case 13: // Add Multiple section Image Upload
+      return qa.answers.map((ans, i) => {
+        const ansObj = JSON.parse(ans.answer);
+        return (
+          <Fragment key={i}>
+            <p><b>{ansObj.desc}</b></p>
+            <div style={{ display: 'flex', alignItems: 'center', gap:'3em' }}>
+            {ansObj.files.map((img) => (
+                <LazyImage name={img} style={{ width: '10vw' }} />
+                ))}
+                </div>
+          </Fragment>)
+      });
+
+    case 9:
+      return qa.answers.map((ans, i) => {
+        // console.log(JSON.parse(ans.answer));
+        debugger;
+        const ansObj = JSON.parse(ans.answer);
+        return (
+          <Fragment key={i}>
+            <div style={{ display: 'flex', marginBottom: '30px', gap: '3em' }}>
+              <p style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}><b>{ansObj.variation} :</b></p>
+              {ansObj.files.map((img, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <LazyImage name={img} style={{ width: '10vw' }} />
+                </div>
+              ))}
+            </div>
+          </Fragment>)
+      });
+
     case 8: // Multiselect Picture Choice
     case 10: // Single Choice predefinded
     case 11: // Multiple Choice (Checkbox) predefined
     case 15: // Confirm Checkbox
     case 12: // Nested questions
     case 2: // Date
-    case 9: // Add Multiple section Image Upload
     default:
       return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
   }

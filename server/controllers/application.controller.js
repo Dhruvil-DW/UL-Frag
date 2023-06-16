@@ -10,6 +10,9 @@ const AppQuestion = db.app_question;
 const ApplicationStatus = db.application_status;
 const seq = require("../config/sequelize.config");
 const { Op } = require("sequelize");
+const { ifError } = require("assert");
+const fs = require("fs");
+
 const dayjs = require("dayjs");
 
 function getAllQuestions(req, res) {
@@ -77,16 +80,18 @@ function getCountryNames(req, res) {
 function submitApplication(req, res) {
 
   const user_id = req.userdata.user_id;
+  console.log('user id-', user_id);
   let app_id = req.query.app_id;
-  const inputs = req.body.inputs;
-
-  // console.log(user_id);
+  console.log('inputs = ', req.body.inputs)
+  // const data = JSON.parse(req.body.inputs);
+  const data = req.body;
   //console.log(app_id);
-  //console.log("INPUTS-", inputs);
+  console.log(req.body);
+  const inputs = data.inputs;
+  console.log("INPUTS-", inputs);
+  console.log('project_name', req.body.project_name);
   (async () => {
-
-    //Check for Same Project Name
-    const projectName = await seq.seqFindOne(Application, ['project_name'], { project_name: req.body.project_name });
+    const projectName = await seq.seqFindOne(Application, ['project_name'], { project_name: data.project_name });
     console.log(projectName);
     if (projectName) {
       res.status(422).send({ message: "Application name already exists" });
@@ -95,11 +100,11 @@ function submitApplication(req, res) {
 
     // Data To Create or Update in Application Table
     const appData = app_id ? {
-      project_name: req.body.project_name,
+      project_name: data.project_name,
       application_status_id: 2,
       status: 1,
     } : {
-      project_name: req.body.project_name,
+      project_name: data.project_name,
       application_status_id: 2,
       user_id: user_id,
       status: 1,
@@ -191,24 +196,39 @@ function draftApplication(req, res) {
   const user_id = req.userdata.user_id;
   let app_id = req.query.app_id;
   //console.log(app_id);
-  const inputs = req.body.inputs;
-  //console.log("INPUTS-", inputs);
+  const data = req.body;
+  const inputs = JSON.parse(data.inputs);
+  const que_inputs = inputs.inputs;
+  const removeFiles = JSON.parse(data.removeFiles);
+  console.log("INPUTS-", inputs);
+  console.log("removeFiles-", removeFiles);
   (async () => {
 
     // Data To Create or Update in Application Table
     const appData = app_id ? {
-      project_name: req.body.project_name,
+      project_name: data.project_name,
       application_status_id: 1,
       status: 1,
     } : {
-      project_name: req.body.project_name,
+      project_name: data.project_name,
       application_status_id: 1,
       user_id: user_id,
       status: 1,
-    }
+    };
 
     // Create Application If Not Exist
     // Update Application If Exist
+    let removeFileImageRes;
+    deleteFiles(removeFiles, (err) => {
+      if (err) {
+        removeFileImageRes = 500;
+        console.log(err);
+      } else {
+        removeFileImageRes = 200;
+        console.log('all files removed');
+      }
+    });
+
     if (!app_id) {
       const appRes = await seq.seqCreate(Application, appData);
       app_id = appRes.id;
@@ -241,8 +261,8 @@ function draftApplication(req, res) {
     }
 
     let isError = false;
-    for (let question_id in inputs) {
-      // console.log("Question_id-", inputs[question_id]);
+    for (let question_id in que_inputs) {
+      // console.log("Question_id-", que_inputs[question_id]);
       const quesRes = await seq.seqCreate(AppQuestion, {
         app_id: app_id,
         question_id: question_id,
@@ -255,14 +275,19 @@ function draftApplication(req, res) {
       }
 
       const app_question_id = quesRes.id;
-      const answer = inputs[question_id];
+      const answer = que_inputs[question_id];
 
       // console.log("ANSWER-", answer);
       if (Array.isArray(answer)) {
         answer.forEach(async (arrayItem) => {
           console.log("ARRAYITEM-", arrayItem);
+          if (Array.isArray(answer)) {
+            console.log('is array');
+          } else if (typeof answer === "object" && answer !== null) {
+            console.log('is object');
+          }
           const ansRes = await seq.seqCreate(Answers, {
-            answer: arrayItem,
+            answer: JSON.stringify(arrayItem),
             question_id: question_id,
             app_question_id: app_question_id,
           });
@@ -298,6 +323,7 @@ function draftApplication(req, res) {
         }
       }
     }
+
     if (isError) return;
     //**Update Appp so other User can Edit Application */
     await seq.seqUpdate(Application, { last_edit_by: null, last_edit_time: null }, { id: app_id });
@@ -340,6 +366,12 @@ function getDraftedApp(req, res) {
         case 4:
         case 10:
           answer = queAns.answers.map(ans => ans.answer)[0];
+          break;
+        case 9:
+          answer = queAns.answers.map(ans => JSON.parse(ans.answer));
+          break;
+        case 13:
+          answer = queAns.answers.map(ans => JSON.parse(ans.answer))[0];
           break;
         //Answers Multiselect
         case 0: //Child Questions
@@ -469,6 +501,42 @@ function editApplication(req, res) {
   })();
 }
 
+
+const deleteFiles = (files, callback) => {
+  var i = files.length;
+  console.log('remove image', typeof(files));
+  files.map((files) => {
+    fs.unlink('./public/' + files, function (err) {
+      i--;
+      if (err) {
+        callback(err);
+        return;
+      } else if (i <= 0) {
+        callback(null);
+      }
+    });
+  });
+}
+
+function getImage(req, res) {
+  const image_name = req.params.image_name;
+  const options = {
+    root: (__dirname, './public/'),
+    dotfiles: 'deny',
+    headers: {
+      'x-timestamp': Date.now(),
+      'x-sent': true
+    }
+  }
+  const filepath = "./" + image_name;
+  if (fs.existsSync('./public/' + filepath)) {
+    // res.set({ 'Content-Type': 'image/jpeg' });
+    res.status(200).sendFile(filepath, options);
+  } else {
+    res.status(404).send({ message: "Not found" });
+  }
+}
+
 module.exports = {
   getAllQuestions,
   getRegionNames,
@@ -477,5 +545,6 @@ module.exports = {
   draftApplication,
   getDraftedApp,
   copyApplication,
-  editApplication
+  editApplication,
+  getImage,
 };

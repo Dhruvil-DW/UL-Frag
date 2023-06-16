@@ -16,6 +16,7 @@ export default function AddApplication() {
   const navigate = useNavigate();
   const [catWiseQues, setCatWiseQues] = useState([]);
   const [inputs, setInputs] = useState({});
+  const [imageInputs, setImageInputs] = useState({});
   const [allFiles, setAllFiles] = useState([]);
   const [removeFiles, setRemoveFiles] = useState([]);
   const [regions, setRegions] = useState([]);
@@ -140,6 +141,36 @@ export default function AddApplication() {
     }
   }, []);
 
+  const handleImageInputChange = useCallback((name, value, type) => {
+    console.debug('type', type)
+    console.debug('image value', value)
+    
+    if (value && value.length !== 0) {
+      setImageInputs(prevState => {
+        const oldInput = { ...prevState };
+        // if (name === 5) {
+        //   toBeDltQueId.forEach(id => {
+        //     oldInput[id] && delete oldInput[id];
+        //   })
+        // };
+        
+        return { ...oldInput, [name]: value }
+      });
+    } else {
+      
+      setImageInputs(prevState => {
+        const oldInput = { ...prevState };
+        // if (name === 5) {
+        //   toBeDltQueId.forEach(id => {
+        //     oldInput[id] && delete oldInput[id];
+        //   });
+        // };
+        delete oldInput[name];
+        return oldInput;
+      })
+    }
+  }, []);
+console.debug('on image inputs',imageInputs);
 
   const handleRemoveFilesChange = useCallback((name, value)=> setRemoveFiles((prevState) => [...prevState, ...value]), [])
 
@@ -215,6 +246,22 @@ export default function AddApplication() {
   function handleDraft() {
     // console.log({ inputs });
     console.log("DRAFTING...");
+    console.debug('drafting image',imageInputs)
+    console.debug('drafting inputs',inputs)
+    console.debug('inputs',inputs['27'])
+
+    for (var key in inputs) {
+      console.debug('key', key)
+      if(key == 27){
+        inputs[key].map((e, i) => {
+        console.debug('que files', e['files'])
+          console.log(imageInputs[`${key}`][`${i}`]['files'])
+
+          e.files.push(imageInputs[`${key}`][`${i}`]['files'])
+        })
+      }
+    }
+    console.debug('drafting after inputs',inputs)
     const project_name = `Draft_${inputs[1]?.projectName ?? "Fragrance Brief"}`;
     const final_inputs = {
       project_name: project_name,
@@ -222,28 +269,28 @@ export default function AddApplication() {
     };
 
     // console.log(final_inputs);
-    console.log('divyaraj_files_1',allFiles);
+    // console.log('divyaraj_files_1',allFiles);
 
-    const formData = new FormData();
-    for( const f in allFiles){
-      formData.append('filename', allFiles[f]);
-    }
-      // files.forEach((elem) => {
-      //   formData.append('filename', elem);
-      // });
-      formData.append('inputs', JSON.stringify(final_inputs));
-      formData.append('removeFiles', JSON.stringify(removeFiles));
-      // formData.append('removeUploadedFiles', JSON.stringify(removeUploadedFiles));
+    // const formData = new FormData();
+    // for( const f in allFiles){
+    //   formData.append('filename', allFiles[f]);
+    // }
+    //   // files.forEach((elem) => {
+    //   //   formData.append('filename', elem);
+    //   // });
+    //   formData.append('inputs', JSON.stringify(final_inputs));
+    //   formData.append('removeFiles', JSON.stringify(removeFiles));
+    //   // formData.append('removeUploadedFiles', JSON.stringify(removeUploadedFiles));
 
-    console.log(final_inputs);
+    // console.log(final_inputs);
 
-    postData(`/application/draft?app_id=${appId ?? ""}`, formData, (data) => { navigate(`/application/drafted`, { state: { app_id: data.app_id } }) });
+    // postData(`/application/draft?app_id=${appId ?? ""}`, formData, (data) => { navigate(`/application/drafted`, { state: { app_id: data.app_id } }) });
   }
 
   console.log("QUESTIONS: ", catWiseQues);
   let count = 1;
   return (
-    <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleNextPrevNav, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, handleRemoveFiles, regions, country, resetInputCountry }}>
+    <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleNextPrevNav, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, handleRemoveFiles, handleImageInputChange, regions, country, resetInputCountry }}>
       <main className="appFormContainer">
         <ErrorBoundary>
           <NavSideBar formRef={containerRef} activeQue={currentQue} />

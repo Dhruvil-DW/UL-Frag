@@ -7,14 +7,16 @@ import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 
-export default function TextBoxVariationImage({ question, nav, index, value = [{ variation: '', files: [] }], onKeyUp }) {
-  const { handleNextPrevNav, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, handleRemoveFiles } = useContext(ApplicationContext);
-  const [input, setInput] = useState(value);
-  const [count, setSectionCount] = useState(1);
+export default function TextBoxVariationImage({ question, nav, index, value, onKeyUp }) {
+  const { handleNextPrevNav, handleImageInputChange, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, handleRemoveFiles } = useContext(ApplicationContext);
+  const [input, setInput] = useState(value ? value : [{ variation: '', files: [] }]);
   const defferInput = useDeferredValue(input);
+  const [imageInput, setImageInput] = useState([{ files: [] }]);
+  const defferImageInput = useDeferredValue(imageInput);
+  const [count, setSectionCount] = useState(1);
   const [files, setFiles] = useState([]);
-  const [variantFiles, setVariantFiles] = useState([]);
   const defferFiles = useDeferredValue(files);
+  const [variantFiles, setVariantFiles] = useState([]);
   const [removeUploadedFiles, setRemoveUploadedFiles] = useState([]);
   const defferRemoveFiles = useDeferredValue(removeUploadedFiles);
 
@@ -40,20 +42,29 @@ export default function TextBoxVariationImage({ question, nav, index, value = [{
     let newArr = [...variantFiles];
     newArr[i] = updatedFiles;
     let inputsArr = [...input];
+    let imageInputs = [...imageInput];
     setFiles((prevState) => [...prevState, ...updatedFiles]);
     setVariantFiles((prevState) => {
       const newState = [...prevState];
       newState[i] = newState[i] ? [...newState[i], ...updatedFiles] : updatedFiles;
       return newState;
     });
-    inputsArr[i].files = imageFileNames;
+    console.debug('image files', imageFileNames);
+    
+    // let index = i;
+    // let new_files = imageFileNames;
+    imageInputs[i].files = imageFileNames;
+    setImageInput(imageInputs);
+    console.debug('new image uploads', imageInput)
+
+    // inputsArr[i].files = imageFileNames;
     // setInput((prevState) => ({ ...prevState, files: [...prevState.files, ...imageFileNames] }));
+    
   };
 
   const addVariation = () => {
-    // let inputsArr = [...input];
-    // inputsArr.push({ variation: '', files: [] });
-    setInput((inputsArr) => [...inputsArr, { variation: '', files: [] }]);
+   setInput((inputsArr) => [...inputsArr, { variation: '', files: [] }]);
+   setImageInput((imageInputs) => [...imageInputs, { files: [] }]);
   }
 
   const removeVariation = (i) => {
@@ -66,8 +77,12 @@ export default function TextBoxVariationImage({ question, nav, index, value = [{
     ));
     setRemoveUploadedFiles((prevState) => [...prevState , ...remove_images.files]);
     input.splice(i, 1);
+    imageInput.splice(i, 1);
     variantFiles.splice(i, 1);
     setInput([...input]);
+    setImageInput([...imageInput]);
+    console.debug('after variant remove', imageInput)
+
   }
 
   const removeSingleFile = (index, inner_index) => {
@@ -104,6 +119,9 @@ export default function TextBoxVariationImage({ question, nav, index, value = [{
     let inputsArr = [...input];
     inputsArr[index].files.splice(inner_index, 1);
     setInput(inputsArr);
+    let inputsImageArr = [...imageInput];
+    inputsImageArr[index].files.splice(inner_index, 1);
+    setImageInput(inputsImageArr);
     console.log("inputs", input);
     // setInput((prevState) => ({ ...prevState, files: prevState.files.filter((file) => file !== removeFile) }));
   };
@@ -142,11 +160,10 @@ export default function TextBoxVariationImage({ question, nav, index, value = [{
   }, [handleRemoveFilesChange, question.id, defferRemoveFiles]);
 
   useEffect(() => {
-    if (defferRemoveFiles.length != 0) {
-      console.debug('defur remove files',defferRemoveFiles);
-      handleRemoveFiles(question.id, defferRemoveFiles);
+    if (defferImageInput.length != 0) {
+      handleImageInputChange(question.id, defferImageInput, question.question_type_id);
     }
-  }, [handleRemoveFiles, question.id, defferRemoveFiles]);
+  }, [handleImageInputChange, question.id, defferImageInput, question.question_type_id]);
 
   function BasicExample(nav) {
     const element = document.getElementById(nav);
@@ -158,7 +175,7 @@ export default function TextBoxVariationImage({ question, nav, index, value = [{
   console.log('edit input', input)
 
   return (
-    <div className="questionContainer">
+    <div data-que-type={question.question_type_id} className="questionContainer">
       <div style={{ display: "flex", gap: "3rem" }}>
         <div className="queBox">
           <h2 className="question">{question.question}</h2>

@@ -10,7 +10,6 @@ router.put('/profile/update', authMiddleware.checkAuth, userController.updatePro
 
 //router.post('/sendinvite/:app_id', authMiddleware.checkAuth, applicationController.sendInviteApplication);
 //router.get('/getanswers', authMiddleware.checkAuth, answerController.getAnswers);
-router.post('/sendinvite/:app_id', authMiddleware.checkAuth, userController.sendInviteApplication);
 
 router.get('/get/myapplications', authMiddleware.checkAuth, userController.getMyApplications);
 router.get('/get/approvedapplications', authMiddleware.checkAuth, userController.getApprovedApplications);

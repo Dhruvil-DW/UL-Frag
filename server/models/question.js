@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     question_type_id: DataTypes.INTEGER,
     question: DataTypes.STRING,
     question_opt: DataTypes.STRING,
-    require: DataTypes.BOOLEAN,
+    require: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
     status: DataTypes.INTEGER,
   }, {
     sequelize,

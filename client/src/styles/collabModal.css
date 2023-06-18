@@ -7,8 +7,8 @@
 }
 
 .collabModalContainer {
-  height: 50vh;
-  width: 50vw;
+  height: 70vh;
+  width: 70vw;
   background-color: white;
   padding: 2rem;
   position: relative;
@@ -39,11 +39,25 @@
 /* .addBtnWrapper {
 } */
 
-.emailList {
-  margin: 1rem;
+.emailListContainer {
   display: flex;
   flex-wrap: wrap;
+  gap: 1rem;
+  height: calc(100% - 130px);
+  overflow: auto;
+}
+
+.emailList {
+  height: 100%;
+}
+
+.emailList .chipContainer {
+  margin: 1rem 0rem;
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
+  overflow: auto;
+  height: calc(100% - 56px);
 }
 
 

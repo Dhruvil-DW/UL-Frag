@@ -1,6 +1,6 @@
 import { Avatar, Button } from "@mui/material";
 import UnileverIcon from "../../assets/icons/unileverIcon";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { authContext } from "../../context/authContext";
 import LogoutArrowIcon from "../../assets/icons/logout_arrow";
@@ -12,13 +12,14 @@ export default function Header() {
     <>
       <header className="headerWrapper">
         <div className="headerContainer">
-          <div style={{ display: 'flex', gap: "1rem", alignItems: "center", textTransform: "capitalize" }}>
+          <div style={{ display: 'flex', gap: "1rem", alignItems: "center", textTransform: "capitalize", color:"#7C8DB5", fontWeight:400 }}>
             <Avatar />Hello {`${userdata.first_name} ${userdata.last_name}`},
-          </div>
-          <Button variant="outlined" color="secondary" style={{ marginLeft: "auto" }} startIcon={<LogoutArrowIcon />} onClick={() => navigate("/logout")}>
+          <Button variant="text" color="secondary" style={{ position:'absolute', top:71, left:86 }} startIcon={<LogoutArrowIcon />} onClick={() => navigate("/logout")}>
             Logout
           </Button>
-          <div style={{ fontSize: 64 }}>
+          {/* <Link to='/logout' startIcon={<LogoutArrowIcon />} style={{ position:'absolute', top:61, left:87 }} color="secondary">Logout</Link> */}
+          </div>
+          <div style={{ fontSize: 64}}>
             <UnileverIcon style={{ display: "block" }} />
           </div>
         </div>

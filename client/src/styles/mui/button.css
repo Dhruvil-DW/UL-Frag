@@ -80,3 +80,20 @@
    color: hsl(0, 0%, 70%);
    border-color: hsl(0, 0%, 70%);
  }
+
+ .MuiButton-root.MuiButtonBase-root.MuiButton-text {
+  background-color: hsl(0, 0%, 100%);
+  color: var(--Color-Primary);
+  border-color: hsl(0, 0%, 100%);
+}
+
+.MuiButton-root.MuiButtonBase-root.MuiButton-text:hover {
+  background-color: var(--Color-Primary);
+  color: hsl(0, 0%, 100%);
+  border-color: hsl(0, 0%, 100%);
+}
+
+.MuiButton-root.MuiButtonBase-root.MuiButton-text.Mui-disabled {
+  background-color: hsl(0, 0%, 50%);
+  color: hsl(219, 39%, 32%);
+}

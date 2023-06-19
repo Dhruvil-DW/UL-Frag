@@ -24,7 +24,7 @@ export default function Dashboard() {
   const [myAppData, setMyAppData] = useState([]);
   const [myAppParams, setMyAppParams] = useState({ search: "", filters: { status: [], answer: null } });
   const [myAppParamsDebounced, setMyAppParamsDebounced] = useState(myAppParams);
-
+  
   const handleMyAppFilterChange = (__event, value, __reason, name) => {
     setMyAppParams((prevState) => ({ ...prevState, filters: { ...prevState.filters, [name]: value } }))
   }
@@ -108,11 +108,11 @@ export default function Dashboard() {
     <section className="dashboardWrapper">
       <div className="dashboardContainer">
         <Header />
-        <Divider sx={{ my: 2 }} />
+        <Divider sx={{ marginTop:'55px' }} />
         <div className="dashboardContentWrapper">
           <div className="tabContainer">
             <Tabs value={selectedTab} onChange={handleChangeTab} sx={{ mr: 'auto' }}>
-              <Tab label={userdata.role_id === 2 ? "In Approval Projects" : "My Projects"} />
+              <Tab label={userdata.role_id === 2 ? "In Approval Projects" : "My Projects"} sx={{ fontWeight:500 }}/>
               <Tab label="All Projects" />
               {userdata.role_id === 1 && <Tab label="Invited Projects" />}
             </Tabs>

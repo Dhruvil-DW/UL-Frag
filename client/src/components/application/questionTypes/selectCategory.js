@@ -44,7 +44,8 @@ export default function SelectCategory({ question, nav, index, value = null, onK
         value={input}
         onChange={handleInputChange}
         popupIcon={<ArrowDownIcon />}
-        renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Select Option" />}
+        renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Select Category" 
+        sx={{"& ::placeholder" : { fontSize:18, fontWeight: 400, color:'rgb(0, 0, 0, 0.5)'}}}/>}
         onKeyUp={onKeyUp}
       />
       {input === "Other" && <TextField variant="outlined" color="secondary" placeholder="Enter Category Name" name="Other Category" value={textInput} onKeyUp={onKeyUp} onChange={handleTextChange} />}

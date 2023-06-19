@@ -85,7 +85,10 @@ function getMyApplications(req, res) {
     const role_id = req.userdata.role_id;
     //console.log("QUERY: ", req.query);
     const searchText = req.query.search;
-    // console.log(searchText);
+    //const limit = req.query.limit ? Number(req.query.limit) : null;
+  //console.log(limit);
+    //const offset = req.query.offset ? Number(req.query.offset) : 0;
+  //console.log(offset);
     const filters = req.query.filters;
     console.log("Filters-",filters);
     let filterData = [];
@@ -137,11 +140,19 @@ function getApprovedApplications(req, res) {
     console.log("Query-", req.query);
     const filters = req.query.filters;
     console.log("Filters-", filters);
-    const filterCategory = filters?.answer ? filters.answer : '';
-    console.log("filterCategory", filterCategory);
+    //const filterCategory = filters?.answer ? filters.answer : '';
+    //console.log("filterCategory", filterCategory);
     let filterData = [];
+    let filterCategory;
     // filterCategory.length != 0 && filterData.push({'$app_question.answers.answer$': {[Op.or]: filterCategory}});
-    filterCategory.length != 0 && filterData.push({ '$app_questions.answers.answer$': { [Op.eq]: filterCategory } });
+    if(filters?.answer) {
+        if(filters.answer === "Other") {
+            filterCategory = { [Op.not]: ['Fabric clean(FCL)', 'Fabric Enhancer(FEN)', 'Home & Hygiene(H&H)']};
+        } else {
+            filterCategory = { [Op.eq]: filters.answer};
+        }
+        filterData.push({ '$app_questions.answers.answer$': filterCategory });
+    }
     console.log("FilterData", filterData);
     const searchCond = searchText ? {
         [Op.and]: filterData,
@@ -206,13 +217,16 @@ function getInvitedApplications(req, res) {
     const filters = req.query.filters;
     //console.log("Filters-",filters);
     let filterData = [];
-    // const filterStatus = filters?.status ? filters.status : [];
-    const filterCategory = filters?.answer ? filters.answer : '';
-    //console.log('Filtercategory', filterCategory);
-    // filterStatus.length != 0 && filterData.push({ '$application_status.status$': { [Op.or]: filterStatus } });
-    filterCategory.length != 0 && filterData.push({ '$app_questions.answers.answer$': { [Op.eq]: filterCategory } });
-
-    //console.log("FilterData", filterData);
+    //const filterCategory = filters?.answer ? filters.answer : '';
+    let filterCategory;
+    if(filters?.answer) {
+        if(filters.answer === "Other") {
+            filterCategory = { [Op.not]: ['Fabric clean(FCL)', 'Fabric Enhancer(FEN)', 'Home & Hygiene(H&H)']};
+        } else {
+            filterCategory = { [Op.eq]: filters.answer};
+        }
+        filterData.push({ '$app_questions.answers.answer$': filterCategory });
+    }
     const searchCond = searchText ? {
         [Op.and]: filterData,
         [Op.or]:

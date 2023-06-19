@@ -144,8 +144,6 @@ export default function AddApplication() {
   }, []);
 
   const handleImageInputChange = useCallback((name, value, type) => {
-    console.debug('type', type)
-    console.debug('image value', value)
     
     if (value && value.length !== 0) {
       setImageInputs(prevState => {
@@ -172,7 +170,6 @@ export default function AddApplication() {
       })
     }
   }, []);
-console.debug('on image inputs',imageInputs);
 
   const handleRemoveFilesChange = useCallback((name, value)=> setRemoveFiles((prevState) => [...prevState, ...value]), [])
 
@@ -218,8 +215,6 @@ console.debug('on image inputs',imageInputs);
     })
   }, []);
 
-  console.log('divyaraj_files',allFiles);
-  console.debug('divyaraj_files',allFiles);
   const handleSubmit = () => {
     for (var key in inputs) {
       console.debug('key', key)
@@ -253,7 +248,6 @@ console.debug('on image inputs',imageInputs);
       project_name: project_name,
       inputs: inputs
     };
-    console.log('divyaraj_files_1',allFiles);
 
     const formData = new FormData();
     for( const f in allFiles){
@@ -321,7 +315,7 @@ console.debug('on image inputs',imageInputs);
     postData(`/application/draft?app_id=${appId ?? ""}`, formData, (data) => { navigate(`/application/drafted`, { state: { app_id: data.app_id } }) });
   }
 
-  console.log("QUESTIONS: ", catWiseQues);
+  console.debug("QUESTIONS: ", catWiseQues);
   let count = 1;
   return (
     <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleNextPrevNav, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, handleRemoveFiles, handleImageInputChange, regions, country, resetInputCountry }}>

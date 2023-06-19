@@ -12,7 +12,6 @@ import UserAddIcon from "../../assets/icons/userAdd";
 import { collabActions, collabContext } from "../../context/collabContext";
 
 export default function NavSideBar({ appId, activeQue }) {
-  console.log(activeQue)
   const navigate = useNavigate();
   const { catWiseQues, inputs } = useContext(ApplicationContext);
   const { collabDispatch } = useContext(collabContext);

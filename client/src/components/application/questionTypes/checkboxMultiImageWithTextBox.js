@@ -1,24 +1,38 @@
-import { Checkbox } from "@mui/material";
+import { Checkbox, TextField } from "@mui/material";
 import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 
-export default function CheckBoxImage({ question, nav, index, value = [], onKeyUp }) {
+export default function CheckBoxImageWithTextBox({ question, nav, index, value = { option: [], desc: "" }, onKeyUp }) {
   const { handleAnswerChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const defferInput = useDeferredValue(input);
 
   function handleInputChange(option) {
+
+    //**Prevent Selection more than 2 */
+    if (input.option?.length >= 2 && !(input.option?.includes(option))) {
+      return;
+    }
+
     setInput(prevInput => {
-      const copyOld = [...prevInput];
-      const index = prevInput.indexOf(option);
-      index === -1 ? copyOld.push(option) : copyOld.splice(index, 1);
-      return copyOld
+      const copyOpt = [...prevInput.option];
+      const index = prevInput.option.indexOf(option);
+      index === -1 ? copyOpt.push(option) : copyOpt.splice(index, 1);
+      return { ...prevInput, option: copyOpt }
     });
   }
 
+  function handleDescChange(e) {
+    setInput(prevInput => ({ ...prevInput, desc: e.target.value }));
+  }
+
   useEffect(() => {
-    handleAnswerChange(question.id, defferInput);
+    if (defferInput.desc?.length === 0 && defferInput.option?.length === 0) {
+      handleAnswerChange(question.id, null);
+    } else {
+      handleAnswerChange(question.id, defferInput);
+    }
   }, [handleAnswerChange, question.id, defferInput]);
 
   function BasicExample(nav) {
@@ -36,7 +50,7 @@ export default function CheckBoxImage({ question, nav, index, value = [], onKeyU
       <div className="optionContainer">
         {question.question_opt?.map((opt) => (
           <div key={opt} className="imageBoxContainer" onClick={() => handleInputChange(opt)}>
-            <Checkbox checked={Boolean(input.find(x => x === opt))} />
+            <Checkbox checked={Boolean(input.option?.find(x => x === opt))} />
             <div className="iconContainer">
               <GetSVG option={opt} />
             </div>
@@ -44,6 +58,12 @@ export default function CheckBoxImage({ question, nav, index, value = [], onKeyU
           </div>
         ))}
       </div>
+
+      <div>
+        <TextField multiline fullWidth rows={2} inputProps={{ maxLength: 100 }} variant="outlined" color="secondary" placeholder="Enter your description here" value={input.desc} onChange={handleDescChange} />
+        <div style={{ position: "absolute", bottom: 8, right: 24, color: "hsl(0, 0%, 60%)" }}>{`${input.length ?? 0} / 100`}</div>
+      </div>
+
       <div className='navBtnCont'>
         <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>
         {question.id !== 31 && <div className="nextBtn" tabIndex={-1} onClick={() => BasicExample((nav) + 1)}><ArrowLeftRoundIcon /></div>}

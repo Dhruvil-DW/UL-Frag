@@ -11,6 +11,7 @@ import TextBoxVariationImage from "./textImageVariation";
 import TextBox from "./textBox";
 import SelectCategory from "./selectCategory";
 import RadioTextInvestment from "./radioTextInvestment";
+import CheckBoxImageWithTextBox from "./checkboxMultiImageWithTextBox";
 
 export default function QuestionType({ question, nav, index, inputs, onKeyUp }) {
 
@@ -33,7 +34,9 @@ export default function QuestionType({ question, nav, index, inputs, onKeyUp }) 
       return <RadioImage question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
 
     case 8: // Multiselect Picture Choice
-      return <CheckBoxImage question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
+      return question.id === 23
+      ? <CheckBoxImageWithTextBox question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
+      : <CheckBoxImage question={question} nav={nav} index={index} value={inputs[question.id]} onKeyUp={onKeyUp} />
 
     case 10: // Single Choice predefinded
       return question.id === 24

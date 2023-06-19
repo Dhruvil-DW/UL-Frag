@@ -14,6 +14,7 @@ const { ifError } = require("assert");
 const fs = require("fs");
 
 const dayjs = require("dayjs");
+const { createFileCopy } = require("../config/file.config");
 
 function getAllQuestions(req, res) {
   (async () => {
@@ -79,19 +80,16 @@ function getCountryNames(req, res) {
 
 function submitApplication(req, res) {
 
+  // console.log("INPUTS: ", req.body.inputs);
   const user_id = req.userdata.user_id;
   console.log('user id-', user_id);
   let app_id = req.query.app_id;
-  console.log('inputs = ', req.body.inputs)
-  // const data = JSON.parse(req.body.inputs);
   const data = req.body;
-  //console.log(app_id);
-  console.log(req.body);
-  const inputs = data.inputs;
-  console.log("INPUTS-", inputs);
-  console.log('project_name', req.body.project_name);
+  const inputs = JSON.parse(data.inputs);
+  const que_inputs = inputs.inputs;
+
   (async () => {
-    const projectName = await seq.seqFindOne(Application, ['project_name'], { project_name: data.project_name });
+    const projectName = await seq.seqFindOne(Application, ['project_name'], { project_name: inputs.project_name });
     console.log(projectName);
     if (projectName) {
       res.status(422).send({ message: "Application name already exists" });
@@ -147,8 +145,8 @@ function submitApplication(req, res) {
     if (newUpdate === 500) return res.status(500).send({ message: "Error while updating application" });
 
     let isError = false;
-    for (let question_id in inputs) {
-      console.log("Question_id-", inputs[question_id]);
+    for (let question_id in que_inputs) {
+      // console.log("Question_id-", que_inputs[question_id]);
       const quesRes = await seq.seqCreate(AppQuestion, {
         app_id: app_id,
         question_id: question_id,
@@ -158,13 +156,17 @@ function submitApplication(req, res) {
         res.status(500).send({ message: "Error while fetching question" });
       }
       const app_question_id = quesRes.id;
-      const answer = inputs[question_id];
+      const answer = que_inputs[question_id];
 
       console.log("ANSWER-", answer);
       if (Array.isArray(answer)) {
         answer.forEach(async (arrayItem) => {
-          console.log("ARRAYITEM-", arrayItem);
-          const ansRes = await seq.seqCreate(Answers, { answer: arrayItem, question_id: question_id, app_question_id: app_question_id });
+          // console.log("ARRAYITEM-", arrayItem);
+          const ansRes = await seq.seqCreate(Answers, {
+            answer: typeof arrayItem === "object" ? JSON.stringify(arrayItem) : arrayItem,
+            question_id: question_id,
+            app_question_id: app_question_id
+          });
           //console.log("ANS_res-", ansRes);
           if (ansRes === 500) {
             isError = true;
@@ -200,8 +202,7 @@ function draftApplication(req, res) {
   const inputs = JSON.parse(data.inputs);
   const que_inputs = inputs.inputs;
   const removeFiles = JSON.parse(data.removeFiles);
-  console.log("INPUTS-", inputs);
-  console.log("removeFiles-", removeFiles);
+
   (async () => {
 
     // Data To Create or Update in Application Table
@@ -280,14 +281,8 @@ function draftApplication(req, res) {
       // console.log("ANSWER-", answer);
       if (Array.isArray(answer)) {
         answer.forEach(async (arrayItem) => {
-          console.log("ARRAYITEM-", arrayItem);
-          if (Array.isArray(answer)) {
-            console.log('is array');
-          } else if (typeof answer === "object" && answer !== null) {
-            console.log('is object');
-          }
           const ansRes = await seq.seqCreate(Answers, {
-            answer: JSON.stringify(arrayItem),
+            answer: typeof arrayItem === "object" ? JSON.stringify(arrayItem) : arrayItem,
             question_id: question_id,
             app_question_id: app_question_id,
           });
@@ -360,6 +355,13 @@ function getDraftedApp(req, res) {
         case 14: //Select with TextBox
           answer = queAns.answers.map(ans => JSON.parse(ans.answer))[0];
           break;
+        case 8: //Multi-Select Picture Choice
+          if (queAns.question_id === 23) { //With TextBox
+            answer = queAns.answers.map(ans => JSON.parse(ans.answer))[0];
+          } else {
+            answer = queAns.answers.map(ans => ans.answer);
+          }
+          break;
         //Answers Single Selected
         case 1:
         case 3:
@@ -367,10 +369,10 @@ function getDraftedApp(req, res) {
         case 10:
           answer = queAns.answers.map(ans => ans.answer)[0];
           break;
-        case 9:
+        case 9: // Add Multiple Section
           answer = queAns.answers.map(ans => JSON.parse(ans.answer));
           break;
-        case 13:
+        case 13: // Textarea with File Upload
           answer = queAns.answers.map(ans => JSON.parse(ans.answer))[0];
           break;
         //Answers Multiselect
@@ -388,6 +390,7 @@ function getDraftedApp(req, res) {
 
   })();
 }
+
 function copyApplication(req, res) {
   const appId = req.params.app_id;
   const user_id = req.userdata.user_id;
@@ -442,7 +445,7 @@ function copyApplication(req, res) {
     const newAppId = appCreate.id;
 
     copyAppQueRes.forEach(async (queAns) => {
-      //console.log("QuestionAns", queAns.answers);
+      console.log("QuestionAns", queAns.question);
       const newAppQues = await seq.seqCreate(AppQuestion, { app_id: newAppId, question_id: queAns.question_id });
       //console.log("newAppQues", newAppQues);
       if (newAppQues === 500) return res.status(500).send({ message: "Error while copying applications" });
@@ -450,14 +453,35 @@ function copyApplication(req, res) {
       const newAnswers = queAns.answers;
       newAnswers.forEach(async (ans) => {
         //console.log("ANS", ans.id);
-        //newResp.push()
+        //newResp.push();
+        let answerStr = ans.answer;
+        if (queAns.question.question_type_id === 9) {
+          //**Question for Variation and Upload Image */
+          const answerObj = JSON.parse(answerStr);
+          answerObj.files = answerObj.files.map((imgName) => {
+            const renameFile = `${newAppId}_${imgName}`;
+            createFileCopy(imgName, renameFile);
+            return renameFile;
+          });
+          answerStr = JSON.stringify(answerObj);
+        } else if (queAns.question.question_type_id === 13) {
+          //**Question for TextBox and Upload Image  */
+          const answerObj = JSON.parse(answerStr);
+          answerObj.files = answerObj.files.map((imgName) => {
+            const renameFile = `${newAppId}_${imgName}`;
+            createFileCopy(imgName, renameFile);
+            return renameFile;
+          });
+          answerStr = JSON.stringify(answerObj);
+        }
+
         const newAnswerResp = await seq.seqCreate(Answers,
           {
             question_id: queAns.question_id,
             app_question_id: app_question_id,
-            answer: ans.answer
+            answer: answerStr
           }
-        );
+          );
         //console.log("NewAns-", newAnswerResp);
         if (newAnswerResp === 500) return res.status(500).send({ message: "Error while copying answers" });
       })
@@ -504,7 +528,7 @@ function editApplication(req, res) {
 
 const deleteFiles = (files, callback) => {
   var i = files.length;
-  console.log('remove image', typeof(files));
+  console.log('remove image', typeof (files));
   files.map((files) => {
     fs.unlink('./public/' + files, function (err) {
       i--;

@@ -8,7 +8,7 @@ import { ApplicationContext } from "../addApplication";
 
 export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
   const { handleNextPrevNav, handleAnswerChange, handleFilesChange, handleImageInputChange } = useContext(ApplicationContext);
-  const [input, setInput] = useState(value ? value : {desc: '', files: []});
+  const [input, setInput] = useState(value ? value : { desc: '', files: [] });
   const defferInput = useDeferredValue(input);
   const [files, setFiles] = useState([]);
   const defferFiles = useDeferredValue(files);
@@ -17,23 +17,22 @@ export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
   const defferImageInput = useDeferredValue(imageInput);
 
   const imageFileNames = [];
-  function newFilesUpload(files){
+  function newFilesUpload(files) {
     console.log(files);
     const Files = [...files];
     const newFiles = [];
     console.log('Files: ', Files);
     Files.forEach((element, i) => {
-        const name = element.name.split(".");
-        name.forEach(e => {
-            name[0] = name[0] + `_` + uuidv4();
-        })
-        imageFileNames.push(name[0] + `.` + name[1]);
-        const myRenamedFile = new File([element], name[0] + `.` + name[1],{ type: element.type});
-        newFiles.push(myRenamedFile);
-      });
-      return newFiles;
+      const fileNameArr = element.name.split(".");
+      const fileExt = fileNameArr.pop();
+      const renamedFileName = `${fileNameArr.join(".")}_${uuidv4().slice(0, 8)}.${fileExt}`;
+      imageFileNames.push(renamedFileName);
+      const myRenamedFile = new File([element], renamedFileName, { type: element.type });
+      newFiles.push(myRenamedFile);
+    });
+    return newFiles;
   }
-  
+
   // const onUpload = (files) => {
   //   const updatedFiles = newFilesUpload(files);
   //   console.log(updatedFiles);
@@ -43,8 +42,8 @@ export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
 
   const onUpload = (files) => {
     const updatedFiles = newFilesUpload(files);
-    console.log('ipdate',updatedFiles);
-    setFiles((prevState) => [...prevState, ...updatedFiles]);
+    console.log('ipdate', updatedFiles);
+    setFiles((prevState) => ([...prevState, ...updatedFiles]));
     // setInput((prevState) => ({...prevState, files: [...prevState.files, ...imageFileNames]}));
     setImageInput((prevState) => ([...prevState, ...imageFileNames]));
   };
@@ -59,7 +58,7 @@ export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
     setImageInput(newRemoveArr);
     // setImageInput((prevState) => ({...prevState, files: prevState.files.filter((file) => file !== removeFile)}));
   };
-  console.debug('imageInput', imageInput)
+
   const onRemoveUploaded = (removeFile) => {
     setRemoveUploadedFiles((prevState) => [...prevState, removeFile]);
     setInput((prevState) => ({ ...prevState, Images: prevState.Images.filter((file) => file.image_name !== removeFile) }));
@@ -67,9 +66,9 @@ export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
   };
 
   useEffect(() => {
-    if(defferInput.desc.length !== 0){
+    if (defferInput.desc.length !== 0) {
       handleAnswerChange(question.id, defferInput);
-    }else{
+    } else {
       handleAnswerChange(question.id, null);
     }
     // handleAnswerChange(question.id, defferInput);
@@ -82,8 +81,8 @@ export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
   }, [handleImageInputChange, question.id, defferImageInput, question.question_type_id]);
 
   useEffect(() => {
-    if(defferFiles.length != 0){
-    handleFilesChange(question.id, defferFiles);
+    if (defferFiles.length != 0) {
+      handleFilesChange(question.id, defferFiles);
     }
   }, [handleFilesChange, question.id, defferFiles]);
 
@@ -98,7 +97,7 @@ export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
       <div style={{ display: "flex", gap: "3rem" }}>
         <div className="queBox">
           <h2 className="question">{question.question}</h2>
-          <TextField multiline rows={8} variant="outlined" name="desc" color="secondary" style={{ width: '100%'}} placeholder="Enter your description here" value={input.desc ?? ""} onChange={(e) => setInput(prevInput => ({ ...prevInput, [e.target.name]: e.target.value }))} />
+          <TextField multiline rows={8} variant="outlined" name="desc" color="secondary" style={{ width: '100%' }} placeholder="Enter your description here" value={input.desc ?? ""} onChange={(e) => setInput(prevInput => ({ ...prevInput, [e.target.name]: e.target.value }))} />
         </div>
         <div className="uploadContainer">
           <UploadDoc que_id={question.id} label='Upload Cabin Photos' files={files} uploadedFiles={input.files} onUpload={onUpload} onRemove={onRemove} onRemoveUploaded={onRemoveUploaded} required={false} />

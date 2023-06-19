@@ -2,7 +2,6 @@ import { Autocomplete, TextField } from "@mui/material";
 import { Button } from "@mui/material";
 import { v4 as uuidv4 } from 'uuid';
 import UploadDocVariation from '../../../assets/uploadDoc/uploadDocVariation';
-import ArrowDownIcon from "../../../assets/icons/arrowDownIcon";
 import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
@@ -22,16 +21,14 @@ export default function TextBoxVariationImage({ question, nav, index, value, onK
 
   const imageFileNames = [];
   function newFilesUpload(files) {
-
     const Files = [...files];
     const newFiles = [];
     Files.forEach((element, i) => {
-      const name = element.name.split(".");
-      name.forEach(e => {
-        name[0] = name[0] + `_` + uuidv4();
-      })
-      imageFileNames.push(name[0] + `.` + name[1]);
-      const myRenamedFile = new File([element], name[0] + `.` + name[1], { type: element.type });
+      const fileNameArr = element.name.split(".");
+      const fileExt = fileNameArr.pop();
+      const renamedFileName = `${fileNameArr.join(".")}_${uuidv4().slice(0,8)}.${fileExt}`;
+      imageFileNames.push(renamedFileName);
+      const myRenamedFile = new File([element], renamedFileName, { type: element.type });
       newFiles.push(myRenamedFile);
     });
     return newFiles;
@@ -50,7 +47,7 @@ export default function TextBoxVariationImage({ question, nav, index, value, onK
       return newState;
     });
     console.debug('image files', imageFileNames);
-    
+
     // let index = i;
     // let new_files = imageFileNames;
     imageInputs[i].files = imageFileNames;
@@ -59,23 +56,23 @@ export default function TextBoxVariationImage({ question, nav, index, value, onK
 
     // inputsArr[i].files = imageFileNames;
     // setInput((prevState) => ({ ...prevState, files: [...prevState.files, ...imageFileNames] }));
-    
+
   };
 
   const addVariation = () => {
-   setInput((inputsArr) => [...inputsArr, { variation: '', files: [] }]);
-   setImageInput((imageInputs) => [...imageInputs, { files: [] }]);
+    setInput((inputsArr) => [...inputsArr, { variation: '', files: [] }]);
+    setImageInput((imageInputs) => [...imageInputs, { files: [] }]);
   }
 
   const removeVariation = (i) => {
     // console.log(input);
     // console.log(i)
     const remove_images = input[i];
-    console.log('remove images',remove_images.files);
+    console.log('remove images', remove_images.files);
     remove_images.files.map((f, i) => (
       setFiles((prevState) => prevState.filter((file) => file.name !== f))
     ));
-    setRemoveUploadedFiles((prevState) => [...prevState , ...remove_images.files]);
+    setRemoveUploadedFiles((prevState) => [...prevState, ...remove_images.files]);
     input.splice(i, 1);
     imageInput.splice(i, 1);
     variantFiles.splice(i, 1);
@@ -104,17 +101,14 @@ export default function TextBoxVariationImage({ question, nav, index, value, onK
   };
 
 
-  console.log('hey files', files);
-  // const onUpload = (files) => setInput((prevState) => [...prevState, ...files]);
   const onRemove = (index, removeFile, inner_index) => {
-console.log(index, removeFile, inner_index)
     setFiles((prevState) => prevState.filter((file) => file !== removeFile));
     setVariantFiles((prevState) => {
       const newState = [...prevState];
       newState[index] = newState[index] ? newState[index].filter((file) => file !== removeFile) : removeFile;
-      console.log(newState[index]);
       return newState;
     });
+
     setVariantFiles((prevState) => prevState.filter((file) => file !== removeFile));
     let inputsArr = [...input];
     inputsArr[index].files.splice(inner_index, 1);
@@ -122,38 +116,32 @@ console.log(index, removeFile, inner_index)
     let inputsImageArr = [...imageInput];
     inputsImageArr[index].files.splice(inner_index, 1);
     setImageInput(inputsImageArr);
-    console.log("inputs", input);
-    // setInput((prevState) => ({ ...prevState, files: prevState.files.filter((file) => file !== removeFile) }));
   };
+
   const onRemoveUploaded = (removeFile) => {
     console.log(removeFile);
     setRemoveUploadedFiles((prevState) => [...prevState, removeFile]);
-    console.log('remove image',removeUploadedFiles);
-    console.log('inputs', input);
-    // setInput((prevState) => ({ ...prevState, files: prevState.files.filter((file) => file !== removeFile) }));
     setInput((prevState) => {
-      // console.log(prevState);
-      const new_value = prevState.map((file)=>{
+      const new_value = prevState.map((file) => {
         console.log(file);
-        const remaining_files = file.files.filter((image)=> image !== removeFile)
+        const remaining_files = file.files.filter((image) => image !== removeFile)
         return { ...file, files: remaining_files };
       })
       return new_value;
     });
-    console.log('uploadedFiles', removeUploadedFiles, input);
   };
 
   useEffect(() => {
     let isNull = true;
-    for(const value of defferInput){
-      if(value.variation.length !== 0){
+    for (const value of defferInput) {
+      if (value.variation.length !== 0) {
         isNull = false;
         break;
       }
     }
-    if(isNull){
+    if (isNull) {
       handleAnswerChange(question.id, null);
-    }else{
+    } else {
       handleAnswerChange(question.id, defferInput);
     }
   }, [handleAnswerChange, question.id, defferInput]);
@@ -171,7 +159,8 @@ console.log(index, removeFile, inner_index)
   }, [handleRemoveFilesChange, question.id, defferRemoveFiles]);
 
   useEffect(() => {
-    if (defferFiles.length != 0) {;
+    if (defferFiles.length != 0) {
+      ;
       handleRemoveFiles(question.id, defferFiles);
     }
   }, [handleRemoveFiles, question.id, defferFiles]);
@@ -189,8 +178,6 @@ console.log(index, removeFile, inner_index)
     }
   }
 
-  console.log('edit input', input)
-
   return (
     <div data-que-type={question.question_type_id} className="questionContainer">
       <div style={{ display: "flex", gap: "3rem" }}>
@@ -199,13 +186,13 @@ console.log(index, removeFile, inner_index)
           {input.map((element, index) => (
             <div key={index} style={{ display: "flex", gap: "3rem" }}>
               <div style={{ display: "grid", gap: "15rem" }}>
-              <TextField variant="outlined" name="variation" color="secondary" placeholder="Variation name" value={element.variation ?? ""} onChange={(e) => handleChange(index, e)} />
-              {input.length > 1 && (<Button variant="outlined" color="secondary" style={{ width: 'auto' }} onClick={() => removeVariation(index)}>remove Variation</Button>)}
+                <TextField variant="outlined" name="variation" color="secondary" placeholder="Variation name" value={element.variation ?? ""} onChange={(e) => handleChange(index, e)} />
+                {input.length > 1 && (<Button variant="outlined" color="secondary" style={{ width: 'auto' }} onClick={() => removeVariation(index)}>remove Variation</Button>)}
               </div>
               <div className="uploadContainer">
                 <UploadDocVariation que_id={question.id} label='Upload Cabin Photos' files={variantFiles[index] ?? []} uploadedFiles={element.files} onUpload={(e) => onUpload(index, e)} onRemove={(e, i) => onRemove(index, e, i)} onRemoveUploaded={onRemoveUploaded} required={false} />
               </div>
-              
+
             </div>
           ))}
         </div>

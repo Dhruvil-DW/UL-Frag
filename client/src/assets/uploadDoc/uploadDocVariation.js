@@ -19,7 +19,6 @@ export default function UploadDocVariation({ label = 'Upload Images', name = 'De
     //   };
     // }, []);
 
-    console.log('upload variation', files);
     const handleDragOver = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -58,13 +57,6 @@ export default function UploadDocVariation({ label = 'Upload Images', name = 'De
     };
 
     const file_values = Object.values(files);
-    console.log(file_values);
-
-    console.log('uploaded files', uploadedFiles);
-
-    uploadedFiles.map((image, i) => {
-        console.log('manges',image)
-    });
 
     return (
         <section className="uploadWrapper">

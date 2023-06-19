@@ -67,7 +67,12 @@ export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
   };
 
   useEffect(() => {
-    handleAnswerChange(question.id, defferInput);
+    if(defferInput.desc.length !== 0){
+      handleAnswerChange(question.id, defferInput);
+    }else{
+      handleAnswerChange(question.id, null);
+    }
+    // handleAnswerChange(question.id, defferInput);
   }, [handleAnswerChange, question.id, defferInput]);
 
   useEffect(() => {

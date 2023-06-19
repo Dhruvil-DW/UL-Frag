@@ -144,7 +144,18 @@ console.log(index, removeFile, inner_index)
   };
 
   useEffect(() => {
-    handleAnswerChange(question.id, defferInput);
+    let isNull = true;
+    for(const value of defferInput){
+      if(value.variation.length !== 0){
+        isNull = false;
+        break;
+      }
+    }
+    if(isNull){
+      handleAnswerChange(question.id, null);
+    }else{
+      handleAnswerChange(question.id, defferInput);
+    }
   }, [handleAnswerChange, question.id, defferInput]);
 
   useEffect(() => {

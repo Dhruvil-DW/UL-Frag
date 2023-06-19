@@ -175,8 +175,6 @@ function GetAnswer({ qa }) {
 
     case 9:
       return qa.answers.map((ans, i) => {
-        // console.log(JSON.parse(ans.answer));
-        debugger;
         const ansObj = JSON.parse(ans.answer);
         return (
           <Fragment key={i}>

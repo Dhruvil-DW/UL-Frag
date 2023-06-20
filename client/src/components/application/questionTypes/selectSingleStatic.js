@@ -5,7 +5,7 @@ import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 
 export default function SelectSingleStatic({ question, nav, index, value = null, onKeyUp }) {
-  const { handleNextPrevNav, regions, handleAnswerChange, resetInputCountry } = useContext(ApplicationContext);
+  const { regions, handleAnswerChange, resetInputCountry } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const defferInput = useDeferredValue(input);
 

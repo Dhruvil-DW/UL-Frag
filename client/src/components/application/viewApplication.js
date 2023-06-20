@@ -6,7 +6,7 @@ import CalenderIcon from '../../assets/icons/calenderIcon';
 import PageIcon from '../../assets/icons/pageIcon';
 import { useAxios } from '../../hooks/useAxios';
 import { formatDate } from '../../utils/globalFunctions/dateFns';
-import { Button, Hidden } from '@mui/material';
+import { Button } from '@mui/material';
 import { authContext } from '../../context/authContext';
 import { promptActions, promptContext } from '../../context/promptContext';
 import { LazyImage } from '../../assets/image/lazyImage';

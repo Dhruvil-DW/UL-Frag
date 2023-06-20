@@ -10,7 +10,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { getInputDate } from "../../../utils/globalFunctions/dateFns";
 
 export default function NestedQuestion({ question, nav, index, onKeyUp }) {
-  const { handleNextPrevNav, inputs, country, handleAnswerChange } = useContext(ApplicationContext);
+  const { inputs, country, handleAnswerChange } = useContext(ApplicationContext);
   // console.log(question);
   // console.log(childQuestionData[question.id]);
   function handleNestedDateSelection(value, id, index) {

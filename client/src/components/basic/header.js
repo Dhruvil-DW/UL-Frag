@@ -1,6 +1,6 @@
 import { Avatar, Button } from "@mui/material";
 import UnileverIcon from "../../assets/icons/unileverIcon";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { authContext } from "../../context/authContext";
 import LogoutArrowIcon from "../../assets/icons/logout_arrow";

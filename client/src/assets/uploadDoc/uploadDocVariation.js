@@ -1,6 +1,5 @@
 import React from 'react';
 import { Button } from "@mui/material";
-import { v4 as uuidv4 } from 'uuid';
 import './uploadDoc.css';
 import PropTypes from 'prop-types';
 import { LazyImage } from '../image/lazyImage';

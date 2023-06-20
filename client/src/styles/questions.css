@@ -86,7 +86,7 @@
 }
 
 .imageBoxContainer {
-  height: 250px;
+  height: 170px;
   flex-grow: 1;
   color: white;
   display: flex;
@@ -97,10 +97,14 @@
 .imageBoxContainer p {
   text-align: center;
   white-space: pre-line;
+  font-size: 14px;
+}
+.imageBoxContainer .MuiCheckbox-root {
+  padding-bottom: 0;
 }
 
 .iconContainer img {
-  height: 100px;
+  height: 80px;
 }
 
 .imageBoxContainer .MuiCheckbox-root.MuiCheckbox-colorPrimary {
@@ -136,11 +140,14 @@
   height: 40vh;
   overflow-y: scroll;
 }
-.addTxt{
+.addText{
   color: #6F6F6F;
   font-size: 16px; 
   font-weight: 500;
   line-height: 21px; 
+  position: absolute;
+  top: 4rem;
+  left: 6vw;
 }
 
 .checkBxTxt{

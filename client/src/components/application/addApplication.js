@@ -286,14 +286,15 @@ export default function AddApplication() {
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Category" } });
       return;
     }
+    if (!Boolean(inputs[6])) {
+      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Country" } });
+      return;
+    }
     const project_name = `${inputs[1]?.projectName ?? "Fragrance Brief"}`;
     const final_inputs = {
       project_name: project_name,
       inputs: inputs
     };
-
-    console.log(final_inputs);
-    console.log('divyaraj_files_1',allFiles);
 
     const formData = new FormData();
     for( const f in allFiles){

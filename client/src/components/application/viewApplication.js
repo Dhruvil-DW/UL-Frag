@@ -203,6 +203,18 @@ function GetAnswer({ qa }) {
       });
 
     case 8: // Multiselect Picture Choice
+      if (qa.question.id === 23) {
+        const ansObj = JSON.parse(qa.answers[0].answer);
+        return (
+          <>
+            {ansObj.option.map((opt, i) => <p key={i}>{opt}</p>)}
+            <p><b>Description: </b>{ansObj.desc}</p>
+          </>
+        )
+      } else {
+        return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
+      }
+
     case 10: // Single Choice predefinded
     case 11: // Multiple Choice (Checkbox) predefined
     case 15: // Confirm Checkbox

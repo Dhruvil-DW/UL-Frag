@@ -45,34 +45,36 @@ export default function CheckBoxImageWithTextBox({ question, nav, index, value =
   }
 
   return (
-    <div className="questionContainer">
-      {question.id === 23 && 
-      <p className="addTxt">Performance input</p>
+    <>
+      {question.id === 23 &&
+        <p className="addText">Performance input</p>
       }
-      <h2 className="question">{question.question}</h2>
-      <div className="optionContainer">
-        {question.question_opt?.map((opt) => (
-          <div key={opt} className="imageBoxContainer" onClick={() => handleInputChange(opt)}>
-            <Checkbox checked={Boolean(input.option?.find(x => x === opt))} />
-            <div className="iconContainer">
-              <GetSVG option={opt} />
+      <div className="questionContainer">
+        <h2 className="question">{question.question}</h2>
+        <div className="optionContainer">
+          {question.question_opt?.map((opt) => (
+            <div key={opt} className="imageBoxContainer" onClick={() => handleInputChange(opt)}>
+              <Checkbox checked={Boolean(input.option?.find(x => x === opt))} />
+              <div className="iconContainer">
+                <GetSVG option={opt} />
+              </div>
+              <p>{opt}</p>
             </div>
-            <p>{opt}</p>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      <div>
-        <TextField multiline fullWidth rows={2} inputProps={{ maxLength: 100 }} variant="outlined" color="secondary" placeholder="Enter your description here" value={input.desc} onChange={handleDescChange} />
-        <div style={{ position: "absolute", bottom: 8, right: 24, color: "hsl(0, 0%, 60%)" }}>{`${input.length ?? 0} / 100`}</div>
-      </div>
+        <div>
+          <TextField multiline fullWidth rows={2} inputProps={{ maxLength: 100 }} variant="outlined" color="secondary" placeholder="Enter your description here" value={input.desc} onChange={handleDescChange} />
+          <div style={{ position: "absolute", bottom: 8, right: 24, color: "hsl(0, 0%, 60%)" }}>{`${input.length ?? 0} / 100`}</div>
+        </div>
 
-      <div className='navBtnCont'>
-        <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>
-        {question.id !== 31 && <div className="nextBtn" tabIndex={-1} onClick={() => BasicExample((nav) + 1)}><ArrowLeftRoundIcon /></div>}
-      {/* <p className="checkBxTxt">You can select only two of them</p> */}
+        <div className='navBtnCont'>
+          <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>
+          {question.id !== 31 && <div className="nextBtn" tabIndex={-1} onClick={() => BasicExample((nav) + 1)}><ArrowLeftRoundIcon /></div>}
+          {/* <p className="checkBxTxt">You can select only two of them</p> */}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

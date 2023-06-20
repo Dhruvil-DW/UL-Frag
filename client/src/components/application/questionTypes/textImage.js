@@ -1,13 +1,12 @@
-import { Autocomplete, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import { v4 as uuidv4 } from 'uuid';
 import UploadDoc from '../../../assets/uploadDoc/uploadDoc';
-import ArrowDownIcon from "../../../assets/icons/arrowDownIcon";
 import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 
 export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
-  const { handleNextPrevNav, handleAnswerChange, handleFilesChange, handleImageInputChange, handleRemoveFiles, handleRemoveFilesChange } = useContext(ApplicationContext);
+  const { handleAnswerChange, handleFilesChange, handleImageInputChange, handleRemoveFiles, handleRemoveFilesChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value ? value : { desc: '', files: [] });
   const defferInput = useDeferredValue(input);
   const [files, setFiles] = useState([]);
@@ -106,7 +105,7 @@ export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
       <div style={{ display: "flex", gap: "3rem" }}>
         <div className="queBox">
           <h2 className="question">{question.question}</h2>
-          <TextField multiline rows={8} variant="outlined" name="desc" color="secondary" style={{ width: '100%' }} placeholder="Enter your description here" value={input.desc ?? ""} onChange={(e) => setInput(prevInput => ({ ...prevInput, [e.target.name]: e.target.value }))} />
+          <TextField multiline rows={8} variant="outlined" name="desc" color="secondary" style={{ width: '100%' }} placeholder="Enter your answer here" value={input.desc ?? ""} onChange={(e) => setInput(prevInput => ({ ...prevInput, [e.target.name]: e.target.value }))} />
         </div>
         <div className="uploadContainer">
           <UploadDoc que_id={question.id} label='Upload Cabin Photos' files={files} uploadedFiles={input.files} onUpload={onUpload} onRemove={onRemove} onRemoveUploaded={onRemoveUploaded} required={false} />

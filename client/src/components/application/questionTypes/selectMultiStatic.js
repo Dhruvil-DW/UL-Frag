@@ -53,8 +53,7 @@ export default function SelectMultiStatic({ question, nav, index, value = [], on
           isOptionEqualToValue={(option, value) => option.label === value}
           disabled={!Boolean(inputs[5])}
           popupIcon={<ArrowDownIcon />}
-          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Enter Country" 
-          sx={{"& ::placeholder" : { fontSize:18, fontWeight: 400, color:'rgb(0, 0, 0, 0.5)' }}}/>}
+          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Enter Country"/>}
           renderOption={(params, option, { selected }) => (
             <li {...params}>
               <Checkbox color="secondary" name="location" checked={selected} />
@@ -72,8 +71,7 @@ export default function SelectMultiStatic({ question, nav, index, value = [], on
           value={input}
           onChange={handleInputChange}
           popupIcon={<ArrowDownIcon />}
-          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Select Format" 
-          sx={{"& ::placeholder" : { fontSize:18, fontWeight: 400, color:'rgb(0, 0, 0, 0.5)' }}}/>}
+          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Select Format"/>}
           renderOption={(params, option, { selected }) => (
             <li {...params}>
               <Checkbox color="secondary" name="location" checked={selected} />

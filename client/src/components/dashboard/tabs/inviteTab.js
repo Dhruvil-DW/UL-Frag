@@ -42,7 +42,7 @@ export default function InviteTab({ data, params, handleParamsChange, handleEdit
               <img src="/images/icons/eye_round.svg" alt="view" onClick={() => navigate(`/application/view/${app.id}`)} />
               {userdata.role_id === 1 && (
                 <>
-                  {app.application_status_id === 1 && <img src="/images/icons/pencil_round.svg" alt="edit" onClick={() => handleEditApp(app.id)} />}
+                  {app.application_status_id === 1 && <img src="/images/icons/pencil_round.svg" alt="edit" onClick={(event) => handleEditApp(app.id, event)} />}
                 </>
               )}
             </div>
@@ -65,8 +65,7 @@ function FilterContainer({ onChange, filterInputs }) {
             popupIcon={<ArrowDownIcon />}
             sx={{ width: 289 }}
             onChange={(event, value, reason) => onChange(event, value, reason, "answer")}
-            renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Category wise" 
-            sx={{"& ::placeholder" : { fontSize:18, color: '#545454'}}}/>}
+            renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Category wise"/>}
           />
         </div>
       </div>

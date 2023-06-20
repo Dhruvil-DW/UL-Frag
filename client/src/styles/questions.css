@@ -31,7 +31,7 @@
   position: absolute;
   bottom: -4rem;
   display: flex;
-  gap: 2rem;
+  gap: 1rem;
   margin-top: 1rem;
 }
 
@@ -130,4 +130,19 @@
 
 .assets.bg_images {
   z-index: 0;
+}
+.addTxt{
+  color: #6F6F6F;
+  font-size: 16px; 
+  font-weight: 500;
+  line-height: 21px; 
+}
+
+.checkBxTxt{
+  display: inline;
+  position: relative;
+  left: 37vw;
+  font-style: italic;
+  font-weight: 500;
+  color:rgba(0, 0, 0, 0.5);
 }

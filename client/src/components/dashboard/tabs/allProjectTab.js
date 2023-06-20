@@ -20,7 +20,8 @@ export default function AllProjectTab({ data, params, handleParamsChange }) {
   const mouseEnter = (id) => setHoverCardId(id);
   const mouseExit = () => setHoverCardId(null);
 
-  function getCopyApplication(app_id) {
+  function getCopyApplication(app_id, event) {
+    event.stopPropagation();
     getData(`application/copy/${app_id}`, {},
       (data) => {
         navigate(`/application/edit/${data.app_id}`)
@@ -32,8 +33,8 @@ export default function AllProjectTab({ data, params, handleParamsChange }) {
       <FilterContainer onChange={handleParamsChange} filterInputs={params.filters} />
       <div className="applicationCardContainer">
         {data.length > 0 ? data.map((app, i) => (
-          <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit}>
-            {/* <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit} onClick={() => navigate(`/application/view/${app.id}`)}> */}
+          // <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit}>
+            <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit} onClick={() => navigate(`/application/view/${app.id}`)}>
             <h2 style={{ marginTop: 16 }}>{app.project_name}</h2>
             <div className="statusContainer">
             <p>{app.application_status.status} | {app.app_questions[0].answers[0].answer}</p>
@@ -51,8 +52,8 @@ export default function AllProjectTab({ data, params, handleParamsChange }) {
               <img src="/images/icons/eye_round.svg" alt="view" onClick={() => navigate(`/application/view/${app.id}`)} />
               {userdata.role_id === 1 && (
                 <>
-                  {<img src="/images/icons/copy_round.svg" alt="copy" onClick={() => getCopyApplication(app.id)} />}
-                  {app.application_status_id === 1 && <img src="/images/icons/pencil_round.svg" alt="edit" onClick={() => navigate(`/application/edit/${app.id}`)} />}
+                  {<img src="/images/icons/copy_round.svg" alt="copy" onClick={(event) => getCopyApplication(app.id, event)} />}
+                  {app.application_status_id === 1 && <img src="/images/icons/pencil_round.svg" alt="edit" onClick={(event) => {event.stopPropagation(); navigate(`/application/edit/${app.id}`)}} />}
                 </>
               )}
             </div>
@@ -75,8 +76,7 @@ function FilterContainer({ onChange, filterInputs }) {
             popupIcon={<ArrowDownIcon />}
             sx={{ width: 285 }}
             onChange={(event, value, reason) => onChange(event, value, reason, "answer")}
-            renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Category wise" 
-            sx={{"& ::placeholder" : { fontSize:18, color: '#545454'}}}/>}
+            renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Category wise"/>}
           />
         </div>
       </div>

@@ -47,3 +47,9 @@
 .whiteDatePicker input::-webkit-calendar-picker-indicator {
   filter: invert(1);
 }
+.addText{
+  color: #6F6F6F;
+  font-size: 16px; 
+  font-weight: 500;
+  line-height: 21px;    
+}

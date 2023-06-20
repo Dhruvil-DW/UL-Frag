@@ -22,7 +22,8 @@ export default function MyProjectTab({ data, params, handleParamsChange, handleE
   const mouseEnter = (id) => setHoverCardId(id);
   const mouseExit = () => setHoverCardId(null);
 
-  function getCopyApplication(app_id) {
+  function getCopyApplication(app_id, event) {
+    event.stopPropagation();
     getData(`application/copy/${app_id}`, {},
       (data) => {
         navigate(`/application/edit/${data.app_id}`)
@@ -34,9 +35,9 @@ export default function MyProjectTab({ data, params, handleParamsChange, handleE
       <FilterContainer onChange={handleParamsChange} filterInputs={params.filters} />
       <div className="applicationCardContainer">
         {data.length > 0 ? data.map((app, i) => (
-          <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit}>
-            {/* <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit} onClick={() => navigate(`/application/view/${app.id}`)}> */}
-            <h2 style={{ marginTop: 16 }}>{app.project_name}</h2>
+          // <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit}>
+            <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit} onClick={() => navigate(`/application/view/${app.id}`)}>
+            <h2 style={{ marginTop: 16, marginLeft:0 }}>{app.project_name}</h2>
             <div className="statusContainer">
               <p>{app.application_status.status} | {app.app_questions[0]?.answers[0]?.answer}</p>
             </div>
@@ -53,9 +54,9 @@ export default function MyProjectTab({ data, params, handleParamsChange, handleE
               <img src="/images/icons/eye_round.svg" alt="view" onClick={() => navigate(`/application/view/${app.id}`)} />
               {userdata.role_id === 1 && (
                 <>
-                  {[3, 4].includes(app.application_status_id) && <img src="/images/icons/copy_round.svg" alt="copy" onClick={() => getCopyApplication(app.id)} />}
-                  {app.application_status_id === 1 && <img src="/images/icons/pencil_round.svg" alt="edit" onClick={() => handleEditApp(app.id)} />}
-                  {app.application_status_id === 1 && <img src="/images/icons/invite_user.svg" alt="invite" onClick={() => collabDispatch({ type: collabActions.SHOW_COLLAB, payload: { app_id: app.id } })} />}
+                  {[3, 4].includes(app.application_status_id) && <img src="/images/icons/copy_round.svg" alt="copy" onClick={(event) => getCopyApplication(app.id, event)} />}
+                  {app.application_status_id === 1 && <img src="/images/icons/pencil_round.svg" alt="edit" onClick={(event) => handleEditApp(app.id, event)} />}
+                  {app.application_status_id === 1 && <img src="/images/icons/invite_user.svg" alt="invite" onClick={(event) => {event.stopPropagation(); collabDispatch({ type: collabActions.SHOW_COLLAB, payload: { app_id: app.id } })}} />}
                 </>
               )}
             </div>
@@ -80,9 +81,7 @@ function FilterContainer({ onChange, filterInputs }) {
             popupIcon={<ArrowDownIcon />}
             sx={{ width: 285 }}
             onChange={(event, value, reason) => onChange(event, value, reason, "status")}
-            renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Status" 
-            sx={{"& ::placeholder" : { fontSize:18, color: '#545454'}}}
-            />}
+            renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Status"/>}
             renderOption={(params, option, { selected }) => (
               <li {...params}>
                 <Checkbox color="secondary" name="status" checked={selected} />
@@ -97,9 +96,7 @@ function FilterContainer({ onChange, filterInputs }) {
             popupIcon={<ArrowDownIcon />}
             sx={{ width: 285 }}
             onChange={(event, value, reason) => onChange(event, value, reason, "answer")}
-            renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Category wise" 
-            sx={{"& ::placeholder" : { fontSize:18, color: '#545454'}}}
-            />}
+            renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Category wise"/>}
           />
         </div>
       </div>

@@ -73,12 +73,13 @@
 .appCard .statusContainer {
   margin-top: 40px;
   margin-bottom: 32px;
+  margin-left: 0px;
 }
 
 .appCard .optionIcon {
   position: absolute;
-  right: 49px;
-  top: 32px;
+  right: 28px;
+  top: 28px;
 }
 
 .appCard img {
@@ -87,7 +88,7 @@
 
 .appCard .appCardActionContainer {
   position: absolute;
-  right: 49px;
+  right: 28px;
   top: 113px;
   display: flex;
   gap: 23px;
@@ -103,4 +104,11 @@
 
 .cardButton.MuiButton-root.MuiButtonBase-root {
   border: 1px solid hsla(222, 57%, 42%, 0.2);
+}
+
+.MuiAutocomplete-root .MuiAutocomplete-input::placeholder {
+  font-size: 18px;
+  font-weight: 400;
+  color: rgb(0, 0, 0, 0.5);
+  padding: 0 9px;
 }

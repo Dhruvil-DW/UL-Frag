@@ -40,8 +40,7 @@ export default function SelectSingleStatic({ question, nav, index, value = null,
           onChange={(event, value, reason) => handleInputChange(event, value?.label ?? null, reason)}
           isOptionEqualToValue={(option, value) => option.label === value}
           popupIcon={<ArrowDownIcon />}
-          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Enter Business Unit" 
-          sx={{"& ::placeholder" : { fontSize:18, fontWeight: 400, color:'rgb(0, 0, 0, 0.5)' }}}/>}
+          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Enter Business Unit"/>}
           onKeyUp={onKeyUp}
         />
       ) : (

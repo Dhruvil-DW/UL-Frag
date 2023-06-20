@@ -19,10 +19,10 @@ export default function Dashboard() {
   const { getData } = useAxios();
   const [selectedTab, setSelectedTab] = useState(0);
   const handleChangeTab = (__event, newTab) => setSelectedTab(newTab);
-
+  
   //**** My Application Data Start ****//
   const [myAppData, setMyAppData] = useState([]);
-  const [myAppParams, setMyAppParams] = useState({ search: "", filters: { status: [], answer: null } });
+  const [myAppParams, setMyAppParams] = useState({ search: "", filters: { status: [], answer: null }});
   const [myAppParamsDebounced, setMyAppParamsDebounced] = useState(myAppParams);
   
   const handleMyAppFilterChange = (__event, value, __reason, name) => {
@@ -93,7 +93,8 @@ export default function Dashboard() {
     if (selectedTab === 2) setInvitedAppParams((prevSearch) => ({ ...prevSearch, search: e.target.value }))
   };
 
-  const handleEditApp = (appId) => {
+  const handleEditApp = (appId, event) => {
+    event.stopPropagation();
     getData(`application/edit/${appId}`, {},
       (data) => {
         if (data.canEdit) {

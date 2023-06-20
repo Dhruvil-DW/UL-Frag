@@ -159,7 +159,7 @@ export default function TextBoxVariationImage({ question, nav, index, value, onK
       handleFilesChange(question.id, defferFiles);
       // handleRemoveFiles(question.id, defferFiles);
     }
-  }, [handleRemoveFiles, question.id, defferFiles]);
+  }, [handleFilesChange, question.id, defferFiles]);
 
   // to upload new files
   // useEffect(() => {

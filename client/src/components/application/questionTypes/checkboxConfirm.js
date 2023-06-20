@@ -6,7 +6,7 @@ import TooltipIcon from "../../../assets/icons/tooltipIcon";
 import Tooltip from "@mui/material/Tooltip";
 
 export default function CheckBoxConfirm({ question, nav, index, value = [], onKeyUp }) {
-  const { handleNextPrevNav, handleAnswerChange } = useContext(ApplicationContext);
+  const { handleAnswerChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const defferInput = useDeferredValue(input);
 

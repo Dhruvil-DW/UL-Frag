@@ -5,7 +5,7 @@ import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 
 export default function SelectMultiStatic({ question, nav, index, value = [], onKeyUp }) {
-  const { handleNextPrevNav, inputs, country, handleAnswerChange } = useContext(ApplicationContext);
+  const { inputs, country, handleAnswerChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const defferInput = useDeferredValue(input);
   

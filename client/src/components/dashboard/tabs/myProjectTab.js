@@ -1,4 +1,4 @@
-import { Autocomplete, Button, Checkbox, TextField } from "@mui/material"
+import { Autocomplete, Checkbox, TextField } from "@mui/material"
 import ErrorBoundary from "../../../config/errorBoundary/ErrorBoundary"
 import ArrowDownIcon from "../../../assets/icons/arrowDownIcon";
 import UserIcon from "../../../assets/icons/userIcon";

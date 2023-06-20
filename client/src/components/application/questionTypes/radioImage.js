@@ -4,7 +4,7 @@ import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
 
 export default function RadioImage({ question, nav, index, value = {}, onKeyUp }) {
-  const { handleNextPrevNav, handleAnswerChange } = useContext(ApplicationContext);
+  const { handleAnswerChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const defferedInput = useDeferredValue(input);
   // console.log(question);

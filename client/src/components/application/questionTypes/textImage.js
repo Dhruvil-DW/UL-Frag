@@ -7,7 +7,7 @@ import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 
 export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
-  const { handleNextPrevNav, handleAnswerChange, handleFilesChange, handleImageInputChange, handleRemoveFilesChange } = useContext(ApplicationContext);
+  const { handleNextPrevNav, handleAnswerChange, handleFilesChange, handleImageInputChange, handleRemoveFiles, handleRemoveFilesChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value ? value : { desc: '', files: [] });
   const defferInput = useDeferredValue(input);
   const [files, setFiles] = useState([]);
@@ -51,6 +51,7 @@ export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
 
   // const onUpload = (files) => setInput((prevState) => [...prevState, ...files]);
   const onRemove = (removeFile) => {
+    handleRemoveFiles(question.id, removeFile);
     // newFilesUpload(removeFile);
     setFiles((prevState) => prevState.filter((file) => file !== removeFile));
     // setInput((prevState) => ({...prevState, files: prevState.files.filter((file) => file !== removeFile)}));

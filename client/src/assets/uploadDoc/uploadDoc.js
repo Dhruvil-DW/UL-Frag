@@ -101,7 +101,7 @@ export default function UploadDoc({ label = 'Upload Images', name = 'DefaultName
                         ))}
                     </div>
                 ) : (
-                    <img src="/images/icons/upload_cloud.svg" alt="upload" style={{ width: 80 }} />
+                    <img src="/images/icons/upload_cloud.svg" alt="upload" style={{ width: 55 }} />
                 )}
                 <div>
                     <p>Drag & Drop files to upload</p>

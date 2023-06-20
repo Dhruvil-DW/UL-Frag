@@ -17,7 +17,7 @@
     align-items: center;
     gap: 16px;
     text-align: center;
-    min-height: 300px;
+    min-height: 200px;
     /* width: 400px; */
     padding: 16px;
     background: #fff;
@@ -47,5 +47,5 @@
   }
   
   .uploadContainer{
-    width: 30%;
+    width: 45%;
   }

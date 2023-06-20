@@ -131,6 +131,11 @@
 .assets.bg_images {
   z-index: 0;
 }
+
+.variation_list{
+  height: 40vh;
+  overflow-y: scroll;
+}
 .addTxt{
   color: #6F6F6F;
   font-size: 16px; 

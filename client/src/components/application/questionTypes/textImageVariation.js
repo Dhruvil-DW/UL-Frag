@@ -26,7 +26,7 @@ export default function TextBoxVariationImage({ question, nav, index, value, onK
     Files.forEach((element, i) => {
       const fileNameArr = element.name.split(".");
       const fileExt = fileNameArr.pop();
-      const renamedFileName = `${fileNameArr.join(".")}_${uuidv4().slice(0,8)}.${fileExt}`;
+      const renamedFileName = `${fileNameArr.join(".")}_${uuidv4().slice(0, 8)}.${fileExt}`;
       imageFileNames.push(renamedFileName);
       const myRenamedFile = new File([element], renamedFileName, { type: element.type });
       newFiles.push(myRenamedFile);
@@ -102,6 +102,7 @@ export default function TextBoxVariationImage({ question, nav, index, value, onK
 
 
   const onRemove = (index, removeFile, inner_index) => {
+    handleRemoveFiles(question.id, removeFile);
     setFiles((prevState) => prevState.filter((file) => file !== removeFile));
     setVariantFiles((prevState) => {
       const newState = [...prevState];
@@ -147,23 +148,25 @@ export default function TextBoxVariationImage({ question, nav, index, value, onK
   }, [handleAnswerChange, question.id, defferInput]);
 
   useEffect(() => {
-    if (defferFiles.length != 0) {
-      handleFilesChange(question.id, defferFiles);
-    }
-  }, [handleFilesChange, question.id, defferFiles]);
-
-  useEffect(() => {
     if (defferRemoveFiles.length != 0) {
       handleRemoveFilesChange(question.id, defferRemoveFiles);
     }
   }, [handleRemoveFilesChange, question.id, defferRemoveFiles]);
 
+  
   useEffect(() => {
     if (defferFiles.length != 0) {
-      ;
-      handleRemoveFiles(question.id, defferFiles);
+      handleFilesChange(question.id, defferFiles);
+      // handleRemoveFiles(question.id, defferFiles);
     }
   }, [handleRemoveFiles, question.id, defferFiles]);
+
+  // to upload new files
+  // useEffect(() => {
+  //   if (defferFiles.length != 0) {
+  //     handleFilesChange(question.id, defferFiles);
+  //   }
+  // }, [handleFilesChange, question.id, defferFiles]);
 
   useEffect(() => {
     if (defferImageInput.length != 0) {
@@ -183,21 +186,22 @@ export default function TextBoxVariationImage({ question, nav, index, value, onK
       <div style={{ display: "flex", gap: "3rem" }}>
         <div className="queBox">
           <h2 className="question">{question.question}</h2>
-          {input.map((element, index) => (
-            <div key={index} style={{ display: "flex", gap: "3rem" }}>
-              <div style={{ display: "grid", gap: "15rem" }}>
-                <TextField variant="outlined" name="variation" color="secondary" placeholder="Variation name" value={element.variation ?? ""} onChange={(e) => handleChange(index, e)} />
-                {input.length > 1 && (<Button variant="outlined" color="secondary" style={{ width: 'auto' }} onClick={() => removeVariation(index)}>remove Variation</Button>)}
+          <div className="variation_list">
+            {input.map((element, index) => (
+              <div key={index} style={{ display: "flex", gap: "3rem", marginBottom: 30 }}>
+                <div style={{ display: "grid", gap: "0", width: "45%" }}>
+                  <TextField variant="outlined" name="variation" color="secondary" placeholder="Variation name" value={element.variation ?? ""} onChange={(e) => handleChange(index, e)} />
+                  {input.length > 1 && (<Button variant="outlined" color="secondary" style={{ width: 'auto', maxWidth: 500, height: '40%' }} onClick={() => removeVariation(index)}>- Remove Variation</Button>)}
+                </div>
+                <div className="uploadContainer">
+                  <UploadDocVariation que_id={question.id} label='Upload Cabin Photos' files={variantFiles[index] ?? []} uploadedFiles={element.files} onUpload={(e) => onUpload(index, e)} onRemove={(e, i) => onRemove(index, e, i)} onRemoveUploaded={onRemoveUploaded} required={false} />
+                </div>
               </div>
-              <div className="uploadContainer">
-                <UploadDocVariation que_id={question.id} label='Upload Cabin Photos' files={variantFiles[index] ?? []} uploadedFiles={element.files} onUpload={(e) => onUpload(index, e)} onRemove={(e, i) => onRemove(index, e, i)} onRemoveUploaded={onRemoveUploaded} required={false} />
-              </div>
-
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
-      <Button variant="outlined" color="secondary" style={{ width: '10%' }} onClick={addVariation}>Add Variation</Button>
+      <Button variant="outlined" color="secondary" style={{ width: '45%', maxWidth: 500 }} onClick={addVariation}>+ Add New Variation</Button>
       <div className='navBtnCont'>
         <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>
         <div className="nextBtn" tabIndex={-1} onClick={() => BasicExample((nav) + 1)}><ArrowLeftRoundIcon /></div>

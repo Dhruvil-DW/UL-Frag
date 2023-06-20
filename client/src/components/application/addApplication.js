@@ -184,8 +184,6 @@ export default function AddApplication() {
             return true;
           }
         } );
-        console.debug('value',value);
-        console.debug('all pre files',prevFiles);
         return [...filtered_file, ...value];
       }
       else{
@@ -196,23 +194,24 @@ export default function AddApplication() {
   }, []);
 
   const handleRemoveFiles = useCallback((name, value) => {
-    let remove_files_array = [];
-    setAllFiles((prevFiles) => {
-      if (value && value.length !== 0) {
-        const filtered_file = prevFiles.filter((file) =>{
-          console.debug('filtered_file', file);
-          console.debug('value',value);
-          const found = value.find((value_file)=> value_file == file.name);
-          if(found){
-            return false
-          }else{
-            return true;
-          }
-        } );
-        // console.debug('all remove files',filtered_file);
-        return filtered_file;
-      }
-    })
+    setAllFiles((prevState) => prevState.filter((file) => file !== value));
+    // setAllFiles((prevFiles) => {
+    //   if (value && value.length !== 0) {
+    //     const filtered_file = prevFiles.filter((file) =>{
+    //       console.debug('filtered_file', file);
+    //       console.debug('value',value);
+    //       const found = value.find((value_file)=> value_file == file.name);
+    //       if(found){
+    //         return false
+    //       }else{
+    //         return true;
+    //       }
+    //     } );
+    //     console.debug('new fileterd file',filtered_file);
+    //     console.debug('all remove files',filtered_file);
+    //     return filtered_file;
+    //   }
+    // })
   }, []);
 
   const handleSubmit = () => {
@@ -229,9 +228,9 @@ export default function AddApplication() {
       }
       if(key == 29){
         console.log('29',inputs[key])
-        if(imageInputs[`${key}`].length > 0){
+        if(imageInputs[`${key}`]?.length > 0){
           inputs[key].files.push(...imageInputs[`${key}`]); 
-        }
+        } 
       }
     }
     // console.log({ inputs });

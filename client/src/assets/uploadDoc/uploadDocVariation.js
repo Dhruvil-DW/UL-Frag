@@ -103,7 +103,7 @@ export default function UploadDocVariation({ label = 'Upload Images', name = 'De
                         ))}
                     </div>
                 ) : (
-                    <img src="/images/icons/upload_cloud.svg" alt="upload" style={{ width: 80 }} />
+                    <img src="/images/icons/upload_cloud.svg" alt="upload" style={{ width: 55 }} />
                 )}
                 <div>
                     <p>Drag & Drop files to upload</p>

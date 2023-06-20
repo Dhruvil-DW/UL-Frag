@@ -66,15 +66,15 @@ export default function ViewApplication() {
             </div>
           </Link>
           {/* <h2 style={{ textAlign: "center" }}>{appData.project_name ?? "N/A"}</h2> */}
-          <h2 style={{ marginLeft: "1rem" }}>{appData.project_name ?? "N/A"}</h2>
+          <h2 style={{ marginLeft: "1rem", maxWidth: 250, textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>{appData.project_name ?? "N/A"}</h2>
           <p className='viewSidebarIconText'><PageIcon />{appData.application_status?.status ?? "N/A"}</p>
           <p className='viewSidebarIconText'><UserIcon />{`${appData.User?.first_name ?? "N/A"} ${appData.User?.last_name ?? ""}`}</p>
           <p className='viewSidebarIconText'><CalenderIcon />{formatDate(appData.updated_at) ?? "N/A"}</p>
           {Boolean(listOfCollab.data?.length) && (
             <div style={{ height: "calc(100% - 300px)", overflowY: "auto" }}>
               <h3 className='viewSidebarIconText'><UserAddIcon />Collaborators</h3>
-              {listOfCollab.data?.map((obj) => (
-                <p className='viewSidebarIconText'>
+              {listOfCollab.data?.map((obj, i) => (
+                <p key={i} className='viewSidebarIconText'>
                   <UserAddIcon />
                   <div style={{ maxWidth: 220, textOverflow: "ellipsis", overflow: "hidden" }}>{obj.User.email}</div>
                 </p>

@@ -46,10 +46,10 @@ export default function CheckBoxImageWithTextBox({ question, nav, index, value =
 
   return (
     <>
+      <div className="questionContainer">
       {question.id === 23 &&
         <p className="addText">Performance input</p>
       }
-      <div className="questionContainer">
         <h2 className="question">{question.question}</h2>
         <div className="optionContainer">
           {question.question_opt?.map((opt) => (

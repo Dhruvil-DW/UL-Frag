@@ -23,13 +23,13 @@ export default function TextBox({ question, nav, index, value = "", onKeyUp }) {
   }
   return (
     <>
+      <div className="questionContainer fixWidth" style={{ flexGrow: 0 }}>
       {question.id === 21 &&
         <p className="addText">Liking input</p>
       }
       {question.id === 22 &&
         <p className="addText">Character input</p>
       }
-      <div className="questionContainer fixWidth" style={{ flexGrow: 0 }}>
         <h2 className="question">
           {question.question}
           <Tooltip className="tooltip" title={question.description} placement="bottom-end" arrow>

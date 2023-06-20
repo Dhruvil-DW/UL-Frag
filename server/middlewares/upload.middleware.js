@@ -10,7 +10,8 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     console.log('file', file);
-    const fileName = file.originalname.toLowerCase().split(' ').join('-');
+    // const fileName = file.originalname.toLowerCase().split(' ').join('-');
+    const fileName = file.originalname;
     cb(null, fileName);
   }
 });

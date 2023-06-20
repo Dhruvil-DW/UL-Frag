@@ -136,7 +136,6 @@ function getIconComp(name) {
 
 function getStepIcon(que, inputs) {
   let isCompleted = false;
-
   if (que.question_type_id === 12) {
     for (const childQue of que.nestedQue) {
       isCompleted = Boolean(inputs[childQue.id]);

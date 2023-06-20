@@ -266,15 +266,12 @@ export default function AddApplication() {
   }
 
   function handleDraft() {
-    // console.log({ inputs });
+
     for (var key in inputs) {
-      console.debug('key', key)
       if(key == 27 || key == 28){
         inputs[key].map((e, i) => {
-        console.debug('que files', e['files'])
-          console.log(imageInputs[`${key}`][`${i}`]?.['files'])
-          if(imageInputs[`${key}`][`${i}`]?.['files'] !== undefined){
-            e.files.push(...imageInputs[`${key}`][`${i}`]?.['files'])
+          if(imageInputs[key][i]?.files) {
+            e.files.push(...imageInputs[key][i].files)
           }
         })
       }

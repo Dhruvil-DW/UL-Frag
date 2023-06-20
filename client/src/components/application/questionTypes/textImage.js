@@ -7,12 +7,13 @@ import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 
 export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
-  const { handleNextPrevNav, handleAnswerChange, handleFilesChange, handleImageInputChange } = useContext(ApplicationContext);
+  const { handleNextPrevNav, handleAnswerChange, handleFilesChange, handleImageInputChange, handleRemoveFilesChange } = useContext(ApplicationContext);
   const [input, setInput] = useState(value ? value : { desc: '', files: [] });
   const defferInput = useDeferredValue(input);
   const [files, setFiles] = useState([]);
   const defferFiles = useDeferredValue(files);
   const [removeUploadedFiles, setRemoveUploadedFiles] = useState([]);
+  const defferRemoveFiles = useDeferredValue(removeUploadedFiles);
   const [imageInput, setImageInput] = useState([]);
   const defferImageInput = useDeferredValue(imageInput);
 
@@ -61,7 +62,8 @@ export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
 
   const onRemoveUploaded = (removeFile) => {
     setRemoveUploadedFiles((prevState) => [...prevState, removeFile]);
-    setInput((prevState) => ({ ...prevState, Images: prevState.Images.filter((file) => file.image_name !== removeFile) }));
+    // setInput((prevState) => ({ ...prevState, Images: prevState.Images.filter((file) => file.image_name !== removeFile) }));
+    setInput((prevState) => ({ ...prevState, files: prevState.files.filter((image_name) => image_name !== removeFile) }));
     console.log('uploadedFiles', removeUploadedFiles, input);
   };
 
@@ -85,6 +87,12 @@ export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
       handleFilesChange(question.id, defferFiles);
     }
   }, [handleFilesChange, question.id, defferFiles]);
+
+  useEffect(() => {
+    if (defferRemoveFiles.length != 0) {
+      handleRemoveFilesChange(question.id, defferRemoveFiles);
+    }
+  }, [handleRemoveFilesChange, question.id, defferRemoveFiles]);
 
   function BasicExample(nav) {
     const element = document.getElementById(nav);

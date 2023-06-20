@@ -70,6 +70,7 @@ function CollabComp({ handleClose, app_id }) {
         onSuccess: () => {
           setEmailList([]);
           setRemoveEmail([]);
+          handleClose();
         }
       }
     );

@@ -6,13 +6,14 @@ import CalenderIcon from '../../assets/icons/calenderIcon';
 import PageIcon from '../../assets/icons/pageIcon';
 import { useAxios } from '../../hooks/useAxios';
 import { formatDate } from '../../utils/globalFunctions/dateFns';
-import { Button } from '@mui/material';
+import { Button, Hidden } from '@mui/material';
 import { authContext } from '../../context/authContext';
 import { promptActions, promptContext } from '../../context/promptContext';
 import { LazyImage } from '../../assets/image/lazyImage';
 import LogoutArrowIcon from "../../assets/icons/logout_arrow";
 import UserAddIcon from "../../assets/icons/userAdd";
 import { collabActions, collabContext } from '../../context/collabContext';
+import { useListCollab } from '../collaborator/collabAPI';
 
 export default function ViewApplication() {
   const { appId } = useParams();
@@ -25,6 +26,8 @@ export default function ViewApplication() {
 
   const [appData, setAppData] = useState({});
   const [queAns, setQueAns] = useState([]);
+
+  const listOfCollab = useListCollab(appId);
 
   function getAppQuestions() {
     getData(`user/viewapplication/${appId}`, {},
@@ -50,7 +53,6 @@ export default function ViewApplication() {
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: data.message, type: "success", timer: 4000 } });
       navigate("/dashboard");
     });
-
   }
 
   return (
@@ -68,6 +70,17 @@ export default function ViewApplication() {
           <p className='viewSidebarIconText'><PageIcon />{appData.application_status?.status ?? "N/A"}</p>
           <p className='viewSidebarIconText'><UserIcon />{`${appData.User?.first_name ?? "N/A"} ${appData.User?.last_name ?? ""}`}</p>
           <p className='viewSidebarIconText'><CalenderIcon />{formatDate(appData.updated_at) ?? "N/A"}</p>
+          {Boolean(listOfCollab.data?.length) && (
+            <div style={{ height: "calc(100% - 300px)", overflowY: "auto" }}>
+              <h3 className='viewSidebarIconText'><UserAddIcon />Collaborators</h3>
+              {listOfCollab.data?.map((obj) => (
+                <p className='viewSidebarIconText'>
+                  <UserAddIcon />
+                  <div style={{ maxWidth: 220, textOverflow: "ellipsis", overflow: "hidden" }}>{obj.User.email}</div>
+                </p>
+              ))}
+            </div>
+          )}
         </div>
         {userdata.role_id === 2 && appData.application_status_id === 2 && (
           <>
@@ -165,11 +178,11 @@ function GetAnswer({ qa }) {
         return (
           <Fragment key={i}>
             <p><b>{ansObj.desc}</b></p>
-            <div style={{ display: 'flex', alignItems: 'center', gap:'3em' }}>
-            {ansObj.files.map((img) => (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '3em' }}>
+              {ansObj.files.map((img) => (
                 <LazyImage name={img} style={{ width: '10vw' }} />
-                ))}
-                </div>
+              ))}
+            </div>
           </Fragment>)
       });
 

@@ -1,9 +1,3 @@
-.MuiAutocomplete-root .MuiAutocomplete-input::placeholder {
-  font-size: 18px;
-  font-weight: 400;
-  color: rgb(0, 0, 0, 0.5);
-  padding: 0 9px;
-}
 .MuiAutocomplete-popper .MuiAutocomplete-paper {
   border-radius: 16px;
 }

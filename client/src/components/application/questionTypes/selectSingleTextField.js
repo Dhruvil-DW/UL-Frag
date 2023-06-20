@@ -38,11 +38,10 @@ export default function SelectSingleWithTextStatic({ question, nav, index, value
         value={input.option ?? null}
         onChange={handleInputChange}
         popupIcon={<ArrowDownIcon />}
-        renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Yes, I have a project name"/>}
+        renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Yes, I have a project name" />}
         onKeyUp={onKeyUp}
       />
-      <TextField variant="outlined" color="secondary" placeholder="Enter Project Name" name="projectName" value={input.projectName ?? ""} onChange={(e) => setInput(prevInput => ({ ...prevInput, [e.target.name]: e.target.value }))} disabled={!Boolean(input.option)} 
-       sx={{"& ::placeholder" : { fontSize:18, fontWeight: 400, color:'rgb(0, 0, 0, 0.5)', padding: '0 9px' }}} onKeyUp={onKeyUp} />
+      <TextField variant="outlined" color="secondary" placeholder="Enter Project Name" name="projectName" value={input.projectName ?? ""} onChange={(e) => setInput(prevInput => ({ ...prevInput, [e.target.name]: e.target.value }))} disabled={!Boolean(input.option)} onKeyUp={onKeyUp} />
 
       <div className='navBtnCont'>
         {question.id !== 1 && <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>}

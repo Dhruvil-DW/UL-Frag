@@ -122,7 +122,6 @@ export default function Dashboard() {
               name="search"
               placeholder="Search application"
               onChange={handleSearch}
-              sx={{"& ::placeholder" : { fontSize:15}}}
               value={selectedTab === 0 ? myAppParams.search : selectedTab === 1 ? allAppParams.search : selectedTab === 2 ? invitedAppParams.search : ""}
               startAdornment=
               <InputAdornment position="start">

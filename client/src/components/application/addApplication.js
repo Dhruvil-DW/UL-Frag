@@ -286,7 +286,7 @@ export default function AddApplication() {
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Category" } });
       return;
     }
-    const project_name = `Draft_${inputs[1]?.projectName ?? "Fragrance Brief"}`;
+    const project_name = `${inputs[1]?.projectName ?? "Fragrance Brief"}`;
     const final_inputs = {
       project_name: project_name,
       inputs: inputs

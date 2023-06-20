@@ -35,7 +35,7 @@ export default function AllProjectTab({ data, params, handleParamsChange }) {
         {data.length > 0 ? data.map((app, i) => (
           // <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit}>
             <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit} onClick={() => navigate(`/application/view/${app.id}`)}>
-            <h2 style={{ marginTop: 16 }}>{app.project_name}</h2>
+            <h2>{app.project_name}</h2>
             <div className="statusContainer">
             <p>{app.application_status.status} | {app.app_questions[0].answers[0].answer}</p>
             </div>

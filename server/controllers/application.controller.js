@@ -84,6 +84,7 @@ function submitApplication(req, res) {
   const user_id = req.userdata.user_id;
   console.log('user id-', user_id);
   let app_id = req.query.app_id;
+  console.log({ app_id });
   const data = req.body;
   const inputs = JSON.parse(data.inputs);
   const que_inputs = inputs.inputs;
@@ -91,7 +92,7 @@ function submitApplication(req, res) {
   (async () => {
     const projectName = await seq.seqFindOne(Application, ['project_name'], { project_name: inputs.project_name });
     console.log(projectName);
-    if (projectName) {
+    if (projectName && !app_id) {
       res.status(422).send({ message: "Application name already exists" });
       return;
     }
@@ -110,6 +111,7 @@ function submitApplication(req, res) {
 
     if (!app_id) {
       //Create App if App not Exist
+      console.log("Creating Application")
       const appRes = await seq.seqCreate(Application, appData);
       if (appRes === 500) return res.status(500).send({ message: "Error while creating application" });
 
@@ -204,7 +206,12 @@ function draftApplication(req, res) {
   const removeFiles = JSON.parse(data.removeFiles);
 
   (async () => {
-
+    const projectName = await seq.seqFindOne(Application, ['project_name'], { project_name: inputs.project_name });
+    console.log(projectName);
+    if (projectName && !app_id) {
+      res.status(422).send({ message: "Application name already exists" });
+      return;
+    }
     // Data To Create or Update in Application Table
     const appData = app_id ? {
       project_name: inputs.project_name,
@@ -455,6 +462,13 @@ function copyApplication(req, res) {
         //console.log("ANS", ans.id);
         //newResp.push();
         let answerStr = ans.answer;
+        if (queAns.question_id === 1) {
+          //**Project Name Changes */
+          const answerObj = JSON.parse(answerStr);
+          answerObj.projectName = newCount;
+          answerStr = JSON.stringify(answerObj);
+        }
+
         if (queAns.question.question_type_id === 9) {
           //**Question for Variation and Upload Image */
           const answerObj = JSON.parse(answerStr);
@@ -481,7 +495,7 @@ function copyApplication(req, res) {
             app_question_id: app_question_id,
             answer: answerStr
           }
-          );
+        );
         //console.log("NewAns-", newAnswerResp);
         if (newAnswerResp === 500) return res.status(500).send({ message: "Error while copying answers" });
       })

@@ -20,3 +20,8 @@ body *::-webkit-scrollbar-track {
 body *::-webkit-scrollbar-thumb {
   background-color: hsl(360, 100%, 67%);
 }
+
+.MuiAutocomplete-root .MuiAutocomplete-inputRoot.MuiInputBase-root,
+.MuiTextField-root .MuiInputBase-root {
+  padding-left: 18px;
+}

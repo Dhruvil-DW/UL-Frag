@@ -37,13 +37,13 @@ export default function MyProjectTab({ data, params, handleParamsChange, handleE
         {data.length > 0 ? data.map((app, i) => (
           // <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit}>
             <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit} onClick={() => navigate(`/application/view/${app.id}`)}>
-            <h2 style={{ marginTop: 16, marginLeft:0 }}>{app.project_name}</h2>
+            <h2>{app.project_name}</h2>
             <div className="statusContainer">
               <p>{app.application_status.status} | {app.app_questions[0]?.answers[0]?.answer}</p>
             </div>
             <div className="cardDetails">
               <UserIcon />
-              <p style={{ lineHeight: '26px'}}>{`${app.User.first_name} ${app.User.last_name}`}</p>
+              <p style={{ lineHeight: '26px' }}>{`${app.User.first_name} ${app.User.last_name}`}</p>
             </div>
             <div className="cardDetails">
               <CalenderIcon />
@@ -89,7 +89,7 @@ function FilterContainer({ onChange, filterInputs }) {
               </li>
             )}
           />
-          
+
           <Autocomplete
             options={QUESTION_CATEGORY}
             value={filterInputs.answer ?? null}

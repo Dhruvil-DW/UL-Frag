@@ -54,7 +54,7 @@ export default function AddApplication() {
   useEffect(getRegions, [getData]);
   useEffect(getCountry, [getData, inputs, regions]);
   // const { appId } = useParams();
-  const [currentQue, setCurrentQue] = useState(0);
+  const [currentQue, setCurrentQue] = useState(1);
   // const [activeSection, setActiveSection] = useState(0);
 
   const handleScroll = useCallback((e) => {
@@ -144,7 +144,7 @@ export default function AddApplication() {
   }, []);
 
   const handleImageInputChange = useCallback((name, value, type) => {
-    
+
     if (value && value.length !== 0) {
       setImageInputs(prevState => {
         const oldInput = { ...prevState };
@@ -153,11 +153,11 @@ export default function AddApplication() {
         //     oldInput[id] && delete oldInput[id];
         //   })
         // };
-        
+
         return { ...oldInput, [name]: value }
       });
     } else {
-      
+
       setImageInputs(prevState => {
         const oldInput = { ...prevState };
         // if (name === 5) {
@@ -171,25 +171,25 @@ export default function AddApplication() {
     }
   }, []);
 
-  const handleRemoveFilesChange = useCallback((name, value)=> setRemoveFiles((prevState) => [...prevState, ...value]), [])
+  const handleRemoveFilesChange = useCallback((name, value) => setRemoveFiles((prevState) => [...prevState, ...value]), [])
 
   const handleFilesChange = useCallback((name, value) => {
     setAllFiles((prevFiles) => {
       if (value && value.length !== 0) {
-        const filtered_file = prevFiles.filter((file) =>{
-          const found = value.find((value_file)=> value_file.name == file.name);
-          if(found){
+        const filtered_file = prevFiles.filter((file) => {
+          const found = value.find((value_file) => value_file.name == file.name);
+          if (found) {
             return false
-          }else{
+          } else {
             return true;
           }
-        } );
+        });
         return [...filtered_file, ...value];
       }
-      else{
+      else {
         return [...value];
       }
-      
+
     })
   }, []);
 
@@ -217,20 +217,20 @@ export default function AddApplication() {
   const handleSubmit = () => {
     for (var key in inputs) {
       console.debug('key', key)
-      if(key == 27 || key == 28){
+      if (key == 27 || key == 28) {
         inputs[key].map((e, i) => {
-        console.debug('que files', e['files'])
+          console.debug('que files', e['files'])
           console.log(imageInputs[`${key}`][`${i}`]?.['files'])
-          if(imageInputs[`${key}`][`${i}`]?.['files'] !== undefined){
+          if (imageInputs[`${key}`][`${i}`]?.['files'] !== undefined) {
             e.files.push(...imageInputs[`${key}`][`${i}`]?.['files'])
           }
         })
       }
-      if(key == 29){
-        console.log('29',inputs[key])
-        if(imageInputs[`${key}`]?.length > 0){
-          inputs[key].files.push(...imageInputs[`${key}`]); 
-        } 
+      if (key == 29) {
+        console.log('29', inputs[key])
+        if (imageInputs[`${key}`]?.length > 0) {
+          inputs[key].files.push(...imageInputs[`${key}`]);
+        }
       }
     }
     // console.log({ inputs });
@@ -249,14 +249,14 @@ export default function AddApplication() {
     };
 
     const formData = new FormData();
-    for( const f in allFiles){
+    for (const f in allFiles) {
       formData.append('filename', allFiles[f]);
     }
-      // files.forEach((elem) => {
-      //   formData.append('filename', elem);
-      // });
-      formData.append('inputs', JSON.stringify(final_inputs));
-      // formData.append('removeUploadedFiles', JSON.stringify(removeUploadedFiles));
+    // files.forEach((elem) => {
+    //   formData.append('filename', elem);
+    // });
+    formData.append('inputs', JSON.stringify(final_inputs));
+    // formData.append('removeUploadedFiles', JSON.stringify(removeUploadedFiles));
 
     console.log(final_inputs);
 
@@ -267,21 +267,21 @@ export default function AddApplication() {
   function handleDraft() {
 
     for (var key in inputs) {
-      if(key == 27 || key == 28){
+      if (key == 27 || key == 28) {
         inputs[key].map((e, i) => {
-          if(imageInputs[key][i]?.files) {
+          if (imageInputs[key][i]?.files) {
             e.files.push(...imageInputs[key][i].files)
           }
         })
       }
-      if(key == 29){
-        console.log('29',inputs[key])
-        if(imageInputs[`${key}`]?.length > 0){
-          inputs[key].files.push(...imageInputs[`${key}`]); 
-        } 
+      if (key == 29) {
+        console.log('29', inputs[key])
+        if (imageInputs[`${key}`]?.length > 0) {
+          inputs[key].files.push(...imageInputs[`${key}`]);
+        }
       }
     }
-    console.debug('drafting after inputs',inputs)
+    console.debug('drafting after inputs', inputs)
     if (!Boolean(inputs[3])) {
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Category" } });
       return;
@@ -297,15 +297,15 @@ export default function AddApplication() {
     };
 
     const formData = new FormData();
-    for( const f in allFiles){
+    for (const f in allFiles) {
       formData.append('filename', allFiles[f]);
     }
-      // files.forEach((elem) => {
-      //   formData.append('filename', elem);
-      // });
-      formData.append('inputs', JSON.stringify(final_inputs));
-      formData.append('removeFiles', JSON.stringify(removeFiles));
-      // formData.append('removeUploadedFiles', JSON.stringify(removeUploadedFiles));
+    // files.forEach((elem) => {
+    //   formData.append('filename', elem);
+    // });
+    formData.append('inputs', JSON.stringify(final_inputs));
+    formData.append('removeFiles', JSON.stringify(removeFiles));
+    // formData.append('removeUploadedFiles', JSON.stringify(removeUploadedFiles));
 
     console.log(final_inputs);
 
@@ -324,7 +324,7 @@ export default function AddApplication() {
         <div className="formRelative">
           <ErrorBoundary>
             <section id="form" ref={containerRef} onScroll={debouncedHandleScroll}>
-            {/* <section id="form" ref={containerRef} > */}
+              {/* <section id="form" ref={containerRef} > */}
               {catWiseQues.map((cat, catIndex) => (
                 <Fragment key={cat.category_id}>
 
@@ -341,11 +341,11 @@ export default function AddApplication() {
                     <div className="pageWrapper" key={que.id} data-que-type={que.question_type_id} data-que-id={que.id} id={count}>
                       <div className="pageContainer">
                         <QuestionType question={que} nav={count++} index={questionIndex} inputs={inputs} onKeyUp={handleFocusNext} />
-                          <Link to='/dashboard'>
-                        <div className="unilever-icon questionPage">
-                          <UnileverIcon width="64px"/>
-                        </div>
-                          </Link>
+                        <Link to='/dashboard'>
+                          <div className="unilever-icon questionPage">
+                            <UnileverIcon width="64px" />
+                          </div>
+                        </Link>
                         <div className="assets bg_images">
                           {que.imgData?.map((e) => (
                             <img key={e.path} src={`/images/${e.path}`} style={{ position: 'absolute', right: 0, bottom: 0, ...e.style }} alt={e.path} />

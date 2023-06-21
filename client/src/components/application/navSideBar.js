@@ -15,22 +15,34 @@ export default function NavSideBar({ appId, activeQue }) {
   const navigate = useNavigate();
   const { catWiseQues, inputs } = useContext(ApplicationContext);
   const { collabDispatch } = useContext(collabContext);
-  const [accOpen, setAccOpen] = useState({});
+  const [accOpen, setAccOpen] = useState(() => getInitialState(catWiseQues));
 
-  useEffect(() => {
-    setAccOpen(getInitialState(catWiseQues));
-  }, [catWiseQues]);
+  // useEffect(() => {
+  //   setAccOpen(getInitialState(catWiseQues));
+  // }, [catWiseQues]);
   // const [lastQueNo, setLastQueNo] = useState(() => getLastQue(catWiseQues));
 
   const handleAccToggle = (e) => {
     const { name } = e.target;
     setAccOpen(prevState => ({ ...prevState, [name]: !prevState[name] }))
   }
+  //** Effect For Section Open-Close onScroll */
+  useEffect(() => {
+    if ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].includes(activeQue)) {
+      setAccOpen({ 1: true, 2: false, 3: false, 4: false })
+    } else if ([11, 12, 13, 14, 15].includes(activeQue)) {
+      setAccOpen({ 1: false, 2: true, 3: false, 4: false })
+    } else if ([16, 17, 18, 19].includes(activeQue)) {
+      setAccOpen({ 1: false, 2: false, 3: true, 4: false })
+    } else if ([20, 21, 22, 23, 24, 25, 26, 27, 28].includes(activeQue)) {
+      setAccOpen({ 1: false, 2: false, 3: false, 4: true })
+    }
+  }, [activeQue]);
 
   function BasicExample(nav) {
     const element = document.getElementById(nav);
-    console.log('new nav', nav);
-    console.log('element', element)
+    // console.log('new nav', nav);
+    // console.log('element', element);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
@@ -50,18 +62,18 @@ export default function NavSideBar({ appId, activeQue }) {
           <Fragment key={i}>
             <Divider />
             <button className="accordion" data-id={count} name={cat.category_id} onClick={handleAccToggle}>
-              {getIconComp(cat)}{cat.category_name ?? "N/A"}<ArrowDownIcon className="accordionToggleIcon" pointerEvents="none" />
+              {getIconComp(cat)}{`${cat.category_id}. ${cat.category_name}`}<ArrowDownIcon className="accordionToggleIcon" pointerEvents="none" />
             </button>
             <div data-id={count++} className={`panel ${accOpen[cat.category_id] ? 'open' : 'close'}`}>
               <Stepper nonLinear orientation="vertical">
-                {cat.questions.map((que) => (
-                  <Step active={(count == activeQue)} key={que.id}>
+                {cat.questions.map((que, i) => (
+                  <Step active={(count === activeQue)} key={que.id}>
                     {/* <StepButton className={`navLink`} onClick={() => handleNextPrevNav(que.id, "fixed")} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
                       <div className="sidebarQueText">{que.question}</div>
                     </StepButton> */}
                     <a href={`#${count}`} className="navlink">
                       <StepButton className={`navLink`} onClick={() => BasicExample(count)} data-id={count} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
-                        <div data-id={count++} data-que-id={que.id} className="sidebarQueText">{que.question}</div>
+                        <div data-id={count++} data-que-id={que.id} className="sidebarQueText">{`${cat.category_id}.${i + 1} ${que.question}`}</div>
                       </StepButton>
                     </a>
                   </Step>

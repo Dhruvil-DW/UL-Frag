@@ -43,6 +43,7 @@ export default function SelectMultiStatic({ question, nav, index, value = [], on
     <div className="questionContainer fixWidth">
       <h2 className="question">{question.question}</h2>
       {question.id === 6 ? (
+        <>
         <Autocomplete
           multiple
           disablePortal
@@ -53,7 +54,10 @@ export default function SelectMultiStatic({ question, nav, index, value = [], on
           isOptionEqualToValue={(option, value) => option.label === value}
           disabled={!Boolean(inputs[5])}
           popupIcon={<ArrowDownIcon />}
-          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Enter Country"/>}
+          renderInput={(params) => (
+            <TextField {...params} variant="outlined" color="secondary" 
+            placeholder="Enter Country"/>
+            )}
           renderOption={(params, option, { selected }) => (
             <li {...params}>
               <Checkbox color="secondary" name="location" checked={selected} />
@@ -62,6 +66,9 @@ export default function SelectMultiStatic({ question, nav, index, value = [], on
           )}
           onKeyUp={onKeyUp}
         />
+        {!Boolean(inputs[5]) ? <p style={{fontSize: 12, color:"red", margin:'-0.3rem 0px 0px 21px' }}>*Please select Business Unit first</p>  : ''}
+        {/* <p style={{fontSize: 12, color:"red", margin:'-0.3rem 0px 0px 21px' }}>*Please select Business Unit first</p> */}
+        </>
       ) : (
         <Autocomplete
           multiple

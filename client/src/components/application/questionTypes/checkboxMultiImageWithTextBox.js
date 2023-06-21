@@ -64,8 +64,8 @@ export default function CheckBoxImageWithTextBox({ question, nav, index, value =
         </div>
 
         <div>
-          <TextField multiline fullWidth rows={2} inputProps={{ maxLength: 100 }} variant="outlined" color="secondary" placeholder="Enter your description here" value={input.desc} onChange={handleDescChange} />
-          <div style={{ position: "absolute", bottom: 8, right: 24, color: "hsl(0, 0%, 60%)" }}>{`${input.length ?? 0} / 100`}</div>
+          <TextField multiline fullWidth rows={2} inputProps={{ maxLength: 1000 }} variant="outlined" color="secondary" placeholder="Enter your description here" value={input.desc} onChange={handleDescChange} />
+          <div style={{ position: "absolute", bottom: 8, right: 24, color: "hsl(0, 0%, 60%)" }}>{`${input.length ?? 0} / 1000`}</div>
         </div>
 
         <div className='navBtnCont'>

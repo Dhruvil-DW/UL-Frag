@@ -45,7 +45,7 @@ export default function AllProjectTab({ data, params, handleParamsChange }) {
             </div>
             <div className="cardDetails">
               <CalenderIcon />
-              <p>Edited on <b>{formatDate(app.updatedAt)}</b></p>
+              <p>Last Edited on <b>{formatDate(app.updatedAt)}</b></p>
             </div>
             <img style={{ marginTop: 16 }} src="/images/icons/three_dot_blue.svg" alt="option" className="optionIcon" />
             <div className={`appCardActionContainer ${hoverCardId === i ? "hovered" : ""}`}>

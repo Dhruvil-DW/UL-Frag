@@ -4,12 +4,14 @@ import { authActions, authContext } from "../../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { Button, TextField } from '@mui/material'
 import UnileverIcon from "../../assets/icons/unileverIcon";
+import { promptActions, promptContext } from "../../context/promptContext";
 
 export default function Login() {
   const { authDispatch } = useContext(authContext);
   const navigate = useNavigate();
   const [inputs, setInputs] = useState({ email: "", otp: "" });
   const [step, setStep] = useState(1);
+  const { promptDispatch } = useContext(promptContext);
   const [otpStatus, setOtpStatus] = useState({ isSend: false, isError: false, msg: '' });
   const [authStatus, setAuthStatus] = useState({ isAuth: true, msg: 'Enter OTP' });
 
@@ -19,6 +21,10 @@ export default function Login() {
   }
 
   function sendOTP() {
+    if(!inputs.email){
+      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Email is required" } });
+      return;
+    }
     axios
       .post('auth/sendotp', { email: inputs.email })
       .then((res) => {
@@ -72,13 +78,19 @@ export default function Login() {
         <UnileverIcon fill="white" />
         <h1>We create a fragrant world!</h1>
         <div className="formContainer">
-          <TextField variant="outlined" color="primary" placeholder="Email" name="email" value={inputs.email} onChange={handleInputChange} onKeyUp={handleKeyUp} autoFocus />
-          <TextField variant="outlined" color="primary" placeholder='OTP' name="otp" value={inputs.otp} onChange={handleInputChange} error={!authStatus.isAuth} helperText={authStatus.msg} onKeyUp={handleKeyUp} />
+          <TextField variant="outlined" color="primary" placeholder="Email" name="email" value={inputs.email} onChange={handleInputChange} onKeyUp={handleKeyUp} autoFocus/>
+          {step === 2 && 
+          <TextField variant="outlined" color="primary" placeholder='OTP' name="otp" value={inputs.otp} onChange={handleInputChange} error={!authStatus.isAuth} 
+          helperText={authStatus.msg} 
+          onKeyUp={handleKeyUp} />
+           }
           <div style={{ marginTop: '1em', display: 'flex', gap: '1rem', justifyContent: 'space-between' }}>
             <Button variant="outlined" onClick={sendOTP}>{step === 1 ? "Send OTP" : step === 2 ? "Resend OTP" : "Invalid Step"}</Button>
+            {step === 2 && 
             <Button variant="contained" onClick={submitOTP}>Submit</Button>
+            }
           </div>
-          <div className="helperText" style={{ marginLeft: 'auto' }}>{otpStatus.msg}</div>
+          <div className="helperText" style={{ marginRight: 'auto' }}>{otpStatus.msg}</div>
           <div>
           </div>
         </div>

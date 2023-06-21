@@ -1,3 +1,6 @@
+.navLinkContainer {
+  --transition: all 700ms ease-out;
+}
 .navLinkContainer .accordion {
   background-color: hsl(221, 100%, 30%);
   color: hsl(0, 0%, 100%);
@@ -7,8 +10,8 @@
   border: none;
   text-align: left;
   outline: none;
-  font-size: 16px;
-  transition: 0.4s;
+  font-size: 14px;
+  transition: var(--transition);
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -17,7 +20,7 @@
 
 .navLinkContainer .accordion .accordionToggleIcon {
   margin-left: auto;
-  transition: all 500ms;
+  transition: var(--transition);
 }
 
 .navLinkContainer .accordion:has(+.panel.open) .accordionToggleIcon {
@@ -48,7 +51,7 @@
   overflow: hidden;
   padding: 1rem;
   max-height: 100vh;
-  transition: all 500ms ease-in-out;
+  transition: var(--transition);
 }
 
 .panel.close {
@@ -56,6 +59,7 @@
   max-height: 0;
   padding-top: 0px;
   padding-bottom: 0px;
+  transition: all 500ms ease-in-out;
 }
 
 .sidebar .buttonContainer {

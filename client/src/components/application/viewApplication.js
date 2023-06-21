@@ -168,7 +168,7 @@ function GetAnswer({ qa }) {
         return (
           <Fragment key={i}>
             <img src={`/images/${ansObj.brand}`} alt={ansObj.brand} />
-            <p>{ansObj.desc}</p>
+            {ansObj.desc && <p>{ansObj.desc}</p>}
           </Fragment>)
       });
 
@@ -177,7 +177,7 @@ function GetAnswer({ qa }) {
         const ansObj = JSON.parse(ans.answer);
         return (
           <Fragment key={i}>
-            <p><b>{ansObj.desc}</b></p>
+            {ansObj.desc && <p><b>{ansObj.desc}</b></p>}
             <div style={{ display: 'flex', alignItems: 'center', gap: '3em' }}>
               {ansObj.files.map((img) => (
                 <LazyImage name={img} style={{ width: '10vw' }} />
@@ -208,7 +208,7 @@ function GetAnswer({ qa }) {
         return (
           <>
             {ansObj.option.map((opt, i) => <p key={i}>{opt}</p>)}
-            <p><b>Description: </b>{ansObj.desc}</p>
+            {ansObj.desc && <p><b>Description: </b>{ansObj.desc}</p>}
           </>
         )
       } else {

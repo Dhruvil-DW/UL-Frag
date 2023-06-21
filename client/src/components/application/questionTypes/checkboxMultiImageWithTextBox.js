@@ -51,6 +51,7 @@ export default function CheckBoxImageWithTextBox({ question, nav, index, value =
         <p className="addText">Performance input</p>
       }
         <h2 className="question">{question.question}</h2>
+        <div style={{fontSize: 14, color: "#00000080", margin: "-12px 0 -12px auto"}}>You can select only two of them</div>
         <div className="optionContainer">
           {question.question_opt?.map((opt) => (
             <div key={opt} className="imageBoxContainer" onClick={() => handleInputChange(opt)}>
@@ -68,6 +69,7 @@ export default function CheckBoxImageWithTextBox({ question, nav, index, value =
           <div style={{ position: "absolute", bottom: 8, right: 24, color: "hsl(0, 0%, 60%)" }}>{`${input.length ?? 0} / 1000`}</div>
         </div>
 
+        {/* <div style={{position: "absolute", display: "flex", justifyContent: "center", width: "100%", fontSize: 14, bottom: "-3rem", color: "#00000080"}}>You can select only two of them</div> */}
         <div className='navBtnCont'>
           <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>
           {question.id !== 31 && <div className="nextBtn" tabIndex={-1} onClick={() => BasicExample((nav) + 1)}><ArrowLeftRoundIcon /></div>}

@@ -224,6 +224,10 @@ export default function AddApplication() {
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Country" } });
       return;
     }
+    if (!Boolean(inputs[20])) {
+      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please confirm question number 2.4" } });
+      return;
+    }
 
     for (var key in inputs) {
       console.debug('key', key)
@@ -273,6 +277,10 @@ export default function AddApplication() {
     }
     if (!Boolean(inputs[6])) {
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Country" } });
+      return;
+    }
+    if (!Boolean(inputs[20])) {
+      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please confirm question number 2.4" } });
       return;
     }
 

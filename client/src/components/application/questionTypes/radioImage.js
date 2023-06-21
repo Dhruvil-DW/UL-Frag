@@ -42,8 +42,8 @@ export default function RadioImage({ question, nav, index, value = {}, onKeyUp }
 
         <div style={{ flexGrow: 1, flexShrink: 0, height: 250, flexBasis: 250, backgroundColor: "rgb(201 177 255)", padding: 16 }}>
           <h3 style={{ color: "white", fontSize: 18 }}>Global Brand Position</h3>
-          <TextField multiline rows={6} fullWidth inputProps={{ maxLength: 100 }} placeholder="Enter your description here" sx={{ '& .MuiInputBase-multiline': { borderRadius: 0, padding: 0 } }} value={input.desc} onChange={(e) => setInput((prevInput) => ({ ...prevInput, desc: e.target.value }))} />
-          <div style={{ position: "absolute", bottom: 24, right: 24, color: "hsl(0, 0%, 90%)" }}>{`${input.desc?.length ?? 0} / 100`}</div>
+          <TextField multiline rows={6} fullWidth inputProps={{ maxLength: 1000 }} placeholder="Enter your description here" sx={{ '& .MuiInputBase-multiline': { borderRadius: 0, padding: 0 } }} value={input.desc} onChange={(e) => setInput((prevInput) => ({ ...prevInput, desc: e.target.value }))} />
+          <div style={{ position: "absolute", bottom: 24, right: 24, color: "hsl(0, 0%, 90%)" }}>{`${input.desc?.length ?? 0} / 1000`}</div>
         </div>
       </div>
 

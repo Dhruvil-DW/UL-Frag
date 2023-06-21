@@ -9,6 +9,9 @@ import ArrowDownIcon from "../../assets/icons/arrowDownIcon";
 import { ApplicationContext } from "./addApplication";
 import LogoutArrowIcon from "../../assets/icons/logout_arrow";
 import UserAddIcon from "../../assets/icons/userAdd";
+import ConsumerIcon from "../../assets/icons/consumerIcon";
+import MarketingIcon from "../../assets/icons/marketingIcon";
+import AboutFragIcon from "../../assets/icons/aboutFragIcon";
 import { collabActions, collabContext } from "../../context/collabContext";
 
 export default function NavSideBar({ appId, activeQue }) {
@@ -62,7 +65,7 @@ export default function NavSideBar({ appId, activeQue }) {
           <Fragment key={i}>
             <Divider />
             <button className="accordion" data-id={count} name={cat.category_id} onClick={handleAccToggle}>
-              {getIconComp(cat)}{`${cat.category_id}. ${cat.category_name}`}<ArrowDownIcon className="accordionToggleIcon" pointerEvents="none" />
+              {getIconComp(cat.category_name)}{`${cat.category_id}. ${cat.category_name}`}<ArrowDownIcon className="accordionToggleIcon" pointerEvents="none" />
             </button>
             <div data-id={count++} className={`panel ${accOpen[cat.category_id] ? 'open' : 'close'}`}>
               <Stepper nonLinear orientation="vertical">
@@ -140,9 +143,15 @@ function getInitialState(catQue) {
 function getIconComp(name) {
   switch (name) {
     case "Overview":
-      return <PageIcon />
+      return <PageIcon />;
+    case "About the Fragrance":
+      return <AboutFragIcon />;
+    case "About the Consumers":
+      return <ConsumerIcon />;
+    case "About the Investment":
+      return <MarketingIcon />;
     default:
-      return <PageIcon />
+      return <PageIcon />;
   }
 }
 

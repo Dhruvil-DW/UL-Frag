@@ -200,7 +200,7 @@ export default function TextBoxVariationImage({ question, nav, index, value, onK
               <div key={index} className="inner_variation" style={{ display: "flex", gap: "3rem", marginBottom: 30 }}>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "0", width: "45%" }}>
                   <TextField variant="outlined" name="variation" color="secondary" placeholder="Variation name" style={{ width: '100%' }} value={element.variation ?? ""} onChange={(e) => handleChange(index, e)} />
-                  {input.length > 1 && (<Button variant="contained" style={{ width: '100%', maxWidth: 500, height: '26%', color: 'black', background: '#F9F9F9', boxShadow: "none" }} onClick={() => removeVariation(index)}>- Remove Variation</Button>)}
+                  {input.length > 1 && (<Button variant="contained" style={{ width: '100%', maxWidth: 500, height: '55px', color: 'black', background: '#F9F9F9', boxShadow: "none" }} onClick={() => removeVariation(index)}>- Remove Variation</Button>)}
                 </div>
                 <div className="uploadContainer">
                   <UploadDocVariation que_id={question.id} label='Upload Cabin Photos' files={variantFiles[index] ?? []} uploadedFiles={element.files} onUpload={(e) => onUpload(index, e)} onRemove={(e, i) => onRemove(index, e, i)} onRemoveUploaded={onRemoveUploaded} required={false} />

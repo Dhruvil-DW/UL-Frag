@@ -215,6 +215,16 @@ export default function AddApplication() {
   }, []);
 
   const handleSubmit = () => {
+    // console.log({ inputs });
+    if (!Boolean(inputs[3])) {
+      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Category" } });
+      return;
+    }
+    if (!Boolean(inputs[6])) {
+      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Country" } });
+      return;
+    }
+
     for (var key in inputs) {
       console.debug('key', key)
       if (key == 27 || key == 28) {
@@ -232,15 +242,6 @@ export default function AddApplication() {
           inputs[key].files.push(...imageInputs[`${key}`]);
         }
       }
-    }
-    // console.log({ inputs });
-    if (!Boolean(inputs[3])) {
-      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Category" } });
-      return;
-    }
-    if (!Boolean(inputs[6])) {
-      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Country" } });
-      return;
     }
     const project_name = inputs[1]?.projectName ?? "Fragrance Brief";
     const final_inputs = {
@@ -266,6 +267,15 @@ export default function AddApplication() {
 
   function handleDraft() {
 
+    if (!Boolean(inputs[3])) {
+      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Category" } });
+      return;
+    }
+    if (!Boolean(inputs[6])) {
+      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Country" } });
+      return;
+    }
+
     for (var key in inputs) {
       if (key == 27 || key == 28) {
         inputs[key].map((e, i) => {
@@ -281,15 +291,7 @@ export default function AddApplication() {
         }
       }
     }
-    console.debug('drafting after inputs', inputs)
-    if (!Boolean(inputs[3])) {
-      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Category" } });
-      return;
-    }
-    if (!Boolean(inputs[6])) {
-      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Country" } });
-      return;
-    }
+    console.debug('drafting after inputs',inputs)
     const project_name = `${inputs[1]?.projectName ?? "Fragrance Brief"}`;
     const final_inputs = {
       project_name: project_name,

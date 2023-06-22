@@ -86,24 +86,24 @@ function getMyApplications(req, res) {
     //console.log("QUERY: ", req.query);
     const searchText = req.query.search;
     //const limit = req.query.limit ? Number(req.query.limit) : null;
-  //console.log(limit);
+    //console.log(limit);
     //const offset = req.query.offset ? Number(req.query.offset) : 0;
-  //console.log(offset);
+    //console.log(offset);
     const filters = req.query.filters;
-    console.log("Filters-",filters);
+    console.log("Filters-", filters);
     let filterData = [];
     const filterStatus = filters?.status ? filters.status : [];
     let filterCategory;
-    if(filters?.answer) {
-        if(filters.answer === "Other") {
-            filterCategory = { [Op.not]: ['Fabric clean(FCL)', 'Fabric Enhancer(FEN)', 'Home & Hygiene(H&H)']};
+    if (filters?.answer) {
+        if (filters.answer === "Other") {
+            filterCategory = { [Op.not]: ['Fabric clean(FCL)', 'Fabric Enhancer(FEN)', 'Home & Hygiene(H&H)'] };
         } else {
-            filterCategory = { [Op.eq]: filters.answer};
+            filterCategory = { [Op.eq]: filters.answer };
         }
         filterData.push({ '$app_questions.answers.answer$': filterCategory });
     }
     filterStatus.length != 0 && filterData.push({ '$application_status.status$': { [Op.or]: filterStatus } });
-     console.log("FilterData", filterData);
+    console.log("FilterData", filterData);
     const searchCond = searchText ? {
         [Op.and]: filterData, [Op.or]: [
             { project_name: { [Op.like]: '%' + searchText + '%' } }
@@ -126,6 +126,7 @@ function getMyApplications(req, res) {
                 {
                     model: AppQuestion, attributes: ['id', 'app_id', 'question_id'], where: { question_id: 3 }, include: [{ model: Answers, attributes: ['id', 'question_id', 'answer'] }]
                 },
+                { model: ApplicationInvite, attributes: ["id"], include: { model: User, attributes: ["id", "email", "first_name", "last_name"] } }
             ],
             [['updatedAt', 'DESC']]
         );
@@ -145,11 +146,11 @@ function getApprovedApplications(req, res) {
     let filterData = [];
     let filterCategory;
     // filterCategory.length != 0 && filterData.push({'$app_question.answers.answer$': {[Op.or]: filterCategory}});
-    if(filters?.answer) {
-        if(filters.answer === "Other") {
-            filterCategory = { [Op.not]: ['Fabric clean(FCL)', 'Fabric Enhancer(FEN)', 'Home & Hygiene(H&H)']};
+    if (filters?.answer) {
+        if (filters.answer === "Other") {
+            filterCategory = { [Op.not]: ['Fabric clean(FCL)', 'Fabric Enhancer(FEN)', 'Home & Hygiene(H&H)'] };
         } else {
-            filterCategory = { [Op.eq]: filters.answer};
+            filterCategory = { [Op.eq]: filters.answer };
         }
         filterData.push({ '$app_questions.answers.answer$': filterCategory });
     }
@@ -169,7 +170,7 @@ function getApprovedApplications(req, res) {
                 {
                     model: AppQuestion, attributes: ['id', 'app_id', 'question_id'], where: { question_id: 3 }, include: [{ model: Answers, attributes: ['id', 'question_id', 'answer'] }]
                 },
-
+                { model: ApplicationInvite, attributes: ["id"], include: { model: User, attributes: ["id", "email", "first_name", "last_name"] } }
             ],
             [['updatedAt', 'DESC']]
         );
@@ -219,11 +220,11 @@ function getInvitedApplications(req, res) {
     let filterData = [];
     //const filterCategory = filters?.answer ? filters.answer : '';
     let filterCategory;
-    if(filters?.answer) {
-        if(filters.answer === "Other") {
-            filterCategory = { [Op.not]: ['Fabric clean(FCL)', 'Fabric Enhancer(FEN)', 'Home & Hygiene(H&H)']};
+    if (filters?.answer) {
+        if (filters.answer === "Other") {
+            filterCategory = { [Op.not]: ['Fabric clean(FCL)', 'Fabric Enhancer(FEN)', 'Home & Hygiene(H&H)'] };
         } else {
-            filterCategory = { [Op.eq]: filters.answer};
+            filterCategory = { [Op.eq]: filters.answer };
         }
         filterData.push({ '$app_questions.answers.answer$': filterCategory });
     }
@@ -253,6 +254,7 @@ function getInvitedApplications(req, res) {
                 {
                     model: AppQuestion, attributes: ['id', 'app_id', 'question_id'], where: { question_id: 3 }, include: [{ model: Answers, attributes: ['id', 'question_id', 'answer'] }]
                 },
+                { model: ApplicationInvite, attributes: ["id"], include: { model: User, attributes: ["id", "email", "first_name", "last_name"] } }
             ],
             [['updatedAt', 'DESC']]
         );

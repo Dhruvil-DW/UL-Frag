@@ -37,10 +37,15 @@
 }
 
 .appCard {
-  background-color: hsl(0, 0%, 100%);
-  border: 1px solid hsla(222, 57%, 42%, 0.25);
+  --blue: #002F98;
+  --blue-dark-1: #002579;
+  --blue-dark-2: #001B65;
+  --white: #FFFFFF;
+  --gray: #2E54AA40;
+  background-color: var(--white);
+  border: 1px solid var(--gray);
   border-radius: 16px;
-  color: hsl(221, 100%, 30%);
+  color: var(--blue);
   padding: 27px;
   transition: all 500ms;
   cursor: pointer;
@@ -48,9 +53,9 @@
 }
 
 .appCard:hover {
-  background-color: hsl(221, 100%, 30%);
-  border: 1px solid hsl(221, 100%, 30%);
-  color: hsl(0, 0%, 100%);
+  background-color: var(--blue);
+  border: 1px solid var(--blue);
+  color: var(--white)
 }
 
 .appCard h2 {
@@ -58,11 +63,57 @@
   font-weight: 400;
   font-style: normal;
   font-size: 24px;
-  margin-top: 16px;
+  margin: 16px 0px;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: calc(100% - 48px);
   white-space: nowrap;
+}
+
+.appCard .cardStatus {
+  display: inline-block;
+  font-size: 12px;
+  border: 1px solid var(--gray);
+  border-radius: 20px;
+  padding: 8px 16px;
+  color: var(--blue);
+}
+
+.appCard .collabContainer p {
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.appCard .collabContainer .collabIcons {
+  --gap: 4px;
+  margin-left: var(--gap);
+}
+
+.appCard .collabContainer .MuiAvatarGroup-root {
+  flex-direction: row;
+}
+
+.appCard .collabContainer .MuiAvatarGroup-root .MuiAvatar-root:last-child {
+  margin-left: calc(var(--gap) * -1);
+}
+
+.appCard .collabContainer .MuiAvatarGroup-root .MuiAvatar-root {
+  border: 1px solid var(--blue-dark-2);
+  background-color: var(--white);
+  color: var(--blue);
+  margin-left: calc(var(--gap) * -1);
+  font-size: 1rem;
+}
+
+.appCard:hover .collabContainer .MuiAvatarGroup-root .MuiAvatar-root {
+  border: 1px solid var(--white);
+  background-color: var(--blue-dark-2);
+  color: var(--white);
+}
+
+.appCard:hover .cardStatus {
+  color: var(--white);
+  border-color: var(--white);
 }
 
 .appCard:hover h2 {
@@ -75,10 +126,16 @@
   align-items: center;
 }
 
-.appCard .statusContainer {
-  margin-top: 40px;
-  margin-bottom: 32px;
-  margin-left: 0px;
+.appCard .categoryContainer {
+  /* margin-top: 40px; */
+}
+
+.appCard .cardDetails {
+  margin: 1rem 0;
+}
+
+.appCard .cardDetails p {
+  margin: 0;
 }
 
 .appCard .optionIcon {
@@ -109,4 +166,14 @@
 
 .cardButton.MuiButton-root.MuiButtonBase-root {
   border: 1px solid hsla(222, 57%, 42%, 0.2);
+}
+
+.cardTooltip.MuiTooltip-popper .MuiTooltip-tooltip {
+  /* --bg-Clr: #2E54AA40; */
+  --bg-Clr: hsl(222, 47%, 95%);
+  background-color: var(--bg-Clr);
+  padding: 1rem;
+}
+.cardTooltip.MuiTooltip-popper .MuiTooltip-tooltip .MuiTooltip-arrow::before {
+  background-color: var(--bg-Clr);
 }

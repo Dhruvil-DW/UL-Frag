@@ -1,4 +1,4 @@
-import { Autocomplete, Checkbox, TextField } from "@mui/material"
+import { Autocomplete, Avatar, AvatarGroup, Checkbox, TextField, Tooltip } from "@mui/material"
 import ErrorBoundary from "../../../config/errorBoundary/ErrorBoundary"
 import ArrowDownIcon from "../../../assets/icons/arrowDownIcon";
 import UserIcon from "../../../assets/icons/userIcon";
@@ -35,15 +35,34 @@ export default function MyProjectTab({ data, params, handleParamsChange, handleE
       <FilterContainer onChange={handleParamsChange} filterInputs={params.filters} />
       <div className="applicationCardContainer">
         {data.length > 0 ? data.map((app, i) => (
-          // <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit}>
-            <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit} onClick={() => navigate(`/application/view/${app.id}`)}>
+          <div className="appCard" key={i} onMouseEnter={() => mouseEnter(i)} onMouseLeave={mouseExit} onClick={() => navigate(`/application/view/${app.id}`)}>
+            <span className="cardStatus">{app.application_status.status}</span>
             <h2>{app.project_name}</h2>
-            <div className="statusContainer">
-              <p>{app.application_status.status} | {app.app_questions[0]?.answers[0]?.answer}</p>
+            <div className="categoryContainer">
+              <p>{app.app_questions[0]?.answers[0]?.answer}</p>
             </div>
+            {Boolean(app.application_invites?.length) && (
+              <div className="collabContainer">
+                <p>Collaborators</p>
+                <div className="collabIcons">
+                  <AvatarGroup>
+                    {app.application_invites.map((invite) => {
+                      const initial = invite.User.first_name ?? "U";
+                      const email = invite.User.email;
+                      const fullName = `${invite.User.first_name ?? ""} ${invite.User.last_name ?? ""}`
+                      return (
+                        <Tooltip key={invite.id} classes={{ popper: "cardTooltip" }} title={<><div>{fullName}</div><div>{email}</div></>} placement="top-start" arrow>
+                          <Avatar sx={{ height: 24, width: 24 }}>{initial[0].toUpperCase()}</Avatar>
+                        </Tooltip>
+                      )
+                    })}
+                  </AvatarGroup>
+                </div>
+              </div>
+            )}
             <div className="cardDetails">
               <UserIcon />
-              <p style={{ lineHeight: '26px' }}>{`${app.User.first_name} ${app.User.last_name}`}</p>
+              <p>{`${app.User.first_name} ${app.User.last_name}`}</p>
             </div>
             <div className="cardDetails">
               <CalenderIcon />
@@ -56,7 +75,7 @@ export default function MyProjectTab({ data, params, handleParamsChange, handleE
                 <>
                   {[3, 4].includes(app.application_status_id) && <img src="/images/icons/copy_round.svg" alt="copy" onClick={(event) => getCopyApplication(app.id, event)} />}
                   {app.application_status_id === 1 && <img src="/images/icons/pencil_round.svg" alt="edit" onClick={(event) => handleEditApp(app.id, event)} />}
-                  {app.application_status_id === 1 && <img src="/images/icons/invite_user.svg" alt="invite" onClick={(event) => {event.stopPropagation(); collabDispatch({ type: collabActions.SHOW_COLLAB, payload: { app_id: app.id } })}} />}
+                  {app.application_status_id === 1 && <img src="/images/icons/invite_user.svg" alt="invite" onClick={(event) => { event.stopPropagation(); collabDispatch({ type: collabActions.SHOW_COLLAB, payload: { app_id: app.id } }) }} />}
                 </>
               )}
             </div>
@@ -81,7 +100,7 @@ function FilterContainer({ onChange, filterInputs }) {
             popupIcon={<ArrowDownIcon />}
             sx={{ width: 285 }}
             onChange={(event, value, reason) => onChange(event, value, reason, "status")}
-            renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Status"/>}
+            renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Status" />}
             renderOption={(params, option, { selected }) => (
               <li {...params}>
                 <Checkbox color="secondary" name="status" checked={selected} />
@@ -96,7 +115,7 @@ function FilterContainer({ onChange, filterInputs }) {
             popupIcon={<ArrowDownIcon />}
             sx={{ width: 285 }}
             onChange={(event, value, reason) => onChange(event, value, reason, "answer")}
-            renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Category wise"/>}
+            renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Category wise" />}
           />
         </div>
       </div>

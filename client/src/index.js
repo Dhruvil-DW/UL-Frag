@@ -10,9 +10,9 @@ axios.defaults.baseURL = process.env.REACT_APP_SERVER_URL;
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
-    <Profiler id='App'>
-      <App />
-    </Profiler>
+  <Profiler id='App'>
+    <App />
+  </Profiler>
   // </React.StrictMode>
 );
 

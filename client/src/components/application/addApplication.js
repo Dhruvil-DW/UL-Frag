@@ -10,6 +10,7 @@ import ErrorBoundary from "../../config/errorBoundary/ErrorBoundary";
 import WelcomeScreen from "./welcomeScreen/welcomeScreen";
 import { useAxios } from "../../hooks/useAxios";
 import { promptActions, promptContext } from "../../context/promptContext";
+import { useGetCountry, useGetQuestions, useGetRegion } from "./addAppAPIs";
 export const ApplicationContext = createContext();
 
 export default function AddApplication() {
@@ -21,8 +22,8 @@ export default function AddApplication() {
   const [imageInputs, setImageInputs] = useState({});
   const [allFiles, setAllFiles] = useState([]);
   const [removeFiles, setRemoveFiles] = useState([]);
-  const [regions, setRegions] = useState([]);
-  const [country, setCountry] = useState([]);
+  // const [regions, setRegions] = useState([]);
+  // const [country, setCountry] = useState([]);
   const containerRef = useRef(null);
   const { getData, postData } = useAxios();
 
@@ -39,20 +40,24 @@ export default function AddApplication() {
     });
   }
 
-  function getRegions() {
-    getData("application/getregions", {}, setRegions);
-  }
+  // function getRegions() {
+  //   getData("application/getregions", {}, setRegions);
+  // }
 
-  function getCountry() {
-    if (inputs[5]) {
-      const country_id = regions?.find((obj) => obj.label === inputs[5])?.id;
-      country_id && getData(`application/getcountry/${country_id}`, {}, setCountry);
-    }
-  }
+  // function getCountry() {
+  //   if (inputs[5]) {
+  //     const country_id = regions?.find((obj) => obj.label === inputs[5])?.id;
+  //     country_id && getData(`application/getcountry/${country_id}`, {}, setCountry);
+  //   }
+  // }
+  const regionList = useGetRegion();
+  // const regions = regionList.data ?? [];
+  const countryList = useGetCountry(regionList?.data?.find((obj) => obj.label === inputs[5])?.id);
+  // const country = countryList.data ?? [];
 
   useEffect(getQuestions, [getData, appId]);
-  useEffect(getRegions, [getData]);
-  useEffect(getCountry, [getData, inputs, regions]);
+  // useEffect(getRegions, [getData]);
+  // useEffect(getCountry, [getData, inputs, regions]);
   // const { appId } = useParams();
   const [currentQue, setCurrentQue] = useState(1);
   // const [activeSection, setActiveSection] = useState(0);
@@ -122,21 +127,11 @@ export default function AddApplication() {
     if (value && value.length !== 0) {
       setInputs(prevState => {
         const oldInput = { ...prevState };
-        // if (name === 5) {
-        //   toBeDltQueId.forEach(id => {
-        //     oldInput[id] && delete oldInput[id];
-        //   })
-        // };
         return { ...oldInput, [name]: value }
       });
     } else {
       setInputs(prevState => {
         const oldInput = { ...prevState };
-        // if (name === 5) {
-        //   toBeDltQueId.forEach(id => {
-        //     oldInput[id] && delete oldInput[id];
-        //   });
-        // };
         delete oldInput[name];
         return oldInput;
       })
@@ -148,23 +143,12 @@ export default function AddApplication() {
     if (value && value.length !== 0) {
       setImageInputs(prevState => {
         const oldInput = { ...prevState };
-        // if (name === 5) {
-        //   toBeDltQueId.forEach(id => {
-        //     oldInput[id] && delete oldInput[id];
-        //   })
-        // };
-
         return { ...oldInput, [name]: value }
       });
     } else {
 
       setImageInputs(prevState => {
         const oldInput = { ...prevState };
-        // if (name === 5) {
-        //   toBeDltQueId.forEach(id => {
-        //     oldInput[id] && delete oldInput[id];
-        //   });
-        // };
         delete oldInput[name];
         return oldInput;
       })
@@ -195,23 +179,6 @@ export default function AddApplication() {
 
   const handleRemoveFiles = useCallback((name, value) => {
     setAllFiles((prevState) => prevState.filter((file) => file !== value));
-    // setAllFiles((prevFiles) => {
-    //   if (value && value.length !== 0) {
-    //     const filtered_file = prevFiles.filter((file) =>{
-    //       console.debug('filtered_file', file);
-    //       console.debug('value',value);
-    //       const found = value.find((value_file)=> value_file == file.name);
-    //       if(found){
-    //         return false
-    //       }else{
-    //         return true;
-    //       }
-    //     } );
-    //     console.debug('new fileterd file',filtered_file);
-    //     console.debug('all remove files',filtered_file);
-    //     return filtered_file;
-    //   }
-    // })
   }, []);
 
   const handleSubmit = () => {
@@ -325,7 +292,7 @@ export default function AddApplication() {
   console.debug("QUESTIONS: ", catWiseQues);
   let count = 1;
   return (
-    <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleNextPrevNav, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, handleRemoveFiles, handleImageInputChange, regions, country, resetInputCountry }}>
+    <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleNextPrevNav, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, handleRemoveFiles, handleImageInputChange, regions: regionList.data, country: countryList.data, resetInputCountry }}>
       <main className="appFormContainer">
         <ErrorBoundary>
           <NavSideBar formRef={containerRef} activeQue={currentQue} appId={appId} />

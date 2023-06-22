@@ -18,7 +18,7 @@ const questions = [
   { category_id: 1, question: "Lead markets", question_type_id: 0, question_opt: 8, require: 0, status: 1, parent_id: 11 },
   { category_id: 1, question: "Rollout markets", question_type_id: 0, question_opt: 9, require: 0, status: 1, parent_id: 11 },
   { category_id: 1, question: "Impacted markets", question_type_id: 0, question_opt: 10, require: 0, status: 1, parent_id: 11 },
-  { category_id: 1, question: "Brand position", question_opt: '["brand_sunlight.png", "brand_domestos.png", "brand_brilhante.png", "brand_cif.png", "brand_dirtisgood.png"]', question_type_id: 7, require: 0, status: 1, parent_id: 0 },
+  { category_id: 1, question: "Brand position", question_opt: '["brand_sunlight.png", "brand_sun.png", "brand_comfort.png", "brand_robjin.png", "brand_skip.png", "brand_snuggle.png", "brand_surf.png", "brand_surfexcel.png", "brand_wheel.png", "brand_domestos_new.png", "brand_brilhante.png", "brand_cif_new.png", "brand_dirtisgood_new.png"]', question_type_id: 7, require: 0, status: 1, parent_id: 0 },
   { category_id: 1, question: "Select product cell", question_type_id: 10, question_opt: '["Guardrail", "Power growth", "Unsure"]', require: 0, status: 1, parent_id: 0 },
 
   // Category:- About the Fragrance

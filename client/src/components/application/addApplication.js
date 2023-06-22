@@ -214,6 +214,10 @@ export default function AddApplication() {
         }
       }
     }
+    if (!Boolean(inputs[20])) {
+      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Confirm before proceeding" } });
+      return;
+    }
     const project_name = inputs[1]?.projectName ?? "Fragrance Brief";
     const final_inputs = {
       project_name: project_name,

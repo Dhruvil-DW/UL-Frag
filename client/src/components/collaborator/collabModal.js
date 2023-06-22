@@ -79,12 +79,12 @@ function CollabComp({ handleClose, app_id }) {
   if (invitedList.isLoading) return <p>Loading</p>
   return (
     <>
-      <h2 className='collabModalTitle'>Invite Collabrator</h2>
+      <h2 className='collabModalTitle'>Invite Collaborator</h2>
       <div className='noAppIdMsg'>{app_id ? null : "Save Application First"}</div>
 
       <div className='fieldBtnContainer'>
         <div className='fieldWrapper'>
-          <TextField fullWidth variant="outlined" color="secondary" placeholder="Email of Collabrator" name="collabEmail" value={input} onChange={handleChange} autoFocus={true} disabled={!app_id} onKeyUp={(e) => e.key === "Enter" && e.target.value && handleAdd()} />
+          <TextField fullWidth variant="outlined" color="secondary" placeholder="Email of Collaborator" name="collabEmail" value={input} onChange={handleChange} autoFocus={true} disabled={!app_id} onKeyUp={(e) => e.key === "Enter" && e.target.value && handleAdd()} />
         </div>
 
         <div className='addBtnWrapper'>

@@ -143,17 +143,17 @@
 .appCard .optionIcon {
   position: absolute;
   right: 28px;
-  top: 28px;
+  top: 13px;
 }
 
 .appCard img {
-  width: 38px;
+  width: 32px;
 }
 
 .appCard .appCardActionContainer {
   position: absolute;
   right: 28px;
-  top: 113px;
+  top: 75px;
   display: flex;
   gap: 23px;
   flex-direction: column;

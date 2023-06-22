@@ -41,10 +41,11 @@ export default function MyProjectTab({ data, params, handleParamsChange, handleE
             <div className="categoryContainer">
               <p>{app.app_questions[0]?.answers[0]?.answer}</p>
             </div>
-            {Boolean(app.application_invites?.length) && (
+            
               <div className="collabContainer">
                 <p>Collaborators</p>
-                <div className="collabIcons">
+                {Boolean(app.application_invites?.length) ? (
+                  <div className="collabIcons">
                   <AvatarGroup>
                     {app.application_invites.map((invite) => {
                       const initial = invite.User.first_name ?? "U";
@@ -58,8 +59,10 @@ export default function MyProjectTab({ data, params, handleParamsChange, handleE
                     })}
                   </AvatarGroup>
                 </div>
+                ) : (
+                  <p>No collaborator</p>
+                )}
               </div>
-            )}
             <div className="cardDetails">
               <UserIcon />
               <p>{`${app.User.first_name} ${app.User.last_name}`}</p>
@@ -73,7 +76,7 @@ export default function MyProjectTab({ data, params, handleParamsChange, handleE
               <img src="/images/icons/eye_round.svg" alt="view" onClick={() => navigate(`/application/view/${app.id}`)} />
               {userdata.role_id === 1 && (
                 <>
-                  {[3, 4].includes(app.application_status_id) && <img src="/images/icons/copy_round.svg" alt="copy" onClick={(event) => getCopyApplication(app.id, event)} />}
+                   <img src="/images/icons/copy_round.svg" alt="copy" onClick={(event) => getCopyApplication(app.id, event)} />
                   {app.application_status_id === 1 && <img src="/images/icons/pencil_round.svg" alt="edit" onClick={(event) => handleEditApp(app.id, event)} />}
                   {app.application_status_id === 1 && <img src="/images/icons/invite_user.svg" alt="invite" onClick={(event) => { event.stopPropagation(); collabDispatch({ type: collabActions.SHOW_COLLAB, payload: { app_id: app.id } }) }} />}
                 </>

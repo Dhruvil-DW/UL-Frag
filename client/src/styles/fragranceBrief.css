@@ -1,6 +1,6 @@
 .overviewWrapper {
   height: 100vh;
-  background-size: cover;
+  background-size: contain;
 }
 
 .overviewContainer {

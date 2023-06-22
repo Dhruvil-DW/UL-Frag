@@ -143,6 +143,8 @@ export default function Dashboard() {
           )}
         </div>
       </div>
+        <img src="/images/blue_flower.png" alt="blue" height="20%" style={{ position: 'fixed', left: '-5%', bottom: '-3%' }} />
+        <img src="/images/golden_image.png" alt="golden" height="20%" style={{ position: 'fixed', right: '-3%', bottom: '-5%' }} />
     </section>
   )
 }

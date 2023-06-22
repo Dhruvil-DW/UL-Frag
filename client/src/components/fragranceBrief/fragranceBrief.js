@@ -7,7 +7,7 @@ export default function FragranceBrief() {
 
   const navigate = useNavigate()
   return (
-    <div className="overviewWrapper" style={{ backgroundImage: 'url("images/overview_image.png")' }}>
+    <div className="overviewWrapper" style={{ backgroundImage: 'url("images/new_brief.png")' }}>
       <div className="overviewContainer">
         <div className="unilever-icon">
           <UnileverIcon />

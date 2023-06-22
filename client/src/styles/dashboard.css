@@ -1,11 +1,13 @@
 .dashboardWrapper {
   background: hsl(202, 63%, 98%);
-  min-height: 100vh;
+  height: 100vh;
   padding: 1rem 2.5rem;
 }
 
 .dashboardContainer {
   /* background: hsl(202, 63%, 98%); */
+  position: relative;
+  z-index: 10;
 }
 
 .dashboardContentWrapper {

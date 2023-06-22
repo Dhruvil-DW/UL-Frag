@@ -47,7 +47,7 @@ export default function App() {
         </BrowserRouter>
         <CollabModal />
         <Prompt />
-        <ReactQueryDevtools />
+        {/* <ReactQueryDevtools /> */}
       </QueryClientProvider>
     </Context>
 

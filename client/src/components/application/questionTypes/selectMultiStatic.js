@@ -5,24 +5,11 @@ import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 
 export default function SelectMultiStatic({ question, nav, index, value = [], onKeyUp }) {
-  const { inputs, country, handleAnswerChange } = useContext(ApplicationContext);
+  const { inputs, country, handleAnswerChange, resetMarket } = useContext(ApplicationContext);
   const [input, setInput] = useState(value);
   const defferInput = useDeferredValue(input);
-  
+
   function handleInputChange(__event, value, __reason) {
-    // switch (reason) {
-    //   case "selectOption":
-    //   case "removeOption":
-    //     // value = isArray ? option.map(x => x.id) : option.id
-    //     break;
-    //   case "clear":
-    //     // value = isArray ? [] : null;
-    //     break;
-    //   case "createOption":
-    //   case "blur":
-    //   default:
-    //     return;
-    // }===
     setInput(value);
   }
 
@@ -37,37 +24,43 @@ export default function SelectMultiStatic({ question, nav, index, value = [], on
       // 👇 Will scroll smoothly to the top of the next section
       element.scrollIntoView({ behavior: 'smooth' });
     }
-}
+  }
+  function handelMarketSelect(event, value, reason) {
+    if (reason === "clear" || reason === "selectOption") {
+      resetMarket();
+    }
+    handleInputChange(event, value.map(obj => obj.label ?? obj), reason)
+  }
 
   return (
     <div className="questionContainer fixWidth">
       <h2 className="question">{question.question}</h2>
       {question.id === 6 ? (
         <>
-        <Autocomplete
-          multiple
-          disablePortal
-          disableCloseOnSelect
-          options={country ?? []}
-          value={inputs[question.id] ?? []}
-          onChange={(event, value, reason) => handleInputChange(event, value.map(obj => obj.label ?? obj), reason)}
-          isOptionEqualToValue={(option, value) => option.label === value}
-          disabled={!Boolean(inputs[5])}
-          popupIcon={<ArrowDownIcon />}
-          renderInput={(params) => (
-            <TextField {...params} variant="outlined" color="secondary" 
-            placeholder="Enter Country"/>
+          <Autocomplete
+            multiple
+            disablePortal
+            disableCloseOnSelect
+            options={country ?? []}
+            value={inputs[question.id] ?? []}
+            onChange={handelMarketSelect}
+            isOptionEqualToValue={(option, value) => option.label === value}
+            disabled={!Boolean(inputs[5])}
+            popupIcon={<ArrowDownIcon />}
+            renderInput={(params) => (
+              <TextField {...params} variant="outlined" color="secondary"
+                placeholder={inputs[question.id]?.length ? "" : "Enter Country"} />
             )}
-          renderOption={(params, option, { selected }) => (
-            <li {...params}>
-              <Checkbox color="secondary" name="location" checked={selected} />
-              {option.label}
-            </li>
-          )}
-          onKeyUp={onKeyUp}
-        />
-        {!Boolean(inputs[5]) ? <p style={{fontSize: 12, color:"red", margin:'-0.3rem 0px 0px 21px' }}>*Please select Business Unit first</p>  : ''}
-        {/* <p style={{fontSize: 12, color:"red", margin:'-0.3rem 0px 0px 21px' }}>*Please select Business Unit first</p> */}
+            renderOption={(params, option, { selected }) => (
+              <li {...params}>
+                <Checkbox color="secondary" name="location" checked={selected} />
+                {option.label}
+              </li>
+            )}
+            onKeyUp={onKeyUp}
+          />
+          {!Boolean(inputs[5]) ? <p style={{ fontSize: 12, color: "red", margin: '-0.3rem 0px 0px 21px' }}>*Please select Business Unit first</p> : ''}
+          {/* <p style={{fontSize: 12, color:"red", margin:'-0.3rem 0px 0px 21px' }}>*Please select Business Unit first</p> */}
         </>
       ) : (
         <Autocomplete
@@ -78,7 +71,7 @@ export default function SelectMultiStatic({ question, nav, index, value = [], on
           value={input}
           onChange={handleInputChange}
           popupIcon={<ArrowDownIcon />}
-          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Select Format"/>}
+          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder={input?.length ? "" : "Select Format"} />}
           renderOption={(params, option, { selected }) => (
             <li {...params}>
               <Checkbox color="secondary" name="location" checked={selected} />

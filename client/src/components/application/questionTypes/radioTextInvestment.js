@@ -3,29 +3,22 @@ import { ApplicationContext } from "../addApplication";
 import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { FormControlLabel, InputAdornment, Radio, RadioGroup, TextField } from "@mui/material";
 
-export default function RadioTextInvestment({ question, nav, index, value = "", onKeyUp }) {
+export default function RadioTextInvestment({ question, nav, index, value = { option: "", amount: "" }, onKeyUp }) {
   const { handleAnswerChange } = useContext(ApplicationContext);
-  const [input, setInput] = useState(value ? (question.question_opt.includes(value) ? value : "Incremental") : "");
-  const [textInput, setTextInput] = useState(value && !(question.question_opt.includes(value)) ? value : "");
+  const [input, setInput] = useState(value);
   const defferInput = useDeferredValue(input);
-  const defferTextInput = useDeferredValue(textInput);
 
   function handleInputChange(__event, value) {
-    console.log(value);
-    setInput(value);
-  }
-
-  function handleTextChange(e) {
-    setTextInput(e.target.value);
+    setInput((prevInput) => ({ ...prevInput, option: value }));
   }
 
   useEffect(() => {
-    if (defferInput === "Incremental") {
-      handleAnswerChange(question.id, defferTextInput);
-    } else {
+    if (defferInput.option || defferInput.amount) {
       handleAnswerChange(question.id, defferInput);
+    } else {
+      handleAnswerChange(question.id, null);
     }
-  }, [handleAnswerChange, question.id, defferInput, defferTextInput]);
+  }, [handleAnswerChange, question.id, defferInput]);
 
   function BasicExample(nav) {
     const element = document.getElementById(nav);
@@ -41,20 +34,20 @@ export default function RadioTextInvestment({ question, nav, index, value = "", 
     <div className="questionContainer fixWidth">
       <h2 className="question">{question.question}</h2>
 
-      <RadioGroup value={input} onChange={handleInputChange} name={question.id.toString()}>
+      <RadioGroup value={input.option} onChange={handleInputChange} name={question.id.toString()}>
         {question.question_opt?.map((opt) => (
           <div key={opt}>
             <FormControlLabel label={opt} value={opt} control={<Radio />} />
-            {opt === "Incremental" && input === "Incremental" && (
+            {opt === input.option && (
               <TextField
                 id="investmentField"
                 variant="outlined"
                 color="secondary"
                 name="Investment"
                 placeholder="0.00"
-                value={textInput}
+                value={input.amount}
                 onKeyUp={onKeyUp}
-                onChange={handleTextChange}
+                onChange={(e) => setInput((prevInput) => ({ ...prevInput, amount: e.target.value }))}
                 InputProps={{
                   startAdornment: <InputAdornment position="start">€</InputAdornment>,
                   endAdornment: <InputAdornment position="start"><p style={{ fontSize: 14 }}>| Cost per tons (in Euros)</p></InputAdornment>

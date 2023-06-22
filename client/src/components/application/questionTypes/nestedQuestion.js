@@ -10,7 +10,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { getInputDate } from "../../../utils/globalFunctions/dateFns";
 
 export default function NestedQuestion({ question, nav, index, onKeyUp }) {
-  const { inputs, country, handleAnswerChange } = useContext(ApplicationContext);
+  const { inputs, handleAnswerChange } = useContext(ApplicationContext);
   // console.log(question);
   // console.log(childQuestionData[question.id]);
   function handleNestedDateSelection(value, id, index) {
@@ -51,36 +51,34 @@ export default function NestedQuestion({ question, nav, index, onKeyUp }) {
                 )}
               </p>
               <div style={{ height: "calc(100% - 1.5rem)", overflow: "auto" }}>
-                {question.id === 7 && (
+                {question.id === 7 && (inputs[6]?.length ? (
                   <>
                     <Autocomplete
                       multiple
                       disablePortal
                       disableCloseOnSelect
                       fullWidth
-                      options={country ?? []}
+                      options={inputs[6] ?? []}
                       value={inputs[que.id] ?? []}
                       onChange={(event, value, reason) => handleNestedAutoCompleteChange(event, value.map(obj => obj.label ?? obj), reason, que.id)}
                       // onChange={(event, value, reason) => onChange(event, value, reason, que.id)}
-                      isOptionEqualToValue={(option, value) => option.label === value}
-                      disabled={!Boolean(inputs[5])}
+                      isOptionEqualToValue={(option, value) => option === value}
+                      disabled={!Boolean(inputs[6])}
                       popupIcon={<ArrowDownIcon />}
-                      renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Select Market" />}
+                      renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder={inputs[que.id]?.length ? "" : "Select Market"} />}
                       renderOption={(params, option, { selected }) => (
                         <li {...params}>
                           <Checkbox color="secondary" name={que.id.toString()} checked={selected} />
-                          {option.label}
+                          {option}
                         </li>
                       )}
                       onKeyUp={onKeyUp}
                       sx={{ my: 3 }}
                     />
-                    {/* <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                    <PlusRoundIcon style={{ fontSize: 24 }} />
-                    <p style={{ fontSize: 12 }}>Add another market</p>
-                  </div> */}
                   </>
-                )}
+                ) : (
+                  <p style={{ fontSize: 14 }}>Please Select Country First</p>
+                ))}
                 {question.id === 11 && (
                   inputs[que.question_opt] ? inputs[que.question_opt].map((ans, index) => (
                     <div key={index} style={{ fontSize: 14, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 8 }}>

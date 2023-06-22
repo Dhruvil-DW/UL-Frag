@@ -90,7 +90,7 @@ export default function MyProjectTab({ data, params, handleParamsChange, handleE
 }
 
 function FilterContainer({ onChange, filterInputs }) {
-
+  
   return (
     <ErrorBoundary>
       <div className="filterWrapper">
@@ -103,7 +103,7 @@ function FilterContainer({ onChange, filterInputs }) {
             popupIcon={<ArrowDownIcon />}
             sx={{ width: 285 }}
             onChange={(event, value, reason) => onChange(event, value, reason, "status")}
-            renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Status" />}
+            renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder={filterInputs.status.length ? "" : "Status"} />}
             renderOption={(params, option, { selected }) => (
               <li {...params}>
                 <Checkbox color="secondary" name="status" checked={selected} />

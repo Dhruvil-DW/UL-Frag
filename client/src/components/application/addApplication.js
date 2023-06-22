@@ -122,6 +122,15 @@ export default function AddApplication() {
       return oldInput;
     })
   }, []);
+  const resetMarket = useCallback(() => {
+    setInputs(prevInput => {
+      const oldInput = { ...prevInput };
+      [8, 9, 10, 12, 13, 14].forEach(id => {
+        delete oldInput[id];
+      });
+      return oldInput;
+    })
+  }, []);
 
   const handleAnswerChange = useCallback((name, value) => {
     if (value && value.length !== 0) {
@@ -296,7 +305,7 @@ export default function AddApplication() {
   console.debug("QUESTIONS: ", catWiseQues);
   let count = 1;
   return (
-    <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleNextPrevNav, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, handleRemoveFiles, handleImageInputChange, regions: regionList.data, country: countryList.data, resetInputCountry }}>
+    <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleNextPrevNav, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, handleRemoveFiles, handleImageInputChange, regions: regionList.data, country: countryList.data, resetInputCountry, resetMarket }}>
       <main className="appFormContainer">
         <ErrorBoundary>
           <NavSideBar formRef={containerRef} activeQue={currentQue} appId={appId} />

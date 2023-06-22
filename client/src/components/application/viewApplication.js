@@ -216,6 +216,19 @@ function GetAnswer({ qa }) {
       }
 
     case 10: // Single Choice predefinded
+      if (qa.question.id === 24) {
+        const ansObj = JSON.parse(qa.answers[0].answer);
+        return (
+          <>
+            {/* {ansObj.option.map((opt, i) => <p key={i}>{opt}</p>)} */}
+            {ansObj.option && <p><b>Investment: </b>{ansObj.option}</p>}
+            {ansObj.amount && <p><b>Amount: </b>&nbsp;€{ansObj.amount} Cost per tons (in Euros)</p>}
+          </>
+        )
+      } else {
+        return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
+      }
+
     case 11: // Multiple Choice (Checkbox) predefined
     case 15: // Confirm Checkbox
     case 12: // Nested questions

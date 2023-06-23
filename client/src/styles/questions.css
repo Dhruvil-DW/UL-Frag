@@ -110,6 +110,7 @@
 
 .imageBoxContainer .MuiCheckbox-root.MuiCheckbox-colorPrimary {
   color: white;
+  color: hsl(221, 100%, 30%);
   align-self: flex-start;
 }
 

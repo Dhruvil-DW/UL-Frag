@@ -87,7 +87,7 @@ function sendInviteApplication(req, res) {
       )
     });
 
-    res.status(200).send({ message: "Collabrator updated successfully" });
+    res.status(200).send({ message: "Collabrator invited successfully" });
   })();
 }
 

@@ -21,7 +21,7 @@ export default function Dashboard() {
   const { getData } = useAxios();
   const [selectedTab, setSelectedTab] = useState(0);
   const handleChangeTab = (__event, newTab) => setSelectedTab(newTab);
-  
+
   //**** My Application Data Start ****//
   const [myAppData, setMyAppData] = useState([]);
   //const [pageParams, setPageParams] = useState({limit:recordsPerPage, offset:page * recordsPerPage});
@@ -29,7 +29,7 @@ export default function Dashboard() {
   const [count, setMyDataCount] = useState(0);
   const [myAppParams, setMyAppParams] = useState({ search: "", filters: { status: [], answer: null }});
   const [myAppParamsDebounced, setMyAppParamsDebounced] = useState(myAppParams);
-  
+
   const handleMyAppFilterChange = (__event, value, __reason, name) => {
     setMyAppParams((prevState) => ({ ...prevState, filters: { ...prevState.filters, [name]: value } }))
   }
@@ -148,11 +148,11 @@ export default function Dashboard() {
     <section className="dashboardWrapper">
       <div className="dashboardContainer">
         <Header />
-        <Divider sx={{ marginTop:'55px' }} />
+        <Divider sx={{ mt: 2 }} />
         <div className="dashboardContentWrapper">
           <div className="tabContainer">
             <Tabs value={selectedTab} onChange={handleChangeTab} sx={{ mr: 'auto' }}>
-              <Tab label={userdata.role_id === 2 ? "In Approval Projects" : "My Projects"} sx={{ fontWeight:500 }}/>
+              <Tab label={userdata.role_id === 2 ? "In Approval Projects" : "My Projects"} sx={{ fontWeight: 500 }} />
               <Tab label="All Projects" />
               {userdata.role_id === 1 && <Tab label="Invited Projects" />}
             </Tabs>
@@ -167,7 +167,7 @@ export default function Dashboard() {
                 <MagnifierIcon fill="#002F98" />
               </InputAdornment>
             />
-            {userdata.role_id !== 2 && <Button variant="contained" color="secondary" onClick={() => navigate("/application")} sx={{fontWeight: 400}}>+ Create Application</Button>}
+            {userdata.role_id !== 2 && <Button variant="contained" color="secondary" onClick={() => navigate("/application")} sx={{ fontWeight: 400 }}>+ Create Application</Button>}
           </div>
           <TabPanel value={selectedTab} index={0}>
             <MyProjectTab data={myAppData} params={myAppParams} handleParamsChange={handleMyAppFilterChange} handleEditApp={handleEditApp} />
@@ -234,8 +234,8 @@ export default function Dashboard() {
           )}
         </div>
       </div>
-        <img src="/images/blue_flower.png" alt="blue" height="20%" style={{ position: 'fixed', left: '-5%', bottom: '-3%' }} />
-        <img src="/images/golden_image.png" alt="golden" height="20%" style={{ position: 'fixed', right: '-3%', bottom: '-5%' }} />
+      <img src="/images/blue_flower.png" alt="blue" height="20%" style={{ position: 'fixed', left: '-5%', bottom: '-3%' }} />
+      <img src="/images/golden_image.png" alt="golden" height="20%" style={{ position: 'fixed', right: '-3%', bottom: '-5%' }} />
     </section>
   )
 }

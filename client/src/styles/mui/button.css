@@ -23,7 +23,7 @@
  }
 
  .MuiButton-root.MuiButtonBase-root.MuiButton-contained:hover {
-   background-color: hsl(228, 100%, 80%);
+   background-color: hsl(221, 100%, 40%);
  }
 
  .MuiButton-root.MuiButtonBase-root.MuiButton-contained.Mui-disabled {
@@ -85,13 +85,14 @@
   background-color: hsl(0, 0%, 100%);
   color: var(--Color-Primary);
   border-color: hsl(0, 0%, 100%);
+  min-width: unset;
 }
 
-.MuiButton-root.MuiButtonBase-root.MuiButton-text:hover {
+/* .MuiButton-root.MuiButtonBase-root.MuiButton-text:hover {
   background-color: var(--Color-Primary);
   color: hsl(0, 0%, 100%);
   border-color: hsl(0, 0%, 100%);
-}
+} */
 
 .MuiButton-root.MuiButtonBase-root.MuiButton-text.Mui-disabled {
   background-color: hsl(0, 0%, 50%);

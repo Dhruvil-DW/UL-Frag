@@ -118,7 +118,7 @@ function FilterContainer({ onChange, filterInputs }) {
             popupIcon={<ArrowDownIcon />}
             sx={{ width: 285 }}
             onChange={(event, value, reason) => onChange(event, value, reason, "answer")}
-            renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Category wise" />}
+            renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Category" />}
           />
         </div>
       </div>

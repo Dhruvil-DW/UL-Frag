@@ -12,14 +12,14 @@ export default function Header() {
     <>
       <header className="headerWrapper">
         <div className="headerContainer">
-          <div style={{ display: 'flex', gap: "1rem", alignItems: "center", textTransform: "capitalize", color:"#7C8DB5", fontWeight:400 }}>
-            <Avatar />Hello {`${userdata.first_name} ${userdata.last_name}`},
-          <Button variant="text" color="secondary" style={{ position:'absolute', top:71, left:86 }} startIcon={<LogoutArrowIcon />} onClick={() => navigate("/logout")}>
-            Logout
-          </Button>
-          {/* <Link to='/logout' startIcon={<LogoutArrowIcon />} style={{ position:'absolute', top:61, left:87 }} color="secondary">Logout</Link> */}
+          <div style={{ display: 'flex', gap: "1rem", alignItems: "center", textTransform: "capitalize", color: "#7C8DB5", fontWeight: 400 }}>
+            <Avatar sx={{ height: 48, width: 48 }} />
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+              <div style={{ marginTop: 16 }}>Hello {`${userdata.first_name} ${userdata.last_name}`},</div>
+              <Button variant="text" onClick={() => navigate("/logout")}><LogoutArrowIcon style={{ fontSize: 16, marginRight: 4 }} />Logout</Button>
+            </div>
           </div>
-          <div style={{ fontSize: 64}}>
+          <div style={{ fontSize: 64 }}>
             <UnileverIcon style={{ display: "block" }} />
           </div>
         </div>

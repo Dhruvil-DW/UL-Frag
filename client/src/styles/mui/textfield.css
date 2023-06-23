@@ -45,5 +45,10 @@
 }
 
 .whiteDatePicker input::-webkit-calendar-picker-indicator {
-  filter: invert(1);
+  /* color: blue; */
+  filter: invert(30%);
+  /* filter: brightness(10%); */
+  /* filter: hue-rotate(180deg); */
 }
+
+/* hsla(221, 100%, 30%, 1); */

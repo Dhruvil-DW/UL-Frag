@@ -39,7 +39,7 @@ export default function NestedQuestion({ question, nav, index, onKeyUp }) {
       <div className="nestedQueWrapper">
         <div className="nestedQueContainer" style={{ display: "flex", color: "white", marginRight: "2rem" }}>
           {question.nestedQue.map((que, i) => (
-            <div key={que.id} style={{ width: "100%", height: "40vh", padding: "1.5rem", backgroundColor: ["rgb(255, 188, 216)", "rgb(248, 224, 117)", "rgb(143, 215, 246)", "rgb(201 177 255)"][i] }}>
+            <div key={que.id} style={{ width: "100%", height: "40vh", padding: "1.5rem", backgroundColor: ["rgb(241, 245, 254)", "rgb(229, 235, 250)", "rgb(222, 231, 254)", "rgb(201 177 255)"][i], color: "hsl(221, 100%, 30%)" }}>
               <p style={{ fontSize: 18, marginTop: 0, marginBottom: 16 }}>{que.question}
                 {que.description !== null && (
                   <Tooltip className="tooltip" title={que.description} placement="bottom-end" arrow>
@@ -61,7 +61,6 @@ export default function NestedQuestion({ question, nav, index, onKeyUp }) {
                       options={inputs[6] ?? []}
                       value={inputs[que.id] ?? []}
                       onChange={(event, value, reason) => handleNestedAutoCompleteChange(event, value.map(obj => obj.label ?? obj), reason, que.id)}
-                      // onChange={(event, value, reason) => onChange(event, value, reason, que.id)}
                       isOptionEqualToValue={(option, value) => option === value}
                       disabled={!Boolean(inputs[6])}
                       popupIcon={<ArrowDownIcon />}
@@ -83,7 +82,7 @@ export default function NestedQuestion({ question, nav, index, onKeyUp }) {
                   inputs[que.question_opt] ? inputs[que.question_opt].map((ans, index) => (
                     <div key={index} style={{ fontSize: 14, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 8 }}>
                       <p>{ans}</p>
-                      <TextField type="date" className="whiteDatePicker" value={inputs[que.id]?.[index] ?? ""} onChange={(e) => handleNestedDateSelection(e.target.value, que.id, index)} inputProps={{ onFocus: showPickerOnFocus, min: getInputDate()}} />
+                      <TextField type="date" className="whiteDatePicker" color="secondary" value={inputs[que.id]?.[index] ?? ""} onChange={(e) => handleNestedDateSelection(e.target.value, que.id, index)} inputProps={{ onFocus: showPickerOnFocus, min: getInputDate() }} />
                     </div>
                   )) : <p style={{ fontSize: 14 }}>Please Select Market First</p>
                 )}

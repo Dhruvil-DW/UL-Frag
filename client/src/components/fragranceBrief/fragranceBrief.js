@@ -14,7 +14,7 @@ export default function FragranceBrief() {
         </div>
         <div className="btnTextContainer">
           <Button variant="contained" color="secondary" onClick={() => navigate("/dashboard")}>
-            <div style={{ height: 32, width: 32, borderRadius: "50%", backgroundColor: "#FFFFFF33", display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: 12 }}>
+            <div style={{ height: 28, width: 28, borderRadius: "50%", backgroundColor: "#FFFFFF33", display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: 11 }}>
               <ArrowIcon />
             </div>
             <CategoryIcon style={{ marginLeft: 8, marginRight: 4 }} />

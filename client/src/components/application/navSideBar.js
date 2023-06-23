@@ -19,11 +19,8 @@ export default function NavSideBar({ appId, activeQue }) {
   const { catWiseQues, inputs } = useContext(ApplicationContext);
   const { collabDispatch } = useContext(collabContext);
   const [accOpen, setAccOpen] = useState(() => getInitialState(catWiseQues));
+  const [activeSection, setActiveSection] = useState(0);
 
-  // useEffect(() => {
-  //   setAccOpen(getInitialState(catWiseQues));
-  // }, [catWiseQues]);
-  // const [lastQueNo, setLastQueNo] = useState(() => getLastQue(catWiseQues));
 
   const handleAccToggle = (e) => {
     const { name } = e.target;
@@ -32,26 +29,36 @@ export default function NavSideBar({ appId, activeQue }) {
   //** Effect For Section Open-Close onScroll */
   useEffect(() => {
     if ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].includes(activeQue)) {
-      setAccOpen({ 1: true, 2: false, 3: false, 4: false })
+      setAccOpen({ 1: true, 2: false, 3: false, 4: false });
+      setActiveSection(0);
     } else if ([11, 12, 13, 14, 15].includes(activeQue)) {
       setAccOpen({ 1: false, 2: true, 3: false, 4: false })
+      setActiveSection(11);
     } else if ([16, 17, 18, 19].includes(activeQue)) {
       setAccOpen({ 1: false, 2: false, 3: true, 4: false })
+      setActiveSection(16);
     } else if ([20, 21, 22, 23, 24, 25, 26, 27, 28].includes(activeQue)) {
       setAccOpen({ 1: false, 2: false, 3: false, 4: true })
+      setActiveSection(20);
     }
   }, [activeQue]);
 
-  function BasicExample(nav) {
+  function BasicExample(queId, catId) {
+    let nav;
+    if(catId === 0) {
+      //First Category
+      nav = queId;
+    } else {
+      nav = (activeSection === catId) ? queId : catId;
+    }
+    // console.log({ queId, catId, activeSection, nav });
     const element = document.getElementById(nav);
-    // console.log('new nav', nav);
-    // console.log('element', element);
+    // console.log({ nav, element });
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   }
-  // console.log("accOpen: ", accOpen);
-  let count = 0;
+
   return (
     <aside className="sidebar">
       <div className="navLinkContainer">
@@ -61,24 +68,21 @@ export default function NavSideBar({ appId, activeQue }) {
             Dashboard
           </div>
         </Link>
-        {catWiseQues.map((cat, i) => (
-          <Fragment key={i}>
+        {catWiseQues.map((cat, catIndex) => (
+          <Fragment key={catIndex}>
             <Divider />
-            <button className="accordion" data-id={count} name={cat.category_id} onClick={handleAccToggle}>
+            <button className="accordion" data-id={cat.serial} name={cat.category_id} onClick={handleAccToggle}>
               {getIconComp(cat.category_name)}{`${cat.category_id}. ${cat.category_name}`}<ArrowDownIcon className="accordionToggleIcon" pointerEvents="none" />
             </button>
-            <div data-id={count++} className={`panel ${accOpen[cat.category_id] ? 'open' : 'close'}`}>
+            <div data-id={cat.serial} className={`panel ${accOpen[cat.category_id] ? 'open' : 'close'}`}>
               <Stepper nonLinear orientation="vertical">
-                {cat.questions.map((que, i) => (
-                  <Step active={(count === activeQue)} key={que.id}>
-                    {/* <StepButton className={`navLink`} onClick={() => handleNextPrevNav(que.id, "fixed")} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
-                      <div className="sidebarQueText">{que.question}</div>
-                    </StepButton> */}
-                    <a href={`#${count}`} className="navlink">
-                      <StepButton className={`navLink`} onClick={() => BasicExample(count)} data-id={count} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
-                        <div data-id={count++} data-que-id={que.id} className="sidebarQueText">{`${cat.category_id}.${i + 1} ${que.question}`}</div>
-                      </StepButton>
-                    </a>
+                {cat.questions.map((que, queIndex) => (
+                  <Step active={(que.serial === activeQue)} key={que.id}>
+                    {/* <a href={`#${activeSection === cat.serial ? que.serial : cat.serial}`} className="navlink"> */}
+                    <StepButton className={`navLink`} onClick={() => BasicExample(que.serial, cat.serial)} data-id={que.serial} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
+                      <div data-id={que.serial} data-que-id={que.id} className="sidebarQueText">{`${cat.category_id}.${queIndex + 1} ${que.question}`}</div>
+                    </StepButton>
+                    {/* </a> */}
                   </Step>
                 ))}
               </Stepper>
@@ -94,34 +98,6 @@ export default function NavSideBar({ appId, activeQue }) {
   )
 }
 
-
-// function getSidebarData(questions) {
-//   const result = [];
-//   questions.forEach((que, index) => {
-//     const childQue = que.question_type_id === 12 ? childQuestionData[que.id].map(obj => obj.id) : null;
-//     const queData = { id: que.id, no: index, question: que.question, question_type_id: que.question_type_id, child_que_id: childQue };
-//     if (result[que.Category.name]) {
-//       result[que.Category.name] = [...result[que.Category.name], queData];
-//     } else {
-//       result[que.Category.name] = [queData];
-//     }
-//   });
-//   return result;
-// }
-
-// function getSidebarData(questions) {
-//   const result = [];
-//   questions.forEach((que, index) => {
-//     if (result[que.Category.id - 1]) {
-//       result[que.Category.id - 1].questions = [...result[que.Category.id - 1].questions, que];
-//     } else {
-//       result[que.Category.id - 1] = { category_id: que.Category.id, category_name: que.Category.name, questions: [que] }
-//     }
-//   });
-//   // console.log("Sidebar_CatWiseData: ", result);
-//   return result;
-// }
-
 function getInitialState(catQue) {
   const result = {};
   // Object.keys(catQue).map((cat, i) => result[cat] = i ? false : true)
@@ -131,14 +107,6 @@ function getInitialState(catQue) {
   return result;
 }
 
-// function getLastQue(catQue) {
-//   const result = {};
-//   Object.keys(catQue).forEach((cat, i) => {
-//     // console.log({ cat, i, data: catQue[cat].pop().no });
-//     result[catQue[cat].pop().no] = cat;
-//   })
-//   return result;
-// }
 
 function getIconComp(name) {
   switch (name) {

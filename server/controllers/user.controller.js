@@ -85,10 +85,8 @@ function getMyApplications(req, res) {
     const role_id = req.userdata.role_id;
     //console.log("QUERY: ", req.query);
     const searchText = req.query.search;
-    //const limit = req.query.limit ? Number(req.query.limit) : null;
-    //console.log(limit);
-    //const offset = req.query.offset ? Number(req.query.offset) : 0;
-    //console.log(offset);
+    const limit = req.query.limit ? Number(req.query.limit) : null;
+    const offset = req.query.offset ? Number(req.query.offset) : 0;
     const filters = req.query.filters;
     console.log("Filters-", filters);
     let filterData = [];
@@ -116,7 +114,7 @@ function getMyApplications(req, res) {
 
         const whereCond = role_id === 2 ? { application_status_id: [2, 4], ...searchCond } : { user_id: userId, ...searchCond }
         console.log("whereCond", whereCond);
-        const applRes = await seq.seqFindAll(
+        const applRes = await seq.seqFindAndCountAll(
             Application,
             ['id', 'project_name', 'application_status_id', 'user_id', 'status', 'updatedAt'],
             whereCond,
@@ -128,7 +126,7 @@ function getMyApplications(req, res) {
                 },
                 { model: ApplicationInvite, attributes: ["id"], include: { model: User, attributes: ["id", "email", "first_name", "last_name"] } }
             ],
-            [['updatedAt', 'DESC']]
+            [['updatedAt', 'DESC']], limit, offset
         );
         if (applRes === 500) return res.status(500).send({ message: 'Error while retrieving applications' });
 
@@ -141,11 +139,11 @@ function getApprovedApplications(req, res) {
     console.log("Query-", req.query);
     const filters = req.query.filters;
     console.log("Filters-", filters);
-    //const filterCategory = filters?.answer ? filters.answer : '';
-    //console.log("filterCategory", filterCategory);
+    const limit = req.query.limit ? Number(req.query.limit) : null;
+    const offset = req.query.offset ? Number(req.query.offset) : 0;
+
     let filterData = [];
     let filterCategory;
-    // filterCategory.length != 0 && filterData.push({'$app_question.answers.answer$': {[Op.or]: filterCategory}});
     if (filters?.answer) {
         if (filters.answer === "Other") {
             filterCategory = { [Op.not]: ['Fabric clean(FCL)', 'Fabric Enhancer(FEN)', 'Home & Hygiene(H&H)'] };
@@ -163,7 +161,7 @@ function getApprovedApplications(req, res) {
     } : filters ? { [Op.and]: filterData } : {};
     console.log("SearchCond: ", searchCond);
     (async () => {
-        const approveRes = await seq.seqFindAll(Application, ['id', 'project_name', 'application_status_id', 'user_id', 'status'], { application_status_id: 3, ...searchCond },
+        const approveRes = await seq.seqFindAndCountAll(Application, ['id', 'project_name', 'application_status_id', 'user_id', 'status'], { application_status_id: 3, ...searchCond },
             [
                 { model: ApplicationStatus, attributes: ['id', 'status'] },
                 { model: User, attributes: ['id', 'first_name', 'last_name', 'email'] },
@@ -172,7 +170,7 @@ function getApprovedApplications(req, res) {
                 },
                 { model: ApplicationInvite, attributes: ["id"], include: { model: User, attributes: ["id", "email", "first_name", "last_name"] } }
             ],
-            [['updatedAt', 'DESC']]
+            [['updatedAt', 'DESC']], limit, offset
         );
         // console.log("Approvr-", approveRes);
         if (approveRes === 500) {
@@ -216,9 +214,10 @@ function getInvitedApplications(req, res) {
     const searchText = req.query.search;
     console.log(searchText);
     const filters = req.query.filters;
+    const limit = req.query.limit ? Number(req.query.limit) : null;
+    const offset = req.query.offset ? Number(req.query.offset) : 0;
     //console.log("Filters-",filters);
     let filterData = [];
-    //const filterCategory = filters?.answer ? filters.answer : '';
     let filterCategory;
     if (filters?.answer) {
         if (filters.answer === "Other") {
@@ -244,7 +243,7 @@ function getInvitedApplications(req, res) {
         console.log("invitedAppIdArr: ", invitedAppIdArr);
         const whereCond = { id: invitedAppIdArr, ...searchCond }
 
-        const applRes = await seq.seqFindAll(
+        const applRes = await seq.seqFindAndCountAll(
             Application,
             ['id', 'project_name', 'application_status_id', 'user_id', 'status', 'updatedAt'], //Change the column updatedAt name if causes error here
             whereCond,
@@ -256,7 +255,7 @@ function getInvitedApplications(req, res) {
                 },
                 { model: ApplicationInvite, attributes: ["id"], include: { model: User, attributes: ["id", "email", "first_name", "last_name"] } }
             ],
-            [['updatedAt', 'DESC']]
+            [['updatedAt', 'DESC']], limit, offset
         );
         if (applRes === 500) return res.status(500).send({ message: 'Error while retrieving applications' });
 

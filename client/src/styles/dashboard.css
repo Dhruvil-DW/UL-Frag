@@ -179,3 +179,14 @@
 .cardTooltip.MuiTooltip-popper .MuiTooltip-tooltip .MuiTooltip-arrow::before {
   background-color: var(--bg-Clr);
 }
+.paginate{
+  display: flex;
+  justify-content: center;
+  margin: 16px;
+  /* font-family: ; */
+  color: #929292;
+}
+
+/* .MuiButtonBase-root-MuiPaginationItem-root.Mui-selected{
+  color: #2E54AA
+} */

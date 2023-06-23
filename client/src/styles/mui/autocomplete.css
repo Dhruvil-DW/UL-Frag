@@ -17,8 +17,15 @@
 .MuiAutocomplete-paper .MuiAutocomplete-listbox .MuiAutocomplete-option.Mui-focused[aria-selected="true"],
 .MuiAutocomplete-paper .MuiAutocomplete-listbox .MuiAutocomplete-option[aria-selected="true"] {
   /* background-color: hsl(1, 100%, 66%); */
-  background-color: hsl(223, 94%, 93%);
+  /* background-color: hsl(223, 94%, 93%); */
   /* background-color: hsl(221, 100%, 30%); */
-  background-color: hsl(221, 94%, 80%);
-  color: white;
+  /* background-color: hsl(221, 94%, 80%); */
+  background-color: hsl(223, 100%, 90%);
+  /* color: white; */
+  color: hsl(221, 100%, 30%);
+}
+
+.MuiAutocomplete-popper .MuiCheckbox-root,
+.MuiAutocomplete-popper .MuiCheckbox-root.Mui-checked {
+  color: currentColor;
 }

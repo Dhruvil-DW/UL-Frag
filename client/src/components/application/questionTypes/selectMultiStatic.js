@@ -53,7 +53,7 @@ export default function SelectMultiStatic({ question, nav, index, value = [], on
             )}
             renderOption={(params, option, { selected }) => (
               <li {...params}>
-                <Checkbox color="secondary" name="location" checked={selected} />
+                <Checkbox checked={selected} />
                 {option.label}
               </li>
             )}
@@ -74,7 +74,7 @@ export default function SelectMultiStatic({ question, nav, index, value = [], on
           renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder={input?.length ? "" : "Select Format"} />}
           renderOption={(params, option, { selected }) => (
             <li {...params}>
-              <Checkbox color="secondary" name="location" checked={selected} />
+              <Checkbox checked={selected} />
               {option}
             </li>
           )}

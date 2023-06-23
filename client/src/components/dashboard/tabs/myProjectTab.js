@@ -106,7 +106,7 @@ function FilterContainer({ onChange, filterInputs }) {
             renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder={filterInputs.status.length ? "" : "Status"} />}
             renderOption={(params, option, { selected }) => (
               <li {...params}>
-                <Checkbox color="secondary" name="status" checked={selected} />
+                <Checkbox name="status" checked={selected} />
                 {option}
               </li>
             )}

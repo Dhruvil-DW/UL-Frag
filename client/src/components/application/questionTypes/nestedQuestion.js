@@ -67,7 +67,7 @@ export default function NestedQuestion({ question, nav, index, onKeyUp }) {
                       renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder={inputs[que.id]?.length ? "" : "Select Market"} />}
                       renderOption={(params, option, { selected }) => (
                         <li {...params}>
-                          <Checkbox color="secondary" name={que.id.toString()} checked={selected} />
+                          <Checkbox name={que.id.toString()} checked={selected} />
                           {option}
                         </li>
                       )}

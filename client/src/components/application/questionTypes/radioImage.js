@@ -55,8 +55,9 @@ export default function RadioImage({ question, nav, index, value = {}, onKeyUp }
 
       <div style={{ display: "flex", gap: "1rem" }}>
 
-        <RadioGroup value={input.brand ?? ""} onChange={(e, value) => setInput((prevInput) => ({ ...prevInput, brand: value }))} style={{ flexGrow: 0 }}>
-          <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", maxHeight: "40vh", overflow: "auto" }}>
+        <RadioGroup value={input.brand ?? ""} onChange={(e, value) => setInput((prevInput) => ({ ...prevInput, brand: value }))} style={{ flexGrow: 3 }}>
+          {/* <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", maxHeight: "40vh", overflow: "auto" }}> */}
+          <div style={{ display: "grid", gap: "1rem", maxHeight: "40vh", gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gridTemplateRows: "100px", overflow: "auto" }}>
             {brands?.map((path) => (
               <FormControlLabel key={path} label={<BrandImage path={path} />} value={path} control={<Radio style={{ alignSelf: "flex-start" }} />} />
             ))}

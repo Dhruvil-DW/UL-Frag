@@ -8,12 +8,62 @@ import { showPickerOnFocus } from "../../../utils/globalFunctions/showPickerOnFo
 import TooltipIcon from "../../../assets/icons/tooltipIcon";
 import Tooltip from "@mui/material/Tooltip";
 import { getInputDate } from "../../../utils/globalFunctions/dateFns";
+import { promptActions, promptContext } from "../../../context/promptContext";
 
 export default function NestedQuestion({ question, nav, index, onKeyUp }) {
   const { inputs, handleAnswerChange } = useContext(ApplicationContext);
+  const { promptDispatch } = useContext(promptContext);
   // console.log(question);
   // console.log(childQuestionData[question.id]);
-  function handleNestedDateSelection(value, id, index) {
+  function handleNestedDateSelection(value, id, index, country, relQueId) {
+    console.log({ id, country, relQueId });
+    if (id !== 12) {
+      debugger;
+      const index = inputs[relQueId - 1]?.indexOf(country);
+      console.log({ index });
+      if (index !== -1) {
+        const prevQueDate = inputs[id - 1]?.[index];
+        if (!prevQueDate) {
+          const msg = `Please select ${id === 13 ? "lead market" : "rollout market"} date of ${country} first`
+          promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg } });
+          return;
+        }
+        const prevQueDateArr = prevQueDate.split("-");
+        const selectedDateArr = value.split("-");
+        const dateDiff = (new Date(selectedDateArr[0], selectedDateArr[1], selectedDateArr[2]) - new Date(prevQueDateArr[0], prevQueDateArr[1], prevQueDateArr[2])) / 1000 / 3600 / 24;
+        console.log({ dateDiff });
+
+        if (dateDiff <= 0) {
+          const msg = `${id === 13 ? "Rollout market" : "Impacted market"} date must be after ${id === 13 ? "lead market" : "rollout market"} date of ${country}`
+          promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg } });
+          return;
+        }
+        // console.log({ prevQueDate, value });
+      }
+      if (id === 14) {
+        const index = inputs[relQueId - 2]?.indexOf(country);
+        console.log({ index });
+        if (index !== -1) {
+          const prevQueDate = inputs[id - 2]?.[index];
+          if (!prevQueDate) {
+            const msg = `Please select lead market date of ${country} first`
+            promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg } });
+            return;
+          }
+          const prevQueDateArr = prevQueDate.split("-");
+          const selectedDateArr = value.split("-");
+          const dateDiff = (new Date(selectedDateArr[0], selectedDateArr[1], selectedDateArr[2]) - new Date(prevQueDateArr[0], prevQueDateArr[1], prevQueDateArr[2])) / 1000 / 3600 / 24;
+          console.log({ dateDiff });
+
+          if (dateDiff <= 0) {
+            const msg = `Impacted market date must be after lead market date of ${country}`
+            promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg } });
+            return;
+          }
+          // console.log({ prevQueDate, value });
+        }
+      }
+    }
     const dateArr = inputs[id] ?? [];
     dateArr[index] = value;
     handleAnswerChange(id, dateArr);
@@ -82,7 +132,7 @@ export default function NestedQuestion({ question, nav, index, onKeyUp }) {
                   inputs[que.question_opt] ? inputs[que.question_opt].map((ans, index) => (
                     <div key={index} style={{ fontSize: 14, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 8 }}>
                       <p>{ans}</p>
-                      <TextField type="date" className="whiteDatePicker" color="secondary" value={inputs[que.id]?.[index] ?? ""} onChange={(e) => handleNestedDateSelection(e.target.value, que.id, index)} inputProps={{ onFocus: showPickerOnFocus, min: getInputDate() }} />
+                      <TextField type="date" className="whiteDatePicker" color="secondary" value={inputs[que.id]?.[index] ?? ""} onChange={(e) => handleNestedDateSelection(e.target.value, que.id, index, ans, que.question_opt)} inputProps={{ onFocus: showPickerOnFocus, min: getInputDate() }} />
                     </div>
                   )) : <p style={{ fontSize: 14 }}>Please Select Market First</p>
                 )}

@@ -16,11 +16,10 @@ export default function NestedQuestion({ question, nav, index, onKeyUp }) {
   // console.log(question);
   // console.log(childQuestionData[question.id]);
   function handleNestedDateSelection(value, id, index, country, relQueId) {
-    console.log({ id, country, relQueId });
+    // console.log({ id, country, relQueId });
     if (id !== 12) {
-      debugger;
       const index = inputs[relQueId - 1]?.indexOf(country);
-      console.log({ index });
+      // console.log({ index });
       if (index !== -1) {
         const prevQueDate = inputs[id - 1]?.[index];
         if (!prevQueDate) {
@@ -31,7 +30,7 @@ export default function NestedQuestion({ question, nav, index, onKeyUp }) {
         const prevQueDateArr = prevQueDate.split("-");
         const selectedDateArr = value.split("-");
         const dateDiff = (new Date(selectedDateArr[0], selectedDateArr[1], selectedDateArr[2]) - new Date(prevQueDateArr[0], prevQueDateArr[1], prevQueDateArr[2])) / 1000 / 3600 / 24;
-        console.log({ dateDiff });
+        // console.log({ dateDiff });
 
         if (dateDiff <= 0) {
           const msg = `${id === 13 ? "Rollout market" : "Impacted market"} date must be after ${id === 13 ? "lead market" : "rollout market"} date of ${country}`
@@ -42,7 +41,7 @@ export default function NestedQuestion({ question, nav, index, onKeyUp }) {
       }
       if (id === 14) {
         const index = inputs[relQueId - 2]?.indexOf(country);
-        console.log({ index });
+        // console.log({ index });
         if (index !== -1) {
           const prevQueDate = inputs[id - 2]?.[index];
           if (!prevQueDate) {
@@ -53,7 +52,7 @@ export default function NestedQuestion({ question, nav, index, onKeyUp }) {
           const prevQueDateArr = prevQueDate.split("-");
           const selectedDateArr = value.split("-");
           const dateDiff = (new Date(selectedDateArr[0], selectedDateArr[1], selectedDateArr[2]) - new Date(prevQueDateArr[0], prevQueDateArr[1], prevQueDateArr[2])) / 1000 / 3600 / 24;
-          console.log({ dateDiff });
+          // console.log({ dateDiff });
 
           if (dateDiff <= 0) {
             const msg = `Impacted market date must be after lead market date of ${country}`

@@ -45,7 +45,7 @@ export default function NavSideBar({ appId, activeQue }) {
 
   function BasicExample(queId, catId) {
     let nav;
-    if(catId === 0) {
+    if (catId === 0) {
       //First Category
       nav = queId;
     } else {
@@ -80,7 +80,7 @@ export default function NavSideBar({ appId, activeQue }) {
                   <Step active={(que.serial === activeQue)} key={que.id}>
                     {/* <a href={`#${activeSection === cat.serial ? que.serial : cat.serial}`} className="navlink"> */}
                     <StepButton className={`navLink`} onClick={() => BasicExample(que.serial, cat.serial)} data-id={que.serial} icon={<StepIcon icon={getStepIcon(que, inputs)} />}>
-                      <div data-id={que.serial} data-que-id={que.id} className="sidebarQueText">{`${cat.category_id}.${queIndex + 1} ${que.question}`}</div>
+                      <div data-id={que.serial} data-que-id={que.id} className="sidebarQueText">{`${que.CatWiseQueIndex} ${que.question}`}</div>
                     </StepButton>
                     {/* </a> */}
                   </Step>
@@ -135,5 +135,5 @@ function getStepIcon(que, inputs) {
     isCompleted = Boolean(inputs[que.id]);
   }
 
-  return isCompleted ? <CheckBoxRoundChecked /> : <CheckBoxRoundUnchecked />
+  return isCompleted ? <CheckBoxRoundChecked style={{ color: "#20A867"}} /> : <CheckBoxRoundUnchecked />
 }

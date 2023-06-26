@@ -29,7 +29,7 @@ export default function RadioText({ question, nav, index, value = "", onKeyUp })
 
   return (
     <div className="questionContainer fixWidth">
-      <h2 className="question">{question.question}
+      <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}
       {question.id === 24 && 
       <Tooltip className="tooltip" title={question.description} placement="bottom-end" arrow>
             <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex"}}>

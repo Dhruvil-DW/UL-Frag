@@ -1,4 +1,4 @@
-import { Checkbox, TextField } from "@mui/material";
+import { Checkbox, InputAdornment, TextField } from "@mui/material";
 import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
@@ -50,7 +50,7 @@ export default function CheckBoxImageWithTextBox({ question, nav, index, value =
       {question.id === 23 &&
         <p className="addText">Performance input</p>
       }
-        <h2 className="question">{question.question}</h2>
+        <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}</h2>
         <div style={{fontSize: 14, color: "#00000080", margin: "-12px 0 -12px auto"}}>You can select only two of them</div>
         <div className="optionContainer">
           {question.question_opt?.map((opt) => (
@@ -65,8 +65,8 @@ export default function CheckBoxImageWithTextBox({ question, nav, index, value =
         </div>
 
         <div>
-          <TextField multiline fullWidth rows={2} inputProps={{ maxLength: 1000 }} variant="outlined" color="secondary" placeholder="Enter your description here" value={input.desc} onChange={handleDescChange} />
-          <div style={{ position: "absolute", bottom: 8, right: 24, color: "hsl(0, 0%, 60%)" }}>{`${input.length ?? 0} / 1000`}</div>
+          <TextField multiline fullWidth rows={2} inputProps={{ maxLength: 1000 }} InputProps={{ endAdornment: <InputAdornment sx={{ position: "absolute", right: 16, bottom: 16, color: "hsl(0, 0%, 90%)" }} position="end">{`${input.desc?.length ?? 0} / 1000`}</InputAdornment> }}  variant="outlined" color="secondary" placeholder="Enter your description here" value={input.desc} onChange={handleDescChange} />
+          {/* <div style={{ position: "absolute", bottom: 8, right: 24, color: "hsl(0, 0%, 60%)" }}>{`${input.length ?? 0} / 1000`}</div> */}
         </div>
 
         {/* <div style={{position: "absolute", display: "flex", justifyContent: "center", width: "100%", fontSize: 14, bottom: "-3rem", color: "#00000080"}}>You can select only two of them</div> */}

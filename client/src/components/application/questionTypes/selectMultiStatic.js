@@ -34,7 +34,7 @@ export default function SelectMultiStatic({ question, nav, index, value = [], on
 
   return (
     <div className="questionContainer fixWidth">
-      <h2 className="question">{question.question}</h2>
+      <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}</h2>
       {question.id === 6 ? (
         <>
           <Autocomplete

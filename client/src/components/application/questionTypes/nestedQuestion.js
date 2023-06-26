@@ -83,7 +83,7 @@ export default function NestedQuestion({ question, nav, index, onKeyUp }) {
 
   return (
     <div className="questionContainer">
-      <h2 className="question">{question.question}</h2>
+      <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}</h2>
 
       <div className="nestedQueWrapper">
         <div className="nestedQueContainer" style={{ display: "flex", color: "white", marginRight: "2rem" }}>

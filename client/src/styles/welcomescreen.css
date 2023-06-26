@@ -1,16 +1,19 @@
-h1{
+h1 {
     font-size: 2rem;
 }
 
-.innerContainer{
+.innerContainer {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    gap: 1rem;
+    /* gap: 1rem; */
     position: relative;
     width: 25vw;
     margin-left: 6vw;
     max-width: 40vw
+}
+.innerContainer > p {
+    margin: 0;
 }
 
 .welcomeScreenContainer {
@@ -21,18 +24,18 @@ h1{
     width: 100%;
 }
 
-.welcomeHeading{
+.welcomeHeading {
     margin: 0;
     white-space: pre-line;
     font-size: 2.2rem;
     word-spacing: 0.2rem;
 }
 
-.welcomeTextColor{
+.welcomeTextColor {
     color: #002F98;
 }
 
-.MuiButton-root.MuiButtonBase-root.MuiButton-contained{
+.MuiButton-root.MuiButtonBase-root.MuiButton-contained {
     background-color: #002F98;
     color: #ffffff
 }
@@ -43,5 +46,5 @@ h1{
 }
 
 .buttonContainer {
-    margin-top: 1vw;
+    margin-top: 4vh;
 }

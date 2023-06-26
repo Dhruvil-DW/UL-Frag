@@ -33,7 +33,7 @@ export default function RadioTextInvestment({ question, nav, index, value = { op
 
   return (
     <div className="questionContainer fixWidth">
-      <h2 className="question">{question.question}
+      <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}
       
       <Tooltip className="tooltip" title={question.description} placement="bottom-end" arrow>
             <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex"}}>

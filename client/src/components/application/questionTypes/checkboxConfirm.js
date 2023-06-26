@@ -36,7 +36,7 @@ export default function CheckBoxConfirm({ question, nav, index, value = [], onKe
   return (
     <div className="questionContainer fixWidth">
       <h2 className="question">
-        {question.question}
+        {`${question.CatWiseQueIndex} ${question.question}`}
         <Tooltip className="tooltip" title={question.description} arrow placement="bottom-end">
           <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex" }}>
             <TooltipIcon />

@@ -195,7 +195,7 @@ export default function TextBoxVariationImage({ question, nav, index, value, onK
     <div data-que-type={question.question_type_id} className="questionContainer">
       <div style={{ display: "flex", gap: "3rem" }}>
         <div className="queBox">
-          <h2 className="question">{question.question}
+          <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}
           <Tooltip className="tooltip" title={question.description} placement="bottom-end" arrow>
             <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex"}}>
               <TooltipIcon />

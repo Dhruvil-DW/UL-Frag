@@ -124,6 +124,7 @@ function getMyApplications(req, res) {
                 { model: User, attributes: ['id', 'first_name', 'last_name', 'email'] },
                 {
                     model: AppQuestion, attributes: ['id', 'app_id', 'question_id'], where: { question_id: 3 }, include: [{ model: Answers, attributes: ['id', 'question_id', 'answer'] }]
+                    // model: AppQuestion, attributes: ['id', 'app_id', 'question_id'], include: [{ model: Answers, attributes: ['id', 'question_id', 'answer'] }]
                 },
                 { model: ApplicationInvite, attributes: ["id"], include: { model: User, attributes: ["id", "email", "first_name", "last_name"] } }
             ],

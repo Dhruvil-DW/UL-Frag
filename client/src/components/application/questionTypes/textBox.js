@@ -1,4 +1,4 @@
-import { TextField } from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material";
 import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
@@ -31,7 +31,7 @@ export default function TextBox({ question, nav, index, value = "", onKeyUp }) {
         <p className="addText">Character input</p>
       }
         <h2 className="question">
-          {question.question}
+        {`${question.CatWiseQueIndex} ${question.question}`}
           <Tooltip className="tooltip" title={question.description} placement="bottom" arrow>
             <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex"}}>
               <TooltipIcon />
@@ -52,8 +52,8 @@ export default function TextBox({ question, nav, index, value = "", onKeyUp }) {
           </Tooltip>
             )} */}
         </h2>
-        <TextField multiline rows={8} inputProps={{ maxLength: 1000 }} variant="outlined" color="secondary" placeholder="Enter your answer here" value={input} onChange={(e) => setInput(e.target.value)} />
-        <div style={{ position: "absolute", bottom: 8, right: 24, color: "hsl(0, 0%, 60%)" }}>{`${input.length ?? 0} / 1000`}</div>
+        <TextField multiline rows={8} inputProps={{ maxLength: 1000 }} InputProps={{ endAdornment: <InputAdornment sx={{ position: "absolute", right: 16, bottom: 16, color: "hsl(0, 0%, 90%)" }} position="end">{`${input.desc?.length ?? 0} / 1000`}</InputAdornment> }}  variant="outlined" color="secondary" placeholder="Enter your answer here" value={input} onChange={(e) => setInput(e.target.value)} />
+        {/* <div style={{ position: "absolute", bottom: 8, right: 24, color: "hsl(0, 0%, 60%)" }}>{`${input.length ?? 0} / 1000`}</div> */}
 
         <div className='navBtnCont'>
           <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>

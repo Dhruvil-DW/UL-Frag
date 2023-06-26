@@ -11,6 +11,7 @@ export function useGetCountry(countryID) {
   return useQuery({
     enabled: Boolean(countryID),
     cacheTime: "Infinity",
+    staleTime: "Infinity",
     queryKey: ["country", countryID],
     queryFn: async () => {
       const { data } = await axios.get(`application/getcountry/${countryID}`, { headers: { Authorization: "Bearer " + token } });
@@ -25,6 +26,7 @@ export function useGetRegion() {
 
   return useQuery({
     cacheTime: "Infinity",
+    staleTime: "Infinity",
     queryKey: ["region"],
     queryFn: async () => {
       const { data } = await axios.get(`application/getregions`, { headers: { Authorization: "Bearer " + token } });
@@ -39,6 +41,7 @@ export function useGetQuestions() {
 
   return useQuery({
     cacheTime: "Infinity",
+    staleTime: "Infinity",
     queryKey: ["questions"],
     queryFn: async () => {
       const { data } = await axios.get(`/application/questions/getall`, { headers: { Authorization: "Bearer " + token } });

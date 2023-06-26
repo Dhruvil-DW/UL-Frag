@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { authContext } from "../../../context/authContext";
 import { QUESTION_CATEGORY } from "./commonData";
+import { CollabIcons } from "./card";
 
 export default function InviteTab({ data, params, handleParamsChange, handleEditApp }) {
   const navigate = useNavigate();
@@ -27,32 +28,19 @@ export default function InviteTab({ data, params, handleParamsChange, handleEdit
             <span className="cardStatus">{app.application_status.status}</span>
             <h2>{app.project_name}</h2>
             <div className="categoryContainer">
-              <p>{app.app_questions[0]?.answers[0]?.answer ?? "Not selected"}</p>
+              <p>{app.app_questions.find(ans => ans.question_id === 3)?.answers?.[0]?.answer ?? "Not Selected"}</p>
             </div>
-            {Boolean(app.application_invites?.length) && (
-              <div className="collabContainer">
-                <p>Collaborators</p>
-                <div className="collabIcons">
-                  <AvatarGroup>
-                    {app.application_invites.map((invite) => {
-                      const initial = invite.User.first_name ?? "U";
-                      const email = invite.User.email;
-                      const fullName = `${invite.User.first_name ?? ""} ${invite.User.last_name ?? ""}`
-                      return (
-                        <Tooltip key={invite.id} classes={{ popper: "cardTooltip" }} title={<><div>{fullName}</div><div>{email}</div></>} placement="top-start" arrow>
-                          <Avatar sx={{ height: 24, width: 24 }}>{initial[0].toUpperCase()}</Avatar>
-                        </Tooltip>
-                      )
-                    })}
-                  </AvatarGroup>
-                </div>
-              </div>
-            )}
+
+            <div className="collabContainer">
+              <p>Collaborators</p>
+              <CollabIcons app={app} />
+            </div>
+
             <div className="cardDetails">
               <UserIcon />
               <p>{`${app.User.first_name} ${app.User.last_name}`}</p>
             </div>
-            <div className="cardDetails">
+            <div className="cardDetails" style={{ marginBottom: 0 }}>
               <CalenderIcon />
               <p>Last Edited on <b>{formatDate(app.updatedAt)}</b></p>
             </div>

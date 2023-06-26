@@ -31,7 +31,7 @@ export default function SelectSingleWithTextStatic({ question, nav, index, value
 
   return (
     <div className="questionContainer fixWidth">
-      <h2 className="question">{question.question}</h2>
+      <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}</h2>
       <Autocomplete
         disablePortal
         options={question.question_opt}

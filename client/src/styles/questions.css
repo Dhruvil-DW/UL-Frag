@@ -17,7 +17,7 @@
 
 .questionContainer .question {
   /* margin-left: 1rem; */
-  color: hsl(218, 91%, 52%);
+  color: var(--Color-Primary);
   margin: 0;
   white-space: pre-line;
   font-weight: 600;
@@ -25,6 +25,13 @@
 
 .questionContainer .MuiAutocomplete-root {
   max-width: 500px;
+}
+
+.categoryText {
+  color: #002F98A0;
+  position: absolute;
+  top: 6vh;
+  left: 6vw;
 }
 
 .navBtnCont {
@@ -100,6 +107,7 @@
   white-space: pre-line;
   font-size: 14px;
 }
+
 .imageBoxContainer .MuiCheckbox-root {
   padding-bottom: 0;
 }
@@ -138,11 +146,12 @@
   height: 40vh;
   overflow-y: scroll;
 }
-.addText{
+
+.addText {
   color: #6F6F6F;
   font-size: 16px;
   font-weight: 500;
-  line-height: 21px; 
+  line-height: 21px;
   /* position: absolute;
   top: 4rem;
   left: 6vw; */
@@ -157,7 +166,7 @@
   color: rgba(0, 0, 0, 0.5);
 }
 
-.variation_list{
+.variation_list {
   padding-right: 20px;
 }
 

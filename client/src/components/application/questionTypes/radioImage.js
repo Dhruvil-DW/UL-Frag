@@ -1,7 +1,7 @@
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
-import { FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
+import { FormControlLabel, InputAdornment, Radio, RadioGroup, TextField } from "@mui/material";
 
 export default function RadioImage({ question, nav, index, value = {}, onKeyUp }) {
   const { handleAnswerChange, inputs } = useContext(ApplicationContext);
@@ -51,7 +51,7 @@ export default function RadioImage({ question, nav, index, value = {}, onKeyUp }
   }
   return (
     <div className="questionContainer">
-      <h2 className="question">{question.question}</h2>
+      <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}</h2>
 
       <div style={{ display: "flex", gap: "1rem" }}>
 
@@ -64,10 +64,36 @@ export default function RadioImage({ question, nav, index, value = {}, onKeyUp }
           </div>
         </RadioGroup>
 
-        <div style={{ flexGrow: 1, flexShrink: 0, height: 250, flexBasis: 250, backgroundColor: "rgb(201 177 255)", padding: 16 }}>
-          <h3 style={{ color: "white", fontSize: 18 }}>Global Brand Position</h3>
-          <TextField multiline rows={6} fullWidth inputProps={{ maxLength: 1000 }} placeholder="Enter your description here" sx={{ '& .MuiInputBase-multiline': { borderRadius: 0, padding: 0 } }} value={input.desc} onChange={(e) => setInput((prevInput) => ({ ...prevInput, desc: e.target.value }))} />
-          <div style={{ position: "absolute", bottom: 32, right: 24, color: "hsl(0, 0%, 90%)" }}>{`${input.desc?.length ?? 0} / 1000`}</div>
+        <div style={{ flexGrow: 1, flexShrink: 0, height: "inherit", backgroundColor: "#CAD9FF", color: "var(--Color-Primary)", padding: 16 }}>
+          <h3 style={{ fontSize: 18 }}>Global Brand Position</h3>
+          <TextField
+            multiline
+            rows={6}
+            fullWidth
+            value={input.desc}
+            onChange={(e) => setInput((prevInput) => ({ ...prevInput, desc: e.target.value }))}
+            inputProps={{ maxLength: 1000 }}
+            InputProps={{
+              endAdornment: <InputAdornment
+                sx={{
+                  position: "absolute",
+                  right: 16,
+                  bottom: 16,
+                  color: "hsl(0, 0%, 90%)"
+                }}
+                position="end"
+              >
+                {`${input.desc?.length ?? 0} / 1000`}
+              </InputAdornment>
+            }}
+            placeholder="Enter your description here"
+            sx={{
+              '& .MuiInputBase-multiline.MuiInputBase-root': { borderRadius: 0, padding: 0, color: "var(--Color-Primary)" },
+              '& .MuiInputBase-multiline.MuiInputBase-root .MuiOutlinedInput-notchedOutline': { borderColor: "var(--Color-Primary)" },
+              '& .MuiInputBase-multiline.MuiInputBase-root.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: "var(--Color-Primary)" },
+            }}
+          />
+          {/* <div style={{ position: "absolute", bottom: 32, right: 24, color: "hsl(0, 0%, 90%)" }}>{`${input.desc?.length ?? 0} / 1000`}</div> */}
         </div>
       </div>
 

@@ -21,7 +21,7 @@ export default function Login() {
   }
 
   function sendOTP() {
-    if(!inputs.email){
+    if (!inputs.email) {
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Email is required" } });
       return;
     }
@@ -78,16 +78,15 @@ export default function Login() {
         <UnileverIcon fill="white" />
         <h1>We create a fragrant world!</h1>
         <div className="formContainer">
-          <TextField variant="outlined" color="primary" placeholder="Email" name="email" value={inputs.email} onChange={handleInputChange} onKeyUp={handleKeyUp} autoFocus/>
-          {step === 2 && 
-          <TextField variant="outlined" color="primary" placeholder='OTP' name="otp" value={inputs.otp} onChange={handleInputChange} error={!authStatus.isAuth} 
-          helperText={authStatus.msg} 
-          onKeyUp={handleKeyUp} />
-           }
+          <TextField variant="outlined" color="primary" placeholder="Email" name="email" value={inputs.email} onChange={handleInputChange} onKeyUp={handleKeyUp} autoFocus autoComplete="false" style={{caretColor: "white"}} />
+          {step === 2 &&
+            <TextField variant="outlined" color="primary" placeholder='OTP' name="otp" value={inputs.otp} onChange={handleInputChange} error={!authStatus.isAuth}
+              helperText={authStatus.msg} onKeyUp={handleKeyUp} style={{caretColor: "white"}}  />
+          }
           <div style={{ marginTop: '1em', display: 'flex', gap: '1rem', justifyContent: 'space-between' }}>
             <Button variant="outlined" onClick={sendOTP}>{step === 1 ? "Send OTP" : step === 2 ? "Resend OTP" : "Invalid Step"}</Button>
-            {step === 2 && 
-            <Button variant="contained" onClick={submitOTP}>Submit</Button>
+            {step === 2 &&
+              <Button variant="contained" onClick={submitOTP}>Submit</Button>
             }
           </div>
           <div className="helperText" style={{ marginRight: 'auto' }}>{otpStatus.msg}</div>

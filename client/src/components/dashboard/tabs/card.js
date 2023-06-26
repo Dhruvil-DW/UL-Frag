@@ -31,25 +31,12 @@ export default function Card({ app, ActionIcons }) {
       <div className="categoryContainer">
         <p>{app.app_questions[0]?.answers[0]?.answer}</p>
       </div>
-      {Boolean(app.application_invites?.length) && (
-        <div className="collabContainer">
-          <p>Collaborators</p>
-          <div className="collabIcons">
-            <AvatarGroup>
-              {app.application_invites.map((invite) => {
-                const initial = invite.User.first_name ?? "U";
-                const email = invite.User.email;
-                const fullName = `${invite.User.first_name ?? ""} ${invite.User.last_name ?? ""}`
-                return (
-                  <Tooltip key={invite.id} classes={{ popper: "cardTooltip" }} title={<><div>{fullName}</div><div>{email}</div></>} placement="top-start" arrow>
-                    <Avatar sx={{ height: 24, width: 24 }}>{initial[0].toUpperCase()}</Avatar>
-                  </Tooltip>
-                )
-              })}
-            </AvatarGroup>
-          </div>
-        </div>
-      )}
+
+      <div className="collabContainer">
+        <p>Collaborators</p>
+        <CollabIcons app={app} />
+      </div>
+
       <div className="cardDetails">
         <UserIcon />
         <p>{`${app.User.first_name} ${app.User.last_name}`}</p>
@@ -68,6 +55,28 @@ export default function Card({ app, ActionIcons }) {
           </>
         )}
       </div>
+    </div>
+  )
+}
+
+export function CollabIcons({ app }) {
+
+  if (!Boolean(app.application_invites?.length)) return <p style={{ height: 30 }}>No collaborator</p>
+  return (
+    <div className="collabIcons" style={{ height: 30 }}>
+      <AvatarGroup>
+        {app.application_invites.map((invite) => {
+          const initial = invite.User.first_name ? invite.User.first_name?.[0] + invite.User.last_name?.[0] : null;
+          const email = invite.User.email;
+          const fullName = `${invite.User.first_name ?? ""} ${invite.User.last_name ?? ""}`
+          return (
+            <Tooltip key={invite.id} classes={{ popper: "cardTooltip" }} title={<><div>{fullName}</div><div>{email}</div></>} placement="top-start" arrow>
+              {/* <Avatar sx={{ height: 28, width: 28 }}>{initial.toUpperCase()}</Avatar> */}
+              <Avatar sx={{ height: 28, width: 28 }}>{initial?.toUpperCase()}</Avatar>
+            </Tooltip>
+          )
+        })}
+      </AvatarGroup>
     </div>
   )
 }

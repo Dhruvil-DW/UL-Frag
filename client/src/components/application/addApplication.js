@@ -192,6 +192,11 @@ export default function AddApplication() {
 
   const handleSubmit = () => {
     // console.log({ inputs });
+    if(!(inputs[1]?.option && inputs[1]?.projectName)) {
+      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please enter project name" } });
+      return;
+    }
+    
     if (!Boolean(inputs[3])) {
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Category" } });
       return;
@@ -250,19 +255,22 @@ export default function AddApplication() {
   }
 
   function handleDraft() {
-
+    if(!(inputs[1]?.option && inputs[1]?.projectName)) {
+      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please enter project name" } });
+      return;
+    }
     if (!Boolean(inputs[3])) {
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Category" } });
       return;
     }
-    if (!Boolean(inputs[6])) {
-      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Country" } });
-      return;
-    }
-    if (!Boolean(inputs[20])) {
-      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please confirm question number 2.4" } });
-      return;
-    }
+    // if (!Boolean(inputs[6])) {
+    //   promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Country" } });
+    //   return;
+    // }
+    // if (!Boolean(inputs[20])) {
+    //   promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please confirm question number 2.4" } });
+    //   return;
+    // }
 
     for (var key in inputs) {
       if (key == 27 || key == 28) {
@@ -279,7 +287,7 @@ export default function AddApplication() {
         }
       }
     }
-    console.debug('drafting after inputs',inputs)
+    console.debug('drafting after inputs', inputs)
     const project_name = `${inputs[1]?.projectName ?? "Fragrance Brief"}`;
     const final_inputs = {
       project_name: project_name,
@@ -330,6 +338,7 @@ export default function AddApplication() {
                   {cat.questions.map((que, questionIndex) => (
                     <div className="pageWrapper" key={que.id} data-que-type={que.question_type_id} data-que-id={que.id} id={que.serial}>
                       <div className="pageContainer">
+                        <div className="categoryText">{que?.category?.name ?? ""}</div>
                         <QuestionType question={que} nav={que.serial} index={questionIndex} inputs={inputs} onKeyUp={handleFocusNext} />
                         <Link to='/dashboard' tabIndex={-1}>
                           <div className="unilever-icon questionPage">
@@ -367,12 +376,15 @@ export default function AddApplication() {
 function getCatWiseQues(questions) {
   const result = [];
   let count = 0;
+  let CatWiseQueIndex;
   questions.forEach((que, index) => {
     const imgData = img_data[que.id];
     if (result[que.category.id - 1]) {
-      result[que.category.id - 1].questions = [...result[que.category.id - 1].questions, { ...que, imgData: imgData, serial: count++ }];
+      CatWiseQueIndex += 1;
+      result[que.category.id - 1].questions = [...result[que.category.id - 1].questions, { ...que, imgData: imgData, serial: count++, CatWiseQueIndex: `${que.category.id}.${CatWiseQueIndex}` }];
     } else {
-      result[que.category.id - 1] = { category_id: que.category.id, category_name: que.category.name, serial: count++, questions: [{ ...que, imgData: imgData, serial: count++ }] }
+      CatWiseQueIndex = 1;
+      result[que.category.id - 1] = { category_id: que.category.id, category_name: que.category.name, serial: count++, questions: [{ ...que, imgData: imgData, serial: count++, CatWiseQueIndex: `${que.category.id}.${CatWiseQueIndex}` }] }
     }
   });
   // console.log("Sidebar_CatWiseData: ", result);

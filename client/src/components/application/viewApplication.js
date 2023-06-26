@@ -28,33 +28,32 @@ export default function ViewApplication() {
   const [queAns, setQueAns] = useState([]);
 
   const listOfCollab = useListCollab(appId);
-
   function getAppQuestions() {
     getData(`user/viewapplication/${appId}`, {},
-      (data) => {
-        setAppData(data.Application);
-        setQueAns(data.QueAns);
+    (data) => {
+      setAppData(data.Application);
+      setQueAns(data.QueAns);
       },
       () => {
         navigate("/dashboard");
       });
   }
   useEffect(getAppQuestions, [navigate, getData, appId]);
-
+  
   function handleApprove() {
     updateData(`authority/application/${appId}/Approved`, {}, (data) => {
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: data.message, type: "success", timer: 4000 } });
       navigate("/dashboard");
     });
   }
-
+  
   function handleReject() {
     updateData(`authority/application/${appId}/Rejected`, {}, (data) => {
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: data.message, type: "success", timer: 4000 } });
       navigate("/dashboard");
     });
   }
-
+  
   return (
     <div className='appFormContainer'>
       <div className='sidebar viewSidebar'>
@@ -65,11 +64,15 @@ export default function ViewApplication() {
               Dashboard
             </div>
           </Link>
+          <div className='detailsContainer' style={{marginTop:38}}>
           {/* <h2 style={{ textAlign: "center" }}>{appData.project_name ?? "N/A"}</h2> */}
-          <h2 style={{ marginLeft: "1rem", maxWidth: 250, textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>{appData.project_name ?? "N/A"}</h2>
-          <p className='viewSidebarIconText'><PageIcon />{appData.application_status?.status ?? "N/A"}</p>
+          <h2 style={{ marginLeft: "1rem", maxWidth: 250, textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap", fontWeight:400 }}>{appData.project_name ?? "N/A"}</h2>
+          {/* <p className='viewSidebarIconText'><PageIcon />{appData.application_status?.status ?? "N/A"}</p> */}
+          <Button variant='outlined' sx={{marginLeft: '1rem'}}>{appData.application_status?.status ?? "N/A"}</Button>
+          <p style={{marginLeft: '1rem'}}>{queAns.find((item) => item.question_id === 3)?.answers[0]?.answer ?? "N/A"}</p>
           <p className='viewSidebarIconText'><UserIcon />{`${appData.User?.first_name ?? "N/A"} ${appData.User?.last_name ?? ""}`}</p>
           <p className='viewSidebarIconText'><CalenderIcon />{formatDate(appData.updated_at) ?? "N/A"}</p>
+          </div>
           {Boolean(listOfCollab.data?.length) && (
             <div style={{ height: "calc(100% - 300px)", overflowY: "auto" }}>
               <h3 className='viewSidebarIconText'><UserAddIcon />Collaborators</h3>
@@ -110,14 +113,19 @@ export default function ViewApplication() {
 }
 
 function QueAns({ qa, index }) {
-  // console.log("QA: ", qa);
+  //console.log("QA: ", qa.question.category.name);
   return (
+    <>
+    {/* <div className='QACategory'>
+    {qa.question.category.name}
+    </div> */}
     <div className='QAContainer'>
       <h3>{index ? `${index}. ` : ""}{qa.question?.question ?? "N/A"}</h3>
       <div className='answerContainer'>
         <GetAnswer qa={qa} />
       </div>
     </div>
+    </>
   )
 }
 

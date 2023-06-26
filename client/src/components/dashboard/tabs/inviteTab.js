@@ -27,7 +27,7 @@ export default function InviteTab({ data, params, handleParamsChange, handleEdit
             <span className="cardStatus">{app.application_status.status}</span>
             <h2>{app.project_name}</h2>
             <div className="categoryContainer">
-              <p>{app.app_questions[0]?.answers[0]?.answer}</p>
+              <p>{app.app_questions[0]?.answers[0]?.answer ?? "Not selected"}</p>
             </div>
             {Boolean(app.application_invites?.length) && (
               <div className="collabContainer">

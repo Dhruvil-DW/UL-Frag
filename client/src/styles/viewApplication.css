@@ -45,3 +45,12 @@
   align-items: center;
   gap: 0.5rem;
 }
+
+.cardStatus {
+  display: inline-block;
+  font-size: 12px;
+  border: white;
+  border-radius: 20px;
+  padding: 8px 16px;
+  /* color: white; */
+}

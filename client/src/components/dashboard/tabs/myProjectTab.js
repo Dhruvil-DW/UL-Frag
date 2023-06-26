@@ -39,7 +39,7 @@ export default function MyProjectTab({ data, params, handleParamsChange, handleE
             <span className="cardStatus">{app.application_status.status}</span>
             <h2>{app.project_name}</h2>
             <div className="categoryContainer">
-              <p>{app.app_questions[0]?.answers[0]?.answer}</p>
+              <p>{app.app_questions[0]?.answers[0]?.answer ?? "Not selected"}</p>
             </div>
             
               <div className="collabContainer">

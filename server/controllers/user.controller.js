@@ -4,6 +4,7 @@ const Application = db.Application;
 const ApplicationStatus = db.application_status;
 const AppQuestion = db.app_question;
 const Question = db.question;
+const Category = db.category;
 const Answers = db.answers;
 const ApplicationInvite = db.application_invite;
 const generateToken = require('../config/jwt.config');
@@ -195,7 +196,7 @@ function viewApplications(req, res) {
 
         const AppQueRes = await seq.seqFindAll(AppQuestion, ["id", "question_id", "app_id"], { app_id: app_id },
             [
-                { model: Question, attributes: ["id", "category_id", "question_type_id", "question", "status", "parent_id"] },
+                { model: Question, attributes: ["id", "category_id", "question_type_id", "question", "status", "parent_id"], include: [{model: Category, attributes: ['id', 'name']}] },
                 { model: Answers, attributes: ["id", "app_question_id", "answer"] },
             ]
         );

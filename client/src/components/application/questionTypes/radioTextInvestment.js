@@ -1,7 +1,8 @@
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
-import { FormControlLabel, InputAdornment, Radio, RadioGroup, TextField } from "@mui/material";
+import { FormControlLabel, InputAdornment, Radio, RadioGroup, TextField, Tooltip } from "@mui/material";
+import TooltipIcon from "../../../assets/icons/tooltipIcon";
 
 export default function RadioTextInvestment({ question, nav, index, value = { option: "", amount: "" }, onKeyUp }) {
   const { handleAnswerChange } = useContext(ApplicationContext);
@@ -32,8 +33,14 @@ export default function RadioTextInvestment({ question, nav, index, value = { op
 
   return (
     <div className="questionContainer fixWidth">
-      <h2 className="question">{question.question}</h2>
-
+      <h2 className="question">{question.question}
+      
+      <Tooltip className="tooltip" title={question.description} placement="bottom-end" arrow>
+            <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex"}}>
+              <TooltipIcon />
+            </span>
+          </Tooltip>
+      </h2>
       <RadioGroup value={input.option} onChange={handleInputChange} name={question.id.toString()}>
         {question.question_opt?.map((opt) => (
           <div key={opt}>

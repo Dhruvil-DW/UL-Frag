@@ -1,4 +1,4 @@
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, TextField, Tooltip } from "@mui/material";
 import { Button } from "@mui/material";
 import { v4 as uuidv4 } from 'uuid';
 import UploadDocVariation from '../../../assets/uploadDoc/uploadDocVariation';
@@ -6,6 +6,7 @@ import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 import { styled } from '@mui/material/styles';
+import TooltipIcon from "../../../assets/icons/tooltipIcon";
 
 export default function TextBoxVariationImage({ question, nav, index, value, onKeyUp }) {
   const { handleNextPrevNav, handleImageInputChange, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, handleRemoveFiles } = useContext(ApplicationContext);
@@ -194,7 +195,13 @@ export default function TextBoxVariationImage({ question, nav, index, value, onK
     <div data-que-type={question.question_type_id} className="questionContainer">
       <div style={{ display: "flex", gap: "3rem" }}>
         <div className="queBox">
-          <h2 className="question">{question.question}</h2>
+          <h2 className="question">{question.question}
+          <Tooltip className="tooltip" title={question.description} placement="bottom-end" arrow>
+            <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex"}}>
+              <TooltipIcon />
+            </span>
+          </Tooltip>
+          </h2>
           <div className="variation_list">
             {input.map((element, index) => (
               <div key={index} className="inner_variation" style={{ display: "flex", gap: "3rem", marginBottom: 30 }}>

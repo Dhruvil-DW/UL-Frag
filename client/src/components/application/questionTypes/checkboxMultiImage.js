@@ -1,7 +1,8 @@
-import { Checkbox } from "@mui/material";
+import { Checkbox, Tooltip } from "@mui/material";
 import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
+import TooltipIcon from "../../../assets/icons/tooltipIcon";
 
 export default function CheckBoxImage({ question, nav, index, value = [], onKeyUp }) {
   const { handleAnswerChange } = useContext(ApplicationContext);
@@ -32,7 +33,13 @@ export default function CheckBoxImage({ question, nav, index, value = [], onKeyU
 
   return (
     <div className="questionContainer">
-      <h2 className="question">{question.question}</h2>
+      <h2 className="question">{question.question}
+      <Tooltip className="tooltip" title={question.description} placement="bottom-end" arrow>
+            <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex"}}>
+              <TooltipIcon />
+            </span>
+          </Tooltip>
+      </h2>
       <div className="optionContainer">
         {question.question_opt?.map((opt) => (
           <div key={opt} className="imageBoxContainer" onClick={() => handleInputChange(opt)}>

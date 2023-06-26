@@ -1,7 +1,8 @@
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
-import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import { FormControlLabel, Radio, RadioGroup, Tooltip } from "@mui/material";
+import TooltipIcon from "../../../assets/icons/tooltipIcon";
 
 export default function RadioText({ question, nav, index, value = "", onKeyUp }) {
   const { handleAnswerChange } = useContext(ApplicationContext);
@@ -28,7 +29,16 @@ export default function RadioText({ question, nav, index, value = "", onKeyUp })
 
   return (
     <div className="questionContainer fixWidth">
-      <h2 className="question">{question.question}</h2>
+      <h2 className="question">{question.question}
+      {question.id === 24 && 
+      <Tooltip className="tooltip" title={question.description} placement="bottom-end" arrow>
+            <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex"}}>
+              <TooltipIcon />
+            </span>
+          </Tooltip>
+      
+      }
+      </h2>
 
       <RadioGroup value={value} onChange={handleInputChange} name={question.id.toString()}>
         {question.question_opt?.map((opt) => (

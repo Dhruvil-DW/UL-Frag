@@ -1,9 +1,10 @@
-import { TextField } from "@mui/material";
+import { TextField, Tooltip } from "@mui/material";
 import { v4 as uuidv4 } from 'uuid';
 import UploadDoc from '../../../assets/uploadDoc/uploadDoc';
 import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { useContext, useDeferredValue, useEffect, useState } from "react";
 import { ApplicationContext } from "../addApplication";
+import TooltipIcon from "../../../assets/icons/tooltipIcon";
 
 export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
   const { handleAnswerChange, handleFilesChange, handleImageInputChange, handleRemoveFiles, handleRemoveFilesChange } = useContext(ApplicationContext);
@@ -104,7 +105,13 @@ export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
     <div className="questionContainer">
       <div style={{ display: "flex", gap: "3rem" }}>
         <div className="queBox">
-          <h2 className="question">{question.question}</h2>
+          <h2 className="question">{question.question}
+          <Tooltip className="tooltip" title={question.description} placement="bottom-end" arrow>
+            <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex"}}>
+              <TooltipIcon />
+            </span>
+          </Tooltip>
+          </h2>
           <TextField multiline rows={8} variant="outlined" name="desc" color="secondary" style={{ width: '100%' }} placeholder="Enter your answer here" value={input.desc ?? ""} onChange={(e) => setInput(prevInput => ({ ...prevInput, [e.target.name]: e.target.value }))} />
         </div>
         <div className="uploadContainer">

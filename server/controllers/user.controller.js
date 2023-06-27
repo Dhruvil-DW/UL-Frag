@@ -9,7 +9,7 @@ const Answers = db.answers;
 const ApplicationInvite = db.application_invite;
 const generateToken = require('../config/jwt.config');
 const seq = require('../config/sequelize.config');
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 const sendEmail = require('../config/mail.config');
 
 function addProfileDetails(req, res) {
@@ -136,6 +136,7 @@ function getMyApplications(req, res) {
     })();
 }
 
+
 function getApprovedApplications(req, res) {
     const searchText = req.query.search;
     console.log("Query-", req.query);
@@ -197,12 +198,19 @@ function viewApplications(req, res) {
 
         const AppQueRes = await seq.seqFindAll(AppQuestion, ["id", "question_id", "app_id"], { app_id: app_id },
             [
-                { model: Question, attributes: ["id", "category_id", "question_type_id", "question", "status", "parent_id"], include: [{model: Category, attributes: ['id', 'name']}] },
-                { model: Answers, attributes: ["id", "app_question_id", "answer"] },
+                // { model: Question, attributes: ["id", "category_id", "question_type_id", "question", "status", "parent_id"], include: [{model: Category, attributes: ['id', 'name']}] },
+                { model: Answers, attributes: ["id", "app_question_id", "answer"]}
             ]
         );
-        // console.log("RESPONSE: ", );
-        res.status(200).send({ Application: AppData, QueAns: AppQueRes });
+        // const AppQuesRes = await seq.seqFindAll(Question, ["id","category_id", "question_type_id", "question", "status", "parent_id"],{},
+        //     [
+        //        {model: Category, attributes: ['id', 'name'] },
+        //        {model : AppQuestion, attributes: ["id", "question_id", "app_id"], include:[{ model: Answers, attributes: ["id", "app_question_id", "answer"] }]  },
+                
+        //     ]
+        // );
+        //console.log("RESPONSE: ", AppQuesRes);
+        res.status(200).send({ Application: AppData, QueAns : AppQueRes});
     })();
 }
 

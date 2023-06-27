@@ -26,13 +26,14 @@ export default function ViewApplication() {
 
   const [appData, setAppData] = useState({});
   const [queAns, setQueAns] = useState([]);
-
+  //console.log("QuesAns", queAns);
   const listOfCollab = useListCollab(appId);
   function getAppQuestions() {
     getData(`user/viewapplication/${appId}`, {},
     (data) => {
       setAppData(data.Application);
       setQueAns(data.QueAns);
+      //console.log("Question", data.QueAns[0].answers);
       },
       () => {
         navigate("/dashboard");
@@ -66,10 +67,10 @@ export default function ViewApplication() {
           </Link>
           <div className='detailsContainer' style={{marginTop:38}}>
           {/* <h2 style={{ textAlign: "center" }}>{appData.project_name ?? "N/A"}</h2> */}
-          <h2 style={{ marginLeft: "1rem", maxWidth: 250, textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap", fontWeight:400 }}>{appData.project_name ?? "N/A"}</h2>
+          <h2 style={{ marginLeft: "2rem", maxWidth: 250, textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap", fontWeight:400 }}>{appData.project_name ?? "N/A"}</h2>
           {/* <p className='viewSidebarIconText'><PageIcon />{appData.application_status?.status ?? "N/A"}</p> */}
-          <Button variant='outlined' sx={{marginLeft: '1rem'}}>{appData.application_status?.status ?? "N/A"}</Button>
-          <p style={{marginLeft: '1rem'}}>{queAns.find((item) => item.question_id === 3)?.answers[0]?.answer ?? "N/A"}</p>
+          <Button variant='outlined' sx={{marginLeft: '2rem'}}>{appData.application_status?.status ?? "N/A"}</Button>
+          <p style={{marginLeft: '2rem'}}>{queAns.find((item) => item.question_id === 3)?.answers[0]?.answer ?? "N/A"}</p>
           <p className='viewSidebarIconText'><UserIcon />{`${appData.User?.first_name ?? "N/A"} ${appData.User?.last_name ?? ""}`}</p>
           <p className='viewSidebarIconText'><CalenderIcon />{formatDate(appData.updated_at) ?? "N/A"}</p>
           </div>
@@ -113,14 +114,16 @@ export default function ViewApplication() {
 }
 
 function QueAns({ qa, index }) {
-  //console.log("QA: ", qa.question.category.name);
+  //console.log("QA: ", qa.answers[0].answer);
+  qa.answers.map((ans, i) => console.log("answer", ans.answer));
   return (
     <>
     {/* <div className='QACategory'>
-    {qa.question.category.name}
+    {qa.category.name}
     </div> */}
     <div className='QAContainer'>
-      <h3>{index ? `${index}. ` : ""}{qa.question?.question ?? "N/A"}</h3>
+    {/* <h3>{index ? `${index}. ` : ""}{qa.question?.question ?? "N/A"}</h3> */}
+      <h3>{index ? `${index}. ` : ""}{qa.question}</h3>
       <div className='answerContainer'>
         <GetAnswer qa={qa} />
       </div>
@@ -144,23 +147,23 @@ function QueAns({ qa, index }) {
 // }
 
 function GetAnswer({ qa }) {
-  // console.log("QA: ", qa);
-  switch (qa.question.question_type_id) {
+  //console.log("QA: ", qa.answers[0].answer);
+  switch (qa) {
     case 1: // TextBox
       // console.log(qa.answers);
       return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>);
 
     case 3: //Select Dropdown predefined
     case 4: // Select Dropdown dynamic
-      // console.log(qa.answers);
+      // console.log(qa)app_questions.answers.;
       return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
 
     case 5: //Multiselect Dropdown predefined
     case 6: // Multiselect dropdown dynamic
-      // console.log(qa.answers);
+      // console.log(qa)app_questions.answers.;
       return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
 
-    case 14: //Select (RadioButton) with TextBox
+    case 14: //Select (projectName) with TextBox
       return qa.answers.map((ans, i) => {
         const ansObj = JSON.parse(ans.answer);
         return (
@@ -211,7 +214,7 @@ function GetAnswer({ qa }) {
       });
 
     case 8: // Multiselect Picture Choice
-      if (qa.question.id === 23) {
+      if (qa.id === 23) {
         const ansObj = JSON.parse(qa.answers[0].answer);
         return (
           <>

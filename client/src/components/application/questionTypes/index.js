@@ -12,8 +12,12 @@ import TextBox from "./textBox";
 import SelectCategory from "./selectCategory";
 import RadioTextInvestment from "./radioTextInvestment";
 import CheckBoxImageWithTextBox from "./checkboxMultiImageWithTextBox";
+import { useContext } from "react";
+import { ApplicationContext } from "../addApplication";
 
-export default function QuestionType({ question, nav, index, inputs, onKeyUp }) {
+export default function QuestionType({ question, nav, index, onKeyUp }) {
+
+  const { inputs } = useContext(ApplicationContext);
 
   // console.log(question);
   switch (question.question_type_id) {

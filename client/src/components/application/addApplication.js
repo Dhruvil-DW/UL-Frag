@@ -40,11 +40,7 @@ export default function AddApplication() {
     }
   }
   useEffect(getAnswers, [answers.status, answers.data, appId]);
-  // useEffect(getRegions, [getData]);
-  // useEffect(getCountry, [getData, inputs, regions]);
-  // const { appId } = useParams();
   const [currentQue, setCurrentQue] = useState(1);
-  // const [activeSection, setActiveSection] = useState(0);
 
   const handleScroll = useCallback((e) => {
     const { clientHeight, scrollTop } = e.target;
@@ -75,10 +71,6 @@ export default function AddApplication() {
       // console.log(containerRef.current);
     }
   }
-  // useEffect(() => {
-  //   const inputs = Array.from(containerRef.current.querySelectorAll('input'));
-  //   inputs[0]?.focus();
-  // }, [])
 
   const resetInputCountry = useCallback(() => {
     setInputs(prevInput => {

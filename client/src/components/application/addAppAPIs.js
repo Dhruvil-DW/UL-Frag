@@ -10,8 +10,8 @@ export function useGetCountry(countryID) {
 
   return useQuery({
     enabled: Boolean(countryID),
-    cacheTime: "Infinity",
-    staleTime: "Infinity",
+    cacheTime: Infinity,
+    staleTime: Infinity,
     queryKey: ["country", countryID],
     queryFn: async () => {
       const { data } = await axios.get(`application/getcountry/${countryID}`, { headers: { Authorization: "Bearer " + token } });
@@ -25,8 +25,8 @@ export function useGetRegion() {
   const token = authState.token;
 
   return useQuery({
-    cacheTime: "Infinity",
-    staleTime: "Infinity",
+    cacheTime: Infinity,
+    staleTime: Infinity,
     queryKey: ["region"],
     queryFn: async () => {
       const { data } = await axios.get(`application/getregions`, { headers: { Authorization: "Bearer " + token } });
@@ -35,13 +35,28 @@ export function useGetRegion() {
   })
 }
 
+export function useGetAnswer(appID) {
+  const { authState } = useContext(authContext);
+  const token = authState.token;
+
+  return useQuery({
+    queryKey: ["answer", appID],
+    enabled: !!appID,
+    queryFn: async () => {
+      const { data } = await axios.get(`/application/getdraft/${appID}`, { headers: { Authorization: "Bearer " + token } });
+      console.log("Manually", data);
+      return data;
+    },
+  })
+}
+
 export function useGetQuestions() {
   const { authState } = useContext(authContext);
   const token = authState.token;
 
   return useQuery({
-    cacheTime: "Infinity",
-    staleTime: "Infinity",
+    cacheTime: Infinity,
+    staleTime: Infinity,
     queryKey: ["questions"],
     queryFn: async () => {
       const { data } = await axios.get(`/application/questions/getall`, { headers: { Authorization: "Bearer " + token } });
@@ -53,13 +68,16 @@ export function useGetQuestions() {
 
 function getCatWiseQues(questions) {
   const result = [];
-  let count = 1;
+  let count = 0;
+  let CatWiseQueIndex;
   questions.forEach((que, index) => {
     const imgData = img_data[que.id];
     if (result[que.category.id - 1]) {
-      result[que.category.id - 1].questions = [...result[que.category.id - 1].questions, { ...que, imgData: imgData, serial: count++ }];
+      CatWiseQueIndex += 1;
+      result[que.category.id - 1].questions = [...result[que.category.id - 1].questions, { ...que, imgData: imgData, serial: count++, CatWiseQueIndex: `${que.category.id}.${CatWiseQueIndex}` }];
     } else {
-      result[que.category.id - 1] = { category_id: que.category.id, category_name: que.category.name, questions: [{ ...que, imgData: imgData, serial: count++ }] }
+      CatWiseQueIndex = 1;
+      result[que.category.id - 1] = { category_id: que.category.id, category_name: que.category.name, serial: count++, questions: [{ ...que, imgData: imgData, serial: count++, CatWiseQueIndex: `${que.category.id}.${CatWiseQueIndex}` }] }
     }
   });
   // console.log("Sidebar_CatWiseData: ", result);

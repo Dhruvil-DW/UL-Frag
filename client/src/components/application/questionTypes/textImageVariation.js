@@ -1,4 +1,4 @@
-import { Autocomplete, TextField, Tooltip } from "@mui/material";
+import { TextField, Tooltip } from "@mui/material";
 import { Button } from "@mui/material";
 import { v4 as uuidv4 } from 'uuid';
 import UploadDocVariation from '../../../assets/uploadDoc/uploadDocVariation';
@@ -9,12 +9,11 @@ import { styled } from '@mui/material/styles';
 import TooltipIcon from "../../../assets/icons/tooltipIcon";
 
 export default function TextBoxVariationImage({ question, nav, index, value, onKeyUp }) {
-  const { handleNextPrevNav, handleImageInputChange, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, handleRemoveFiles } = useContext(ApplicationContext);
+  const { handleImageInputChange, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, handleRemoveFiles } = useContext(ApplicationContext);
   const [input, setInput] = useState(value ? value : [{ variation: '', files: [] }]);
   const defferInput = useDeferredValue(input);
   const [imageInput, setImageInput] = useState([{ files: [] }]);
   const defferImageInput = useDeferredValue(imageInput);
-  const [count, setSectionCount] = useState(1);
   const [files, setFiles] = useState([]);
   const defferFiles = useDeferredValue(files);
   const [variantFiles, setVariantFiles] = useState([]);
@@ -163,13 +162,6 @@ export default function TextBoxVariationImage({ question, nav, index, value, onK
     }
   }, [handleFilesChange, question.id, defferFiles]);
 
-  // to upload new files
-  // useEffect(() => {
-  //   if (defferFiles.length != 0) {
-  //     handleFilesChange(question.id, defferFiles);
-  //   }
-  // }, [handleFilesChange, question.id, defferFiles]);
-
   useEffect(() => {
     if (defferImageInput.length != 0) {
       handleImageInputChange(question.id, defferImageInput, question.question_type_id);
@@ -204,7 +196,7 @@ export default function TextBoxVariationImage({ question, nav, index, value, onK
           </h2>
           <div className="variation_list">
             {input.map((element, index) => (
-              <div key={index} className="inner_variation" style={{ display: "flex", gap: "3rem", marginBottom: 30 }}>
+              <div key={index} className="inner_variation" style={{ display: "flex", gap: "3rem", marginBottom: 30, height: "calc(100% - 30px)" }}>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "0", width: "45%" }}>
                   <TextField variant="outlined" name="variation" color="secondary" placeholder="Variation name" style={{ width: '100%' }} value={element.variation ?? ""} onChange={(e) => handleChange(index, e)} />
                   {input.length > 1 && (<Button variant="contained" style={{ width: '100%', maxWidth: 500, height: '55px', color: 'black', background: '#F9F9F9', boxShadow: "none" }} onClick={() => removeVariation(index)}>- Remove Variation</Button>)}

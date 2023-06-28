@@ -1,4 +1,4 @@
-import { Autocomplete, Avatar, AvatarGroup, TextField, Tooltip } from "@mui/material"
+import { Autocomplete, TextField } from "@mui/material"
 import ErrorBoundary from "../../../config/errorBoundary/ErrorBoundary"
 import ArrowDownIcon from "../../../assets/icons/arrowDownIcon";
 import UserIcon from "../../../assets/icons/userIcon";
@@ -36,7 +36,7 @@ export default function InviteTab({ data, params, handleParamsChange, handleEdit
               <CollabIcons app={app} />
             </div>
 
-            <div className="cardDetails">
+            <div className="cardDetails" style={{ textTransform: "capitalize" }}>
               <UserIcon />
               <p>{`${app.User.first_name} ${app.User.last_name}`}</p>
             </div>

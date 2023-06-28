@@ -1,6 +1,7 @@
 .dashboardWrapper {
   background: hsl(202, 63%, 98%);
-  height: 100vh;
+  min-height: 100vh;
+  height:  100%;
   padding: 1rem 2.5rem;
 }
 
@@ -130,6 +131,7 @@
 
 .appCard .categoryContainer {
   /* margin-top: 40px; */
+  text-transform: capitalize;
 }
 
 .appCard .cardDetails {

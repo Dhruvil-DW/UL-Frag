@@ -10,9 +10,9 @@ import MyProjectTab from "./tabs/myProjectTab";
 import AllProjectTab from "./tabs/allProjectTab";
 import InviteTab from "./tabs/inviteTab";
 import { promptActions, promptContext } from "../../context/promptContext";
-import Pagination from "@mui/material/Pagination";
+// import Pagination from "@mui/material/Pagination";
 
-const recordsPerPage = 12;
+// const recordsPerPage = 12;
 export default function Dashboard() {
   const navigate = useNavigate();
   const { authState } = useContext(authContext);
@@ -24,9 +24,10 @@ export default function Dashboard() {
 
   //**** My Application Data Start ****//
   const [myAppData, setMyAppData] = useState([]);
+  // Pagination parameters
   //const [pageParams, setPageParams] = useState({limit:recordsPerPage, offset:page * recordsPerPage});
-  const [myAppPage, setPage] = useState(0);
-  const [count, setMyDataCount] = useState(0);
+  // const [myAppPage, setPage] = useState(0);
+  // const [count, setMyDataCount] = useState(0);
   const [myAppParams, setMyAppParams] = useState({ search: "", filters: { status: [], answer: null }});
   const [myAppParamsDebounced, setMyAppParamsDebounced] = useState(myAppParams);
 
@@ -40,30 +41,32 @@ export default function Dashboard() {
   }, [myAppParams]);
   
   function getMyApplication() {
-    const params = {...myAppParamsDebounced, limit:recordsPerPage, offset:myAppPage * recordsPerPage};
-    getData('user/get/myapplications', { params }, 
-    (data) => {
-      setMyAppData(data.rows);
-      setMyDataCount(data.count);
-    }
+    const params = myAppParamsDebounced;
+    getData('user/get/myapplications', { params }, setMyAppData
+
+    // for pagination response change
+    // (data) => {
+    //   setMyAppData(data.rows);
+    //   setMyDataCount(data.count);
+    // }
     );
   }
-  useEffect(getMyApplication, [getData, myAppParamsDebounced, myAppPage]);
-  
+  useEffect(getMyApplication, [getData, myAppParamsDebounced]);
   // useEffect(() => {
-  //   setPageParams({limit:recordsPerPage, offset:myAppPage * recordsPerPage});
-  // },[myAppPage, recordsPerPage]);
-
-  const handleMyAppPageChange = (event, newPage) => {
-    console.log("New", newPage);
-    setPage(newPage - 1);
-  }
+    //   setPageParams({limit:recordsPerPage, offset:myAppPage * recordsPerPage});
+    // },[myAppPage, recordsPerPage]);
+    
+  // Pagination handle page size change
+  // const handleMyAppPageChange = (event, newPage) => {
+  //   console.log("New", newPage);
+  //   setPage(newPage - 1);
+  // }
   //**** My Application Data End ****//
 
   //**** All Application Data Start ****//
   const [allAppData, setAllAppData] = useState([]);
-  const [allAppPage, setAllPage] = useState(0);
-  const [allAppCount, setAllDataCount] = useState(0);
+  // const [allAppPage, setAllPage] = useState(0);
+  // const [allAppCount, setAllDataCount] = useState(0);
   const [allAppParams, setAllAppParams] = useState({ search: "", filters: { answer: null } });
   const [allAppParamsDebounced, setAllAppParamsDebounced] = useState(allAppParams);
 
@@ -76,19 +79,18 @@ export default function Dashboard() {
     return () => clearTimeout(delayFn);
   }, [allAppParams]);
 
-  //console.log("lIMITAll", {limit:recordsPerPage});
-  //console.log("OffsetAll", {offset:allAppPage * recordsPerPage});
 
   function getAllApplication() {
     const params = allAppParamsDebounced;
     getData('user/get/approvedapplications', { params }, 
-    (data) => {
-      setAllAppData(data.rows);
-      setAllDataCount(data.count);
-    }
+    // (data) => {
+    //   setAllAppData(data.rows);
+    //   setAllDataCount(data.count);
+    // }
+    setAllAppData
     );
   }
-  useEffect(getAllApplication, [getData, allAppParamsDebounced, allAppPage]);
+  useEffect(getAllApplication, [getData, allAppParamsDebounced]);
 
   // const handleAllAppPageChange = (event, allPage) => {
   //   console.log("NewAll", allPage);
@@ -98,8 +100,8 @@ export default function Dashboard() {
 
   //**** Invited Application Data Start ****//
   const [invitedAppData, setInvitedAppData] = useState([]);
-  const [invitePage, setInvitedPage] = useState(0);
-  const [inviteCount, setInvitedCount] = useState(0);
+  // const [invitePage, setInvitedPage] = useState(0);
+  // const [inviteCount, setInvitedCount] = useState(0);
   const [invitedAppParams, setInvitedAppParams] = useState({ search: "", filters: { answer: null } });
   const [invitedAppParamsDebounced, setInvitedAppParamsDebounced] = useState(invitedAppParams);
 
@@ -116,14 +118,15 @@ export default function Dashboard() {
     if (userdata.role_id !== 2) {
       const params = invitedAppParamsDebounced;
       getData('user/get/invitedapplications', { params }, 
-      (data) => {
-        setInvitedAppData(data.rows);
-        setInvitedCount(data.count);
-      }
+      // (data) => {
+      //   setInvitedAppData(data.rows);
+      //   setInvitedCount(data.count);
+      // }
+      setInvitedAppData
       );
     }
   }
-  useEffect(getinvitedApplication, [getData, invitedAppParamsDebounced, userdata.role_id, invitePage]);
+  useEffect(getinvitedApplication, [getData, invitedAppParamsDebounced, userdata.role_id]);
   //**** Invited Application Data End ****//
 
   const handleSearch = (e) => {
@@ -171,7 +174,7 @@ export default function Dashboard() {
           </div>
           <TabPanel value={selectedTab} index={0}>
             <MyProjectTab data={myAppData} params={myAppParams} handleParamsChange={handleMyAppFilterChange} handleEditApp={handleEditApp} />
-            {count > 12 && 
+            {/* {count > 12 && 
             <Pagination
             className="paginate" 
             count={Math.ceil(count / recordsPerPage)}
@@ -187,12 +190,11 @@ export default function Dashboard() {
               }
             }}
             />
-            
-            }
+            } */}
           </TabPanel>
           <TabPanel value={selectedTab} index={1}>
             <AllProjectTab data={allAppData} params={allAppParams} handleParamsChange={handleAllAppFilterChange} />
-            {allAppCount > 12 && 
+            {/* {allAppCount > 12 && 
             <Pagination
             className="paginate" 
             count={Math.ceil(allAppCount / recordsPerPage)}
@@ -208,12 +210,12 @@ export default function Dashboard() {
               }
             }}
             />
-            }
+            } */}
           </TabPanel>
           {userdata.role_id === 1 && (
             <TabPanel value={selectedTab} index={2}>
               <InviteTab data={invitedAppData} params={invitedAppParams} handleParamsChange={handleinvitedAppFilterChange} handleEditApp={handleEditApp} />
-              {inviteCount > 12 && 
+              {/* {inviteCount > 12 && 
               <Pagination
             className="paginate" 
             count={Math.ceil(inviteCount / recordsPerPage)}
@@ -229,7 +231,7 @@ export default function Dashboard() {
               }
             }}
             />
-              }
+              } */}
             </TabPanel>
           )}
         </div>

@@ -115,7 +115,7 @@ function getMyApplications(req, res) {
 
         const whereCond = role_id === 2 ? { application_status_id: [2, 4], ...searchCond } : { user_id: userId, ...searchCond }
         console.log("whereCond", whereCond);
-        const applRes = await seq.seqFindAndCountAll(
+        const applRes = await seq.seqFindAll(
             Application,
             ['id', 'project_name', 'application_status_id', 'user_id', 'status', 'updatedAt'],
             whereCond,
@@ -163,7 +163,7 @@ function getApprovedApplications(req, res) {
     } : filters ? { [Op.and]: filterData } : {};
     console.log("SearchCond: ", searchCond);
     (async () => {
-        const approveRes = await seq.seqFindAndCountAll(Application, ['id', 'project_name', 'application_status_id', 'user_id', 'status'], { application_status_id: 3, ...searchCond },
+        const approveRes = await seq.seqFindAll(Application, ['id', 'project_name', 'application_status_id', 'user_id', 'status'], { application_status_id: 3, ...searchCond },
             [
                 { model: ApplicationStatus, attributes: ['id', 'status'] },
                 { model: User, attributes: ['id', 'first_name', 'last_name', 'email'] },
@@ -240,12 +240,12 @@ function getInvitedApplications(req, res) {
 
         //**Get Already Invited Collabrator for this App_ID
         const invitedApp = await seq.seqFindAll(ApplicationInvite, ["app_id", "user_id"], { user_id: userId });
-        if (invitedApp === 500) return res.status(500).send({ message: "Error while getting Collabrator" });
+        if (invitedApp === 500) return res.status(500).send({ message: "Error while getting Collaborator" });
         const invitedAppIdArr = invitedApp.map(obj => obj.app_id);
         console.log("invitedAppIdArr: ", invitedAppIdArr);
         const whereCond = { id: invitedAppIdArr, ...searchCond }
 
-        const applRes = await seq.seqFindAndCountAll(
+        const applRes = await seq.seqFindAll(
             Application,
             ['id', 'project_name', 'application_status_id', 'user_id', 'status', 'updatedAt'], //Change the column updatedAt name if causes error here
             whereCond,

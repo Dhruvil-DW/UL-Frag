@@ -105,17 +105,28 @@ export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
     <div className="questionContainer">
       <div style={{ display: "flex", gap: "3rem" }}>
         <div className="queBox">
-          <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}
-          <Tooltip className="tooltip" title={question.description} placement="bottom-end" arrow>
+          {/* <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}
+          <Tooltip className="tooltip" title={question.description} placement="bottom-start" arrow>
             <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex"}}>
               <TooltipIcon />
             </span>
           </Tooltip>
+          </h2> */}
+          <h2 className="question">
+            <span style={{marginRight: 7 }}>{`${question.CatWiseQueIndex}`}</span>
+            <span style={{verticalAlign: "middle" }}>
+            {question.question}
+            <Tooltip className="tooltip" title={question.description} placement="bottom-start" arrow>
+              <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex"}}>
+                <TooltipIcon />
+              </span>
+            </Tooltip>
+            </span>
           </h2>
           <TextField multiline rows={8} variant="outlined" name="desc" color="secondary" style={{ width: '100%' }} placeholder="Enter your answer here" value={input.desc ?? ""} onChange={(e) => setInput(prevInput => ({ ...prevInput, [e.target.name]: e.target.value }))} />
         </div>
         <div className="uploadContainer">
-          <UploadDoc que_id={question.id} label='Upload Cabin Photos' files={files} uploadedFiles={input.files} onUpload={onUpload} onRemove={onRemove} onRemoveUploaded={onRemoveUploaded} required={false} />
+          <UploadDoc que_id={question.id} label='Upload Project Photos' files={files} uploadedFiles={input.files} onUpload={onUpload} onRemove={onRemove} onRemoveUploaded={onRemoveUploaded} required={false} />
         </div>
       </div>
       <div className='navBtnCont'>

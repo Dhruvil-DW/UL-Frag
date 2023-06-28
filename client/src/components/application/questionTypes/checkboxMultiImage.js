@@ -33,13 +33,24 @@ export default function CheckBoxImage({ question, nav, index, value = [], onKeyU
 
   return (
     <div className="questionContainer">
-      <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}
+      {/* <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}
       <Tooltip className="tooltip" title={question.description} placement="bottom-end" arrow>
             <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex"}}>
               <TooltipIcon />
             </span>
           </Tooltip>
-      </h2>
+      </h2> */}
+      <h2 className="question">
+        <span style={{marginRight: 7 }}>{`${question.CatWiseQueIndex}`}</span>
+        <span style={{verticalAlign: "middle" }}>
+        {question.question}
+          <Tooltip className="tooltip" title={question.description} placement="bottom-start" arrow>
+            <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex"}}>
+              <TooltipIcon />
+            </span>
+          </Tooltip>
+        </span>
+        </h2>
       <div className="optionContainer">
         {question.question_opt?.map((opt) => (
           <div key={opt} className="imageBoxContainer" onClick={() => handleInputChange(opt)}>

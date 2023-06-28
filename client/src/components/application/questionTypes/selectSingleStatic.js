@@ -40,7 +40,7 @@ export default function SelectSingleStatic({ question, nav, index, value = null,
           onChange={(event, value, reason) => handleInputChange(event, value?.label ?? null, reason)}
           isOptionEqualToValue={(option, value) => option.label === value}
           popupIcon={<ArrowDownIcon />}
-          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Enter Business Unit"/>}
+          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Enter Business Unit" style={{marginLeft: '31px'}}/>}
           onKeyUp={onKeyUp}
         />
       ) : (
@@ -50,7 +50,7 @@ export default function SelectSingleStatic({ question, nav, index, value = null,
           value={input}
           onChange={handleInputChange}
           popupIcon={<ArrowDownIcon />}
-          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Select Option" />}
+          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Select Option" style={{marginLeft: '31px'}}/>}
           onKeyUp={onKeyUp}
         />)}
       <div className='navBtnCont'>

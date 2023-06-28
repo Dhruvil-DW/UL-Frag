@@ -29,18 +29,30 @@ export default function RadioText({ question, nav, index, value = "", onKeyUp })
 
   return (
     <div className="questionContainer fixWidth">
-      <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}
+      {/* <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}
       {question.id === 24 && 
-      <Tooltip className="tooltip" title={question.description} placement="bottom-end" arrow>
+      <Tooltip className="tooltip" title={question.description} placement="bottom-start" arrow>
             <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex"}}>
               <TooltipIcon />
             </span>
           </Tooltip>
       
       }
-      </h2>
-
-      <RadioGroup value={value} onChange={handleInputChange} name={question.id.toString()}>
+      </h2> */}
+      <h2 className="question">
+        <span style={{marginRight: 7 }}>{`${question.CatWiseQueIndex}`}</span>
+        <span style={{verticalAlign: "middle" }}>
+        {question.question}
+        {question.id === 24 && 
+          <Tooltip className="tooltip" title={question.description} placement="bottom-start" arrow>
+            <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex"}}>
+              <TooltipIcon />
+            </span>
+          </Tooltip>
+        }
+        </span>
+        </h2>
+      <RadioGroup value={value} onChange={handleInputChange} name={question.id.toString()} style={{marginLeft: '32px'}}>
         {question.question_opt?.map((opt) => (
           <FormControlLabel key={opt} label={opt} value={opt} control={<Radio />} />
         ))}

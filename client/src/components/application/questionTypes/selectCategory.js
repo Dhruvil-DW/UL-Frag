@@ -44,10 +44,12 @@ export default function SelectCategory({ question, nav, index, value = null, onK
         value={input}
         onChange={handleInputChange}
         popupIcon={<ArrowDownIcon />}
-        renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Select Category"/>}
+        renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Select Category" style={{marginLeft: '31px'}}/>}
         onKeyUp={onKeyUp}
       />
-      {input === "Other" && <TextField variant="outlined" color="secondary" placeholder="Enter Category Name" name="Other Category" value={textInput} onKeyUp={onKeyUp} onChange={handleTextChange} />}
+      {input === "Other" && <TextField variant="outlined" color="secondary" placeholder="Enter Category Name" name="Other Category" value={textInput} onKeyUp={onKeyUp} 
+      style={{marginLeft: '31px'}}
+      onChange={handleTextChange} />}
 
       <div className='navBtnCont'>
         <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>

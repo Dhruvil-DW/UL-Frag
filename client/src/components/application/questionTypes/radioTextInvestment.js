@@ -52,7 +52,7 @@ export default function RadioTextInvestment({ question, nav, index, value = { op
           </Tooltip>
         </span>
         </h2>
-      <RadioGroup value={input.option} onChange={handleInputChange} name={question.id.toString()} style={{marginLeft: '38px'}}>
+      <RadioGroup value={input.option} onChange={handleInputChange} name={question.id.toString()}>
         {question.question_opt?.map((opt) => (
           <div key={opt}>
             <FormControlLabel label={opt} value={opt} control={<Radio />} />

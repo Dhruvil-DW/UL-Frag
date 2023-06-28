@@ -48,7 +48,7 @@ export default function CheckBoxConfirm({ question, nav, index, value = [], onKe
         </h2>
       <FormGroup onChange={handleInputChange}>
         {question.question_opt.map((opt) => (
-          <FormControlLabel key={opt} control={<Checkbox checked={Boolean(input.find(x => x === opt))} style={{marginLeft:'43px'}}/>} label={opt} name={opt} />
+          <FormControlLabel key={opt} control={<Checkbox checked={Boolean(input.find(x => x === opt))}/>} label={opt} name={opt} />
         ))}
       </FormGroup>
       <div className='navBtnCont'>

@@ -125,7 +125,7 @@ export default function TextBoxImage({ question, nav, index, value, onKeyUp }) {
           </h2>
           <TextField multiline rows={8} variant="outlined" name="desc" color="secondary" style={{ width: '100%' }} placeholder="Enter your answer here" value={input.desc ?? ""} onChange={(e) => setInput(prevInput => ({ ...prevInput, [e.target.name]: e.target.value }))} />
         </div>
-        <div className="uploadContainer">
+        <div className="uploadContainer textImage">
           <UploadDoc que_id={question.id} label='Upload Project Photos' files={files} uploadedFiles={input.files} onUpload={onUpload} onRemove={onRemove} onRemoveUploaded={onRemoveUploaded} required={false} />
         </div>
       </div>

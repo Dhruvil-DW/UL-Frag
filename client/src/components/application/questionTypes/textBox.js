@@ -43,7 +43,7 @@ export default function TextBox({ question, nav, index, value = "", onKeyUp }) {
           </Tooltip>
         </span>
         </h2>
-        <TextField multiline rows={8} sx={{marginLeft: '31px'}} inputProps={{ maxLength: 1000 }} InputProps={{ endAdornment: <InputAdornment sx={{ position: "absolute", right: 16, bottom: 16, color: "hsl(0, 0%, 90%)" }} position="end">{`${input?.length ?? 0} / 1000`}</InputAdornment> }}  variant="outlined" color="secondary" placeholder="Enter your answer here" value={input} onChange={(e) => setInput(e.target.value)} />
+        <TextField multiline rows={8} inputProps={{ maxLength: 1000 }} InputProps={{ endAdornment: <InputAdornment sx={{ position: "absolute", right: 16, bottom: 16, color: "hsl(0, 0%, 90%)" }} position="end">{`${input?.length ?? 0} / 1000`}</InputAdornment> }}  variant="outlined" color="secondary" placeholder="Enter your answer here" value={input} onChange={(e) => setInput(e.target.value)} />
         {/* <div style={{ position: "absolute", bottom: 8, right: 24, color: "hsl(0, 0%, 60%)" }}>{`${input.length ?? 0} / 1000`}</div> */}
         {/* {input.length > 1000 && 
         promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Max word limit is 1000" } })

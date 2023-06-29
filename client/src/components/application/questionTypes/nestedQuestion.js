@@ -16,6 +16,7 @@ export default function NestedQuestion({ question, nav, index, onKeyUp }) {
   // console.log(question);
   // console.log(childQuestionData[question.id]);
   function handleNestedDateSelection(value, id, index, country, relQueId) {
+    const timer = 4000;
     // console.log({ id, country, relQueId });
     if (id !== 12) {
       const index = inputs[relQueId - 1]?.indexOf(country);
@@ -24,7 +25,7 @@ export default function NestedQuestion({ question, nav, index, onKeyUp }) {
         const prevQueDate = inputs[id - 1]?.[index];
         if (!prevQueDate) {
           const msg = `Please select ${id === 13 ? "lead market" : "rollout market"} date of ${country} first`
-          promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg } });
+          promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg, timer } });
           return;
         }
         const prevQueDateArr = prevQueDate.split("-");
@@ -34,7 +35,7 @@ export default function NestedQuestion({ question, nav, index, onKeyUp }) {
 
         if (dateDiff <= 0) {
           const msg = `${id === 13 ? "Rollout market" : "Impacted market"} date must be after ${id === 13 ? "lead market" : "rollout market"} date of ${country}`
-          promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg } });
+          promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg, timer } });
           return;
         }
         // console.log({ prevQueDate, value });
@@ -46,7 +47,7 @@ export default function NestedQuestion({ question, nav, index, onKeyUp }) {
           const prevQueDate = inputs[id - 2]?.[index];
           if (!prevQueDate) {
             const msg = `Please select lead market date of ${country} first`
-            promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg } });
+            promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg, timer }});
             return;
           }
           const prevQueDateArr = prevQueDate.split("-");
@@ -56,7 +57,7 @@ export default function NestedQuestion({ question, nav, index, onKeyUp }) {
 
           if (dateDiff <= 0) {
             const msg = `Impacted market date must be after lead market date of ${country}`
-            promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg } });
+            promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg, timer }});
             return;
           }
           // console.log({ prevQueDate, value });

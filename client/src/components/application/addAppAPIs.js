@@ -42,6 +42,7 @@ export function useGetAnswer(appID) {
   return useQuery({
     queryKey: ["answer", appID],
     enabled: !!appID,
+    cacheTime: 0,
     queryFn: async () => {
       const { data } = await axios.get(`/application/getdraft/${appID}`, { headers: { Authorization: "Bearer " + token } });
       console.log("Manually", data);

@@ -14,6 +14,7 @@ import LogoutArrowIcon from "../../assets/icons/logout_arrow";
 import UserAddIcon from "../../assets/icons/userAdd";
 import { collabActions, collabContext } from '../../context/collabContext';
 import { useListCollab } from '../collaborator/collabAPI';
+import { useGetQuestions } from './addAppAPIs';
 
 export default function ViewApplication() {
   const { appId } = useParams();
@@ -28,33 +29,55 @@ export default function ViewApplication() {
   const [queAns, setQueAns] = useState([]);
   //console.log("QuesAns", queAns);
   const listOfCollab = useListCollab(appId);
+  const questions = useGetQuestions();
+  console.log(questions.data);
+
+  useEffect(() => {
+    if (questions.data && queAns.length) {
+      const result = [];
+      questions.data.forEach((cat) => {
+        const questionWithAns = [];
+        cat.questions.forEach((que) => {
+          const answer = queAns.find((qa) => qa.question_id === que.id);
+          if (answer) {
+            questionWithAns.push({ ...que, answers: answer.answers });
+          }
+        })
+        if (questionWithAns.length) {
+          result.push({ ...cat, questions: questionWithAns });
+        }
+      })
+      console.log(result);
+    }
+  }, [questions.data, queAns]);
+  
   function getAppQuestions() {
     getData(`user/viewapplication/${appId}`, {},
-    (data) => {
-      setAppData(data.Application);
-      setQueAns(data.QueAns);
-      //console.log("Question", data.QueAns[0].answers);
+      (data) => {
+        setAppData(data.Application);
+        setQueAns(data.QueAns);
+        //console.log("Question", data.QueAns[0].answers);
       },
       () => {
         navigate("/dashboard");
       });
   }
   useEffect(getAppQuestions, [navigate, getData, appId]);
-  
+
   function handleApprove() {
     updateData(`authority/application/${appId}/Approved`, {}, (data) => {
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: data.message, type: "success", timer: 4000 } });
       navigate("/dashboard");
     });
   }
-  
+
   function handleReject() {
     updateData(`authority/application/${appId}/Rejected`, {}, (data) => {
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: data.message, type: "success", timer: 4000 } });
       navigate("/dashboard");
     });
   }
-  
+
   return (
     <div className='appFormContainer'>
       <div className='sidebar viewSidebar'>
@@ -65,14 +88,14 @@ export default function ViewApplication() {
               Dashboard
             </div>
           </Link>
-          <div className='detailsContainer' style={{marginTop:38}}>
-          {/* <h2 style={{ textAlign: "center" }}>{appData.project_name ?? "N/A"}</h2> */}
-          <h2 style={{ marginLeft: "2rem", maxWidth: 250, textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap", fontWeight:400 }}>{appData.project_name ?? "N/A"}</h2>
-          {/* <p className='viewSidebarIconText'><PageIcon />{appData.application_status?.status ?? "N/A"}</p> */}
-          <Button variant='outlined' sx={{marginLeft: '2rem'}}>{appData.application_status?.status ?? "N/A"}</Button>
-          <p style={{marginLeft: '2rem'}}>{queAns.find((item) => item.question_id === 3)?.answers[0]?.answer ?? "N/A"}</p>
-          <p className='viewSidebarIconText'><UserIcon />{`${appData.User?.first_name ?? "N/A"} ${appData.User?.last_name ?? ""}`}</p>
-          <p className='viewSidebarIconText'><CalenderIcon />{formatDate(appData.updated_at) ?? "N/A"}</p>
+          <div className='detailsContainer' style={{ marginTop: 38 }}>
+            {/* <h2 style={{ textAlign: "center" }}>{appData.project_name ?? "N/A"}</h2> */}
+            <h2 style={{ marginLeft: "2rem", maxWidth: 250, textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap", fontWeight: 400 }}>{appData.project_name ?? "N/A"}</h2>
+            {/* <p className='viewSidebarIconText'><PageIcon />{appData.application_status?.status ?? "N/A"}</p> */}
+            <Button variant='outlined' sx={{ marginLeft: '2rem' }}>{appData.application_status?.status ?? "N/A"}</Button>
+            <p style={{ marginLeft: '2rem' }}>{queAns.find((item) => item.question_id === 3)?.answers[0]?.answer ?? "N/A"}</p>
+            <p className='viewSidebarIconText'><UserIcon />{`${appData.User?.first_name ?? "N/A"} ${appData.User?.last_name ?? ""}`}</p>
+            <p className='viewSidebarIconText'><CalenderIcon />{formatDate(appData.updated_at) ?? "N/A"}</p>
           </div>
           {Boolean(listOfCollab.data?.length) && (
             <div style={{ height: "calc(100% - 300px)", overflowY: "auto" }}>
@@ -115,19 +138,19 @@ export default function ViewApplication() {
 
 function QueAns({ qa, index }) {
   //console.log("QA: ", qa.answers[0].answer);
-  qa.answers.map((ans, i) => console.log("answer", ans.answer));
+  // qa.answers.map((ans, i) => console.log("answer", ans.answer));
   return (
     <>
-    {/* <div className='QACategory'>
+      {/* <div className='QACategory'>
     {qa.category.name}
     </div> */}
-    <div className='QAContainer'>
-    {/* <h3>{index ? `${index}. ` : ""}{qa.question?.question ?? "N/A"}</h3> */}
-      <h3>{index ? `${index}. ` : ""}{qa.question}</h3>
-      <div className='answerContainer'>
-        <GetAnswer qa={qa} />
+      <div className='QAContainer'>
+        {/* <h3>{index ? `${index}. ` : ""}{qa.question?.question ?? "N/A"}</h3> */}
+        <h3>{index ? `${index}. ` : ""}{qa.question}</h3>
+        <div className='answerContainer'>
+          <GetAnswer qa={qa} />
+        </div>
       </div>
-    </div>
     </>
   )
 }

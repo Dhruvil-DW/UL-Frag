@@ -187,13 +187,24 @@ export default function TextBoxVariationImage({ question, nav, index, value, onK
     <div data-que-type={question.question_type_id} className="questionContainer">
       <div style={{ display: "flex", gap: "3rem" }}>
         <div className="queBox">
-          <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}
-          <Tooltip className="tooltip" title={question.description} placement="bottom-end" arrow>
+          {/* <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}
+          <Tooltip className="tooltip" title={question.description} placement="bottom-start" arrow>
             <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex"}}>
               <TooltipIcon />
             </span>
           </Tooltip>
-          </h2>
+          </h2> */}
+          <h2 className="question">
+        <span style={{marginRight: 7 }}>{`${question.CatWiseQueIndex}`}</span>
+        <span style={{verticalAlign: "middle" }}>
+        {question.question}
+          <Tooltip className="tooltip" title={question.description} placement="bottom-start" arrow>
+            <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex"}}>
+              <TooltipIcon />
+            </span>
+          </Tooltip>
+        </span>
+        </h2>
           <div className="variation_list">
             {input.map((element, index) => (
               <div key={index} className="inner_variation" style={{ display: "flex", gap: "3rem", marginBottom: 30, height: "calc(100% - 30px)" }}>

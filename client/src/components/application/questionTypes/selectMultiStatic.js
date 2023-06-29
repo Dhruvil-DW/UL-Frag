@@ -49,7 +49,7 @@ export default function SelectMultiStatic({ question, nav, index, value = [], on
             popupIcon={<ArrowDownIcon />}
             renderInput={(params) => (
               <TextField {...params} variant="outlined" color="secondary"
-                placeholder={inputs[question.id]?.length ? "" : "Enter Country"} />
+                placeholder={inputs[question.id]?.length ? "" : "Enter Country"}/>
             )}
             renderOption={(params, option, { selected }) => (
               <li {...params}>
@@ -71,7 +71,7 @@ export default function SelectMultiStatic({ question, nav, index, value = [], on
           value={input}
           onChange={handleInputChange}
           popupIcon={<ArrowDownIcon />}
-          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder={input?.length ? "" : "Select Format"} />}
+          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder={input?.length ? "" : "Select Format"}/>}
           renderOption={(params, option, { selected }) => (
             <li {...params}>
               <Checkbox checked={selected} />

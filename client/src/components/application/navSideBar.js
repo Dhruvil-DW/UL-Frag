@@ -91,7 +91,7 @@ export default function NavSideBar({ appId, activeQue }) {
         ))}
       </div>
       <div className="buttonContainer">
-        <Button variant="contained" startIcon={<UserAddIcon />} onClick={() => collabDispatch({ type: collabActions.SHOW_COLLAB, payload: { app_id: appId } })}>Invite</Button>
+        <Button variant="contained" style={{padding: '8px 0px'}} startIcon={<UserAddIcon />} onClick={() => collabDispatch({ type: collabActions.SHOW_COLLAB, payload: { app_id: appId } })}>Invite</Button>
         <Button variant="outlined" startIcon={<LogoutArrowIcon />} onClick={() => navigate('/logout')}>Logout</Button>
       </div>
     </aside>

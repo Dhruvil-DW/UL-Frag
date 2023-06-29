@@ -61,17 +61,27 @@ export default function Card({ app, ActionIcons }) {
 
 export function CollabIcons({ app }) {
 
-  if (!Boolean(app.application_invites?.length)) return <p style={{ height: 30 }}>No collaborator</p>
+  if (!Boolean(app.application_invites?.length)) return <p style={{ height: 30, color: "#888" }}>No collaborator</p>
   return (
     <div className="collabIcons" style={{ height: 30 }}>
       <AvatarGroup>
         {app.application_invites.map((invite) => {
           const initial = invite.User.first_name ? invite.User.first_name?.[0] + invite.User.last_name?.[0] : null;
           const email = invite.User.email;
-          const fullName = `${invite.User.first_name ?? ""} ${invite.User.last_name ?? ""}`
+          const fullName = `${invite.User.first_name ?? ""} ${invite.User.last_name ?? ""}`;
           return (
-            <Tooltip key={invite.id} classes={{ popper: "cardTooltip" }} title={<><div>{fullName}</div><div>{email}</div></>} placement="top-start" arrow>
-              {/* <Avatar sx={{ height: 28, width: 28 }}>{initial.toUpperCase()}</Avatar> */}
+            <Tooltip
+              arrow
+              key={invite.id}
+              classes={{ popper: "cardTooltip" }}
+              title={(
+                <>
+                  {/* <div>{fullName}</div> */}
+                  <div>{email}</div>
+                </>
+              )}
+              placement="top-start"
+            >
               <Avatar sx={{ height: 28, width: 28 }}>{initial?.toUpperCase()}</Avatar>
             </Tooltip>
           )

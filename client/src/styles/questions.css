@@ -21,6 +21,7 @@
   margin: 0;
   white-space: pre-line;
   font-weight: 600;
+  display:flex;
 }
 
 .questionContainer .MuiAutocomplete-root {
@@ -32,13 +33,14 @@
   position: absolute;
   top: 6vh;
   left: 6vw;
+  font-weight: 600;
 }
 
 .navBtnCont {
   position: absolute;
   bottom: -4rem;
   display: flex;
-  gap: 1rem;
+  gap: 2rem;
   margin-top: 1rem;
 }
 
@@ -94,7 +96,8 @@
 
 .imageBoxContainer {
   height: 160px;
-  flex-grow: 1;
+  /* flex-grow: 1; */
+  flex-basis: 25%;
   color: white;
   color: hsl(221, 100%, 30%);
   display: flex;

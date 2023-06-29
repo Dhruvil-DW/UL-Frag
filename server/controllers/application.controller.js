@@ -374,7 +374,11 @@ function getDraftedApp(req, res) {
         case 3:
         case 4:
         case 10:
-          answer = queAns.answers.map(ans => ans.answer)[0];
+          if(queAns.question_id === 24) {
+            answer = JSON.parse(queAns.answers.map(ans => ans.answer)[0]);
+          } else {
+            answer = queAns.answers.map(ans => ans.answer)[0];
+          }
           break;
         case 9: // Add Multiple Section
           answer = queAns.answers.map(ans => JSON.parse(ans.answer));

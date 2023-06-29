@@ -36,16 +36,19 @@ export default function CheckBoxConfirm({ question, nav, index, value = [], onKe
   return (
     <div className="questionContainer fixWidth">
       <h2 className="question">
-        {`${question.CatWiseQueIndex} ${question.question}`}
-        <Tooltip className="tooltip" title={question.description} arrow placement="bottom-end">
-          <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex" }}>
-            <TooltipIcon />
-          </span>
-        </Tooltip>
-      </h2>
+        <span style={{marginRight: 7 }}>{`${question.CatWiseQueIndex}`}</span>
+        <span style={{verticalAlign: "middle" }}>
+        {question.question}
+          <Tooltip className="tooltip" title={question.description} placement="bottom-start" arrow>
+            <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex"}}>
+              <TooltipIcon />
+            </span>
+          </Tooltip>
+        </span>
+        </h2>
       <FormGroup onChange={handleInputChange}>
         {question.question_opt.map((opt) => (
-          <FormControlLabel key={opt} control={<Checkbox checked={Boolean(input.find(x => x === opt))} />} label={opt} name={opt} />
+          <FormControlLabel key={opt} control={<Checkbox checked={Boolean(input.find(x => x === opt))}/>} label={opt} name={opt} />
         ))}
       </FormGroup>
       <div className='navBtnCont'>

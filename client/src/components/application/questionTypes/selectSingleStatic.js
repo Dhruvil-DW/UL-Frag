@@ -50,7 +50,7 @@ export default function SelectSingleStatic({ question, nav, index, value = null,
           value={input}
           onChange={handleInputChange}
           popupIcon={<ArrowDownIcon />}
-          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Select Option" />}
+          renderInput={(params) => <TextField {...params} variant="outlined" color="secondary" placeholder="Select Option"/>}
           onKeyUp={onKeyUp}
         />)}
       <div className='navBtnCont'>

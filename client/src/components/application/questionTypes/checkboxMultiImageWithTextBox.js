@@ -43,7 +43,7 @@ export default function CheckBoxImageWithTextBox({ question, nav, index, value =
       element.scrollIntoView({ behavior: 'smooth' });
     }
   }
-
+  const isInputValid = input.desc?.length < 1000;
   return (
     <>
       <div className="questionContainer">
@@ -67,6 +67,11 @@ export default function CheckBoxImageWithTextBox({ question, nav, index, value =
         <div>
           <TextField multiline fullWidth rows={2} inputProps={{ maxLength: 1000 }} InputProps={{ endAdornment: <InputAdornment sx={{ position: "absolute", right: 16, bottom: 16, color: "hsl(0, 0%, 90%)" }} position="end">{`${input.desc?.length ?? 0} / 1000`}</InputAdornment> }}  variant="outlined" color="secondary" placeholder="Enter your description here" value={input.desc} onChange={handleDescChange} />
           {/* <div style={{ position: "absolute", bottom: 8, right: 24, color: "hsl(0, 0%, 60%)" }}>{`${input.length ?? 0} / 1000`}</div> */}
+          {!isInputValid && (
+        <p style={{ fontSize: 12, color: 'red', marginLeft: '21px' }}>
+          Input length should not exceed 1000 characters.
+        </p>
+          )}
         </div>
 
         {/* <div style={{position: "absolute", display: "flex", justifyContent: "center", width: "100%", fontSize: 14, bottom: "-3rem", color: "#00000080"}}>You can select only two of them</div> */}

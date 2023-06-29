@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, CircularProgress, Dialog } from "@mui/material";
 import { Fragment, createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import QuestionType from "./questionTypes";
 import NavSideBar from "./navSideBar";
@@ -10,57 +10,37 @@ import ErrorBoundary from "../../config/errorBoundary/ErrorBoundary";
 import WelcomeScreen from "./welcomeScreen/welcomeScreen";
 import { useAxios } from "../../hooks/useAxios";
 import { promptActions, promptContext } from "../../context/promptContext";
-import { useGetCountry, useGetQuestions, useGetRegion } from "./addAppAPIs";
+import { useGetAnswer, useGetCountry, useGetQuestions, useGetRegion } from "./addAppAPIs";
 export const ApplicationContext = createContext();
 
 export default function AddApplication() {
   const { appId } = useParams();
   const { promptDispatch } = useContext(promptContext);
   const navigate = useNavigate();
-  const [catWiseQues, setCatWiseQues] = useState([]);
   const [inputs, setInputs] = useState({});
   const [imageInputs, setImageInputs] = useState({});
   const [allFiles, setAllFiles] = useState([]);
   const [removeFiles, setRemoveFiles] = useState([]);
-  // const [regions, setRegions] = useState([]);
-  // const [country, setCountry] = useState([]);
   const containerRef = useRef(null);
-  const { getData, postData } = useAxios();
+  const { postData } = useAxios();
 
   // console.log("INPUTS: ", inputs);
-  function getQuestions() {
-    if (appId) {
-      getData(`/application/getdraft/${appId}`, {}, (data) => {
-        setInputs(data.inputs);
-      });
-    }
-    getData(`/application/questions/getall`, {}, (data) => {
-      const newData = getCatWiseQues(data);
-      setCatWiseQues(newData);
-    });
-  }
 
-  // function getRegions() {
-  //   getData("application/getregions", {}, setRegions);
-  // }
-
-  // function getCountry() {
-  //   if (inputs[5]) {
-  //     const country_id = regions?.find((obj) => obj.label === inputs[5])?.id;
-  //     country_id && getData(`application/getcountry/${country_id}`, {}, setCountry);
-  //   }
-  // }
   const regionList = useGetRegion();
-  // const regions = regionList.data ?? [];
   const countryList = useGetCountry(regionList?.data?.find((obj) => obj.label === inputs[5])?.id);
-  // const country = countryList.data ?? [];
+  const catQue = useGetQuestions();
+  const answers = useGetAnswer(appId);
+  const catWiseQues = catQue?.data ?? [];
 
-  useEffect(getQuestions, [getData, appId]);
-  // useEffect(getRegions, [getData]);
-  // useEffect(getCountry, [getData, inputs, regions]);
-  // const { appId } = useParams();
+  function getAnswers() {
+    console.log("GET_ANSWERS: ");
+    if (answers?.data?.inputs) {
+      console.log("SET_INPUTS: ", answers.data.inputs);
+      setInputs(answers.data.inputs);
+    }
+  }
+  useEffect(getAnswers, [answers.status, answers.data, appId]);
   const [currentQue, setCurrentQue] = useState(1);
-  // const [activeSection, setActiveSection] = useState(0);
 
   const handleScroll = useCallback((e) => {
     const { clientHeight, scrollTop } = e.target;
@@ -69,23 +49,6 @@ export default function AddApplication() {
   }, [])
 
   const debouncedHandleScroll = debounce(handleScroll, 500);
-
-  const handleNextPrevNav = (queNo, type) => {
-    //   console.log('Questions = ',queNo);
-    //   switch (type) {
-    //     case 'next':
-    //       setCurrentQue(queNo + 1);
-    //       break;
-    //     case 'prev':
-    //       setCurrentQue(queNo - 1);
-    //       break;
-    //     case 'fixed':
-    //       setCurrentQue(queNo);
-    //       break;
-    //     default:
-    //       return;
-    //   }
-  }
 
   // useEffect(() => {
   //   // total height of scroll track
@@ -108,10 +71,6 @@ export default function AddApplication() {
       // console.log(containerRef.current);
     }
   }
-  useEffect(() => {
-    const inputs = Array.from(containerRef.current.querySelectorAll('input'));
-    inputs[0]?.focus();
-  }, [])
 
   const resetInputCountry = useCallback(() => {
     setInputs(prevInput => {
@@ -192,11 +151,11 @@ export default function AddApplication() {
 
   const handleSubmit = () => {
     // console.log({ inputs });
-    if(!(inputs[1]?.option && inputs[1]?.projectName)) {
+    if (!(inputs[1]?.option && inputs[1]?.projectName)) {
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please enter project name" } });
       return;
     }
-    
+
     if (!Boolean(inputs[3])) {
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please Select Category" } });
       return;
@@ -255,7 +214,7 @@ export default function AddApplication() {
   }
 
   function handleDraft() {
-    if(!(inputs[1]?.option && inputs[1]?.projectName)) {
+    if (!(inputs[1]?.option && inputs[1]?.projectName)) {
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please enter project name" } });
       return;
     }
@@ -312,8 +271,10 @@ export default function AddApplication() {
 
   // console.debug("QUESTIONS: ", catWiseQues);
   // let count = 1;
+  // if (true) return (<LoadingAddApp />)
+  if (catQue.status === "loading" || (appId && !(Object.keys(inputs).length))) return (<LoadingAddApp />)
   return (
-    <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleNextPrevNav, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, handleRemoveFiles, handleImageInputChange, regions: regionList.data, country: countryList.data, resetInputCountry, resetMarket }}>
+    <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, handleRemoveFiles, handleImageInputChange, regions: regionList.data, country: countryList.data, resetInputCountry, resetMarket }}>
       <main className="appFormContainer">
         <ErrorBoundary>
           <NavSideBar formRef={containerRef} activeQue={currentQue} appId={appId} />
@@ -338,8 +299,8 @@ export default function AddApplication() {
                   {cat.questions.map((que, questionIndex) => (
                     <div className="pageWrapper" key={que.id} data-que-type={que.question_type_id} data-que-id={que.id} id={que.serial}>
                       <div className="pageContainer">
-                        <div className="categoryText">{que?.category?.name ?? ""}</div>
-                        <QuestionType question={que} nav={que.serial} index={questionIndex} inputs={inputs} onKeyUp={handleFocusNext} />
+                        <div className="categoryText">{`${que?.category?.id}. ${que?.category?.name ?? ""}`}</div>
+                        <QuestionType question={que} nav={que.serial} index={questionIndex} onKeyUp={handleFocusNext} />
                         <Link to='/dashboard' tabIndex={-1}>
                           <div className="unilever-icon questionPage">
                             <UnileverIcon width="64px" />
@@ -367,137 +328,23 @@ export default function AddApplication() {
           </div>
         </div>
 
-
       </main>
     </ApplicationContext.Provider>
   )
 }
 
-function getCatWiseQues(questions) {
-  const result = [];
-  let count = 0;
-  let CatWiseQueIndex;
-  questions.forEach((que, index) => {
-    const imgData = img_data[que.id];
-    if (result[que.category.id - 1]) {
-      CatWiseQueIndex += 1;
-      result[que.category.id - 1].questions = [...result[que.category.id - 1].questions, { ...que, imgData: imgData, serial: count++, CatWiseQueIndex: `${que.category.id}.${CatWiseQueIndex}` }];
-    } else {
-      CatWiseQueIndex = 1;
-      result[que.category.id - 1] = { category_id: que.category.id, category_name: que.category.name, serial: count++, questions: [{ ...que, imgData: imgData, serial: count++, CatWiseQueIndex: `${que.category.id}.${CatWiseQueIndex}` }] }
-    }
-  });
-  // console.log("Sidebar_CatWiseData: ", result);
-  return result;
+function LoadingAddApp() {
+  return (
+    // <Dialog open PaperProps={{ sx: { bgcolor: "transparent", boxShadow: 'none' } }} >
+    //   <div style={{ height: 200, width: 200, color: "white", display: "flex", justifyContent: "center", alignItems: "center" }}>
+    //     <CircularProgress color="inherit" />
+    //   </div>
+    // </Dialog>
+    <main className="appFormContainer">
+      <aside className="sidebar"></aside>
+      <div className="formRelative" style={{ color: "black", display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <CircularProgress color="inherit" />
+      </div>
+    </main>
+  )
 }
-
-const img_data = {
-  1: [
-    { path: "question_1_main.png", style: { right: 0, width: '15vw' } },
-    { path: "question_1_small.svg", style: { bottom: '15vw', right: '3vw', width: '7vw' } },
-  ],
-  2: [
-    { path: "question_2_main.png", style: { right: 0, width: '12vw' } },
-    { path: "question_2_small.svg", style: { bottom: '13vw', right: '8vw', width: '6vw' } },
-  ],
-  3: [
-    { path: "question_3_main.png", style: { right: 0, width: '12vw' } },
-    { path: "question_3_small.svg", style: { bottom: '3vw', right: '15vw', width: '7vw' } },
-  ],
-  4: [
-    { path: "question_4_main.png", style: { right: 0, width: '12vw' } },
-    { path: "question_4_small.svg", style: { bottom: '13vw', right: '7vw', width: '7vw' } },
-  ],
-  5: [
-    { path: "question_5_main.png", style: { right: 0, width: '12vw' } },
-    { path: "question_5_small.svg", style: { bottom: '13vw', right: '2vw', width: '7vw' } },
-  ],
-  6: [
-    { path: "question_6_main.png", style: { right: 0, width: '15vw' } },
-    { path: "question_6_small.svg", style: { bottom: '2vw', right: '17vw', width: '7vw' } },
-  ],
-  // 7: [
-  //   { path: "question_7_main.png", style: {right: 0, width: '15vw'}},
-  //   { path: "question_7_small.svg", style: {bottom: '15vw', right: '3vw', width: '7vw'}},
-  // ],
-  // 8: [
-  //   { path: "question_8_main.png", style: {right: 0, width: '15vw'}},
-  //   { path: "question_8_small.svg", style: {bottom: '15vw', right: '3vw', width: '7vw'}},
-  // ],
-  // 9: [
-  //   { path: "question_9_main.png", style: {right: 0, width: '15vw'}},
-  //   { path: "question_9_small.svg", style: {bottom: '15vw', right: '3vw', width: '7vw'}},
-  // ],
-  10: [
-    { path: "question_7_main.png", style: { right: 0, width: '15vw' } },
-    { path: "question_7_small.svg", style: { bottom: '3vw', right: '18vw', width: '7vw' } },
-  ],
-  // 11: [
-  //   { path: "question_3_main.png", style: {right: 0, width: '15vw'}},
-  //   { path: "question_3_small.svg", style: {bottom: '15vw', right: '3vw', width: '7vw'}},
-  // ],
-  // 12: [
-  //   { path: "question_4_main.png", style: {right: 0, width: '15vw'}},
-  //   { path: "question_4_small.svg", style: {bottom: '15vw', right: '3vw', width: '7vw'}},
-  // ],
-  // 13: [
-  //   { path: "question_5_main.png", style: {right: 0, width: '15vw'}},
-  //   { path: "question_5_small.svg", style: {bottom: '15vw', right: '3vw', width: '7vw'}},
-  // ],
-  14: [
-    { path: "question_8_main.png", style: { right: 0, width: '15vw' } },
-    { path: "question_8_small.svg", style: { bottom: '3vw', right: '17vw', width: '7vw' } },
-  ],
-  15: [
-    { path: "question_9_main.png", style: { right: 0, width: '13vw' } },
-    { path: "question_9_small.svg", style: { bottom: '11vw', right: '13vw', width: '6vw' } },
-  ],
-  16: [
-    { path: "question_1_main.png", style: { right: 0, width: '15vw' } },
-    { path: "question_1_small.svg", style: { bottom: '8vw', right: '16vw', width: '7vw' } },
-  ],
-  17: [
-    { path: "question_2_main.png", style: { right: 0, width: '12vw' } },
-    { path: "question_2_small.svg", style: { bottom: '3vw', right: '14vw', width: '6vw' } },
-  ],
-  18: [
-    { path: "question_3_main.png", style: { right: 0, width: '12vw' } },
-    { path: "question_3_small.svg", style: { bottom: '8vw', right: '13vw', width: '7vw' } },
-  ],
-  19: [
-    { path: "question_4_main.png", style: { right: 0, width: '12vw' } },
-    { path: "question_4_small.svg", style: { bottom: '12vw', right: '10vw', width: '7vw' } },
-  ],
-  20: [
-    { path: "question_5_main.png", style: { right: 0, width: '12vw' } },
-    { path: "question_5_small.svg", style: { bottom: '2vw', right: '14vw', width: '7vw' } },
-  ],
-  21: [
-    { path: "question_6_main.png", style: { right: 0, width: '15vw' } },
-    { path: "question_6_small.svg", style: { bottom: '2vw', right: '17vw', width: '7vw' } },
-  ],
-  22: [
-    { path: "question_1_main.png", style: { right: 0, width: '15vw' } },
-    { path: "question_1_small.svg", style: { bottom: '5vw', right: '16vw', width: '7vw' } },
-  ],
-  23: [
-    { path: "question_2_main.png", style: { right: 0, width: '12vw' } },
-    { path: "question_2_small.svg", style: { bottom: '10vw', right: '12vw', width: '6vw' } },
-  ],
-  24: [
-    { path: "question_3_main.png", style: { right: 0, width: '12vw' } },
-    { path: "question_3_small.svg", style: { bottom: '3vw', right: '14vw', width: '7vw' } },
-  ],
-  25: [
-    { path: "question_4_main.png", style: { right: 0, width: '12vw' } },
-    { path: "question_4_small.svg", style: { bottom: '6vw', right: '15vw', width: '7vw' } },
-  ],
-  29: [
-    { path: "question_5_main.png", style: { right: 0, width: '12vw' } },
-    { path: "question_5_small.svg", style: { bottom: '3vw', right: '13vw', width: '7vw' } },
-  ],
-  30: [
-    { path: "question_6_main.png", style: { right: 0, width: '15vw' } },
-    { path: "question_6_small.svg", style: { bottom: '2vw', right: '17vw', width: '7vw' } },
-  ]
-};

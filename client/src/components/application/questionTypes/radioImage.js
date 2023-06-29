@@ -7,6 +7,7 @@ export default function RadioImage({ question, nav, index, value = {}, onKeyUp }
   const { handleAnswerChange, inputs } = useContext(ApplicationContext);
   //console.log("INPUTSCONTEXT-", inputs);
   const [input, setInput] = useState(value);
+  //console.log("Input", input.desc.length);
   const [brands, setBrands] = useState(question.question_opt);
   const defferedInput = useDeferredValue(input);
   // console.log(question);
@@ -49,6 +50,7 @@ export default function RadioImage({ question, nav, index, value = {}, onKeyUp }
       element.scrollIntoView({ behavior: 'smooth' });
     }
   }
+  //const isInputValid = input.desc?.length < 1000;
   return (
     <div className="questionContainer">
       <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}</h2>
@@ -93,6 +95,11 @@ export default function RadioImage({ question, nav, index, value = {}, onKeyUp }
               '& .MuiInputBase-multiline.MuiInputBase-root.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: "var(--Color-Primary)" },
             }}
           />
+          {/* {!isInputValid && (
+        <p style={{ fontSize: 12, color: 'red', marginLeft: '21px' }}>
+          Input length should not exceed 1000 characters.
+        </p>
+          )} */}
           {/* <div style={{ position: "absolute", bottom: 32, right: 24, color: "hsl(0, 0%, 90%)" }}>{`${input.desc?.length ?? 0} / 1000`}</div> */}
         </div>
       </div>
@@ -107,8 +114,8 @@ export default function RadioImage({ question, nav, index, value = {}, onKeyUp }
 
 function BrandImage({ path }) {
   return (
-    <div style={{ height: 70, display: "flex", alignItems: "flex-end" }}>
-      <img src={`/images/${path}`} alt="BrandImage" height={50} />
+    <div style={{ display: "flex", alignItems: "flex-end" }}>
+      <img src={`/images/${path}`} alt="BrandImage" width={100} />
     </div>
   )
 }

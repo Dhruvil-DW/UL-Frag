@@ -1,9 +1,6 @@
 import Login from "./components/login/login";
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-// import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Redirect } from "./config/routes";
-import Context from "./context";
 import Dashboard from "./components/dashboard/dashboard";
 import AddProfile from "./components/profile/addProfile";
 import Logout from "./components/login/logout";
@@ -12,27 +9,29 @@ import FragranceBrief from './components/fragranceBrief/fragranceBrief'
 import SubmitApplication from "./components/application/submitApplication";
 import ViewApplication from "./components/application/viewApplication";
 import DraftApplication from "./components/application/draftApplication";
-import Prompt from "./assets/prompt/prompt";
-import CollabModal from "./components/collaborator/collabModal";
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-    }
-  }
-});
+import { useContext } from "react";
+import { authContext } from "./context/authContext";
 
 export default function App() {
+  const { authState } = useContext(authContext);
+  const token = authState.token;
+  const userdata = authState.userdata;
+
+  console.log(userdata)
   return (
-    <Context>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Redirect />} />
-            <Route path="/*" element={<Navigate to="/" />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/logout" element={<Logout />} />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Redirect />} />
+        <Route path="/*" element={<Navigate to="/" />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route path="/login" element={<Login />} />
+        
+        {/* New User */}
+        {token && userdata?.role_id === 0 && <Route path="/profile" element={<AddProfile />} />}
+
+        {/* User */}
+        {token && userdata?.role_id === 1 && (
+          <>
             <Route path="/profile" element={<AddProfile />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/application">
@@ -43,14 +42,21 @@ export default function App() {
               <Route path="view/:appId" element={<ViewApplication />} />
               <Route path="edit/:appId" element={<AddApplication />} />
             </Route>
-          </Routes>
-        </BrowserRouter>
-        <CollabModal />
-        <Prompt />
-        {/* <ReactQueryDevtools /> */}
-      </QueryClientProvider>
-    </Context>
+          </>
+        )}
 
+        {/* Aproval Authority */}
+        {token && userdata?.role_id === 2 && (
+          <>
+            <Route path="/profile" element={<AddProfile />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/application">
+              <Route path="view/:appId" element={<ViewApplication />} />
+            </Route>
+          </>
+        )}
+      </Routes>
+    </BrowserRouter>
   );
 }
 

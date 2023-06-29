@@ -1,4 +1,5 @@
 import { createContext, useReducer } from "react"
+import Prompt from "../assets/prompt/prompt";
 
 //Create Context
 export const promptContext = createContext();
@@ -38,6 +39,7 @@ export default function PromptContextWrapper({ children }) {
   return (
     <promptContext.Provider value={{ promptState, promptDispatch }}>
       {children}
+      <Prompt />
     </promptContext.Provider>
   )
 }

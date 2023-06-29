@@ -20,7 +20,7 @@ export default function FragranceBrief() {
             <CategoryIcon style={{ marginLeft: 8, marginRight: 4 }} />
             Dashboard
           </Button>
-          <h1>Give us an overview of<br />your fragrance brief</h1>
+          <h1 style={{ width: "10vw" }}>Give us an overview of<br />your fragrance brief</h1>
           <Button variant="contained" color="secondary" className="get_started" onClick={() => navigate("new")}>Get started</Button>
         </div>
       </div>

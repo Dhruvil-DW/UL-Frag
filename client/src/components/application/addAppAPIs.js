@@ -144,7 +144,7 @@ const img_data = {
     { path: "question_8_small.svg", style: { bottom: '3vw', right: '17vw', width: '7vw' } },
   ],
   15: [
-    { path: "question_9_main.png", style: { right: 0, width: '13vw' } },
+    { path: "question_9_main.png", style: { right: 0, width: '10vw' } },
     { path: "question_9_small.svg", style: { bottom: '11vw', right: '13vw', width: '6vw' } },
   ],
   16: [

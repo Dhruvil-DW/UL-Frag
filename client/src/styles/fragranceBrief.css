@@ -18,3 +18,12 @@
   margin-top: 30vh;
   color: var(--Color-Primary);
 }
+.briefHeading {
+  width: 25vw;
+}
+
+@media only screen and (max-width: 1300px) {
+  .briefHeading{
+    font-size: 24px;
+  }
+}

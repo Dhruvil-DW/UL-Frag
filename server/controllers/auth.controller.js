@@ -24,7 +24,7 @@ function sendOTP(req, res) {
         }
         sendEmail([email], `OTP for Your Fragrance Login`,
             `Your One Time Password (OTP) is <b>${otp}</b>.`)
-        res.status(200).send({ message: "OTP send successfully" });
+        res.status(200).send({ message: "OTP sent successfully" });
     })();
 }
 

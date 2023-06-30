@@ -4,6 +4,7 @@ import './styles/index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import axios from 'axios';
+import Context from './context';
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_URL;
 
@@ -11,7 +12,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
   <Profiler id='App'>
-    <App />
+    <Context>
+      <App />
+    </Context>
   </Profiler>
   // </React.StrictMode>
 );

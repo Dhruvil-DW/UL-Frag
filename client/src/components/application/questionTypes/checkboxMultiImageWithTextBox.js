@@ -47,11 +47,20 @@ export default function CheckBoxImageWithTextBox({ question, nav, index, value =
   return (
     <>
       <div className="questionContainer">
-      {question.id === 23 &&
+        {/* {question.id === 23 &&
         <p className="addText">Performance input</p>
-      }
-        <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}</h2>
-        <div style={{fontSize: 14, color: "#00000080", margin: "-12px 0 -12px auto"}}>You can select only two of them</div>
+      } */}
+        {/* <h2 className="question">
+          {`${question.CatWiseQueIndex} ${question.id === 23 ? "Performance input: " : ""}${question.question}`}
+        </h2> */}
+        <h2 className="question">
+          <span style={{ marginRight: 7 }}>{question.CatWiseQueIndex}</span>
+          <span>
+            <span className="addText">{question.id === 23 ? "Performance input: " : ""}</span>
+            {question.question}
+          </span>
+        </h2>
+        <div style={{ fontSize: 14, color: "#00000080", margin: "-12px 0 -12px auto" }}>You can select any two of them</div>
         <div className="optionContainer">
           {question.question_opt?.map((opt) => (
             <div key={opt} className="imageBoxContainer" onClick={() => handleInputChange(opt)}>
@@ -65,12 +74,12 @@ export default function CheckBoxImageWithTextBox({ question, nav, index, value =
         </div>
 
         <div>
-          <TextField multiline fullWidth rows={2} inputProps={{ maxLength: 1000 }} InputProps={{ endAdornment: <InputAdornment sx={{ position: "absolute", right: 16, bottom: 16, color: "hsl(0, 0%, 90%)" }} position="end">{`${input.desc?.length ?? 0} / 1000`}</InputAdornment> }}  variant="outlined" color="secondary" placeholder="Enter your description here" value={input.desc} onChange={handleDescChange} />
+          <TextField multiline fullWidth rows={2} inputProps={{ maxLength: 1000 }} InputProps={{ endAdornment: <InputAdornment sx={{ position: "absolute", right: 16, bottom: 16, color: "hsl(0, 0%, 90%)" }} position="end">{`${input.desc?.length ?? 0} / 1000`}</InputAdornment> }} variant="outlined" color="secondary" placeholder="Enter your description here" value={input.desc} onChange={handleDescChange} />
           {/* <div style={{ position: "absolute", bottom: 8, right: 24, color: "hsl(0, 0%, 60%)" }}>{`${input.length ?? 0} / 1000`}</div> */}
           {!isInputValid && (
-        <p style={{ fontSize: 12, color: 'red', marginLeft: '21px' }}>
-          Input length should not exceed 1000 characters.
-        </p>
+            <p style={{ fontSize: 12, color: 'red', marginLeft: '21px' }}>
+              Input length should not exceed 1000 characters.
+            </p>
           )}
         </div>
 

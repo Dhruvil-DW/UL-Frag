@@ -1,4 +1,5 @@
 import { createContext, useReducer } from "react"
+import CollabModal from "../components/collaborator/collabModal";
 
 //Create Context
 export const collabContext = createContext();
@@ -16,7 +17,7 @@ const collabReducer = (state, action) => {
   console.log(action);
   switch (action.type) {
     case collabActions.SHOW_COLLAB:
-      return { isOpen: true , appData: action.payload ?? null };
+      return { isOpen: true, appData: action.payload ?? null };
 
     case collabActions.HIDE_COLLAB:
       return { isOpen: false };
@@ -34,6 +35,7 @@ export default function CollabContextWrapper({ children }) {
   return (
     <collabContext.Provider value={{ collabState, collabDispatch }}>
       {children}
+      <CollabModal />
     </collabContext.Provider>
   )
 }

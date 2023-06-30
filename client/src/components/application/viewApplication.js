@@ -27,27 +27,39 @@ export default function ViewApplication() {
 
   const [appData, setAppData] = useState({});
   const [queAns, setQueAns] = useState([]);
+  const [result, setResult] = useState([]);
   //console.log("QuesAns", queAns);
   const listOfCollab = useListCollab(appId);
   const questions = useGetQuestions();
-  console.log(questions.data);
+  //console.log(questions.data);
 
   useEffect(() => {
     if (questions.data && queAns.length) {
-      const result = [];
+      const finalResult = [];
       questions.data.forEach((cat) => {
         const questionWithAns = [];
         cat.questions.forEach((que) => {
-          const answer = queAns.find((qa) => qa.question_id === que.id);
-          if (answer) {
-            questionWithAns.push({ ...que, answers: answer.answers });
+          if(que.question_type_id === 12) {
+            debugger;
+            const answer = queAns
+            .filter((qa) => [que.id + 1, que.id + 2, que.id + 3 ].includes(qa.question_id))
+            .map(obj => ({ question_id: obj.question_id, answer: obj.answers[0].answer }))
+            if (answer) {
+              questionWithAns.push({ ...que, answers: answer });
+            }
+          } else {
+            const answer = queAns.find((qa) => qa.question_id === que.id);
+            if (answer) {
+              questionWithAns.push({ ...que, answers: answer.answers });
+            }
           }
         })
         if (questionWithAns.length) {
-          result.push({ ...cat, questions: questionWithAns });
+          finalResult.push({ ...cat, questions: questionWithAns });
         }
       })
-      console.log(result);
+      setResult(finalResult);
+      //console.log(finalResult);
     }
   }, [questions.data, queAns]);
   
@@ -77,7 +89,7 @@ export default function ViewApplication() {
       navigate("/dashboard");
     });
   }
-
+// console.log("resultqueans", result[0].category_name);
   return (
     <div className='appFormContainer'>
       <div className='sidebar viewSidebar'>
@@ -130,31 +142,54 @@ export default function ViewApplication() {
         )}
       </div>
       <div className='QAWrapper'>
-        {queAns.map((qa, index) => <QueAns key={qa.id} index={index + 1} qa={qa} />)}
+        {/* {queAns.map((qa, index) => <QueAns key={qa.id} index={index + 1} qa={qa} />)} */}
+        {result.map((cat) => <NewQuesAns category={cat} />)}
       </div>
     </div>
   )
 }
 
-function QueAns({ qa, index }) {
-  //console.log("QA: ", qa.answers[0].answer);
-  // qa.answers.map((ans, i) => console.log("answer", ans.answer));
+// function QueAns({ qa, index }) {
+//   //console.log("QA: ", qa);
+//   // ans.map((ans, i) => console.log("answer", ans.answer));
+//   return (
+//     <>
+//       {/* <div className='QACategory'>
+//     {qa.category.name}
+//     </div> */}
+//       <div className='QAContainer'>
+//         {/* <h3>{index ? `${index}. ` : ""}{qa.question?.question ?? "N/A"}</h3> */}
+//         <h3>{index ? `${index}. ` : ""}{qa.question}</h3>
+//         <div className='answerContainer'>
+//           <GetAnswer qa={qa} />
+//         </div>
+//       </div>
+//     </>
+//   )
+// }
+
+function NewQuesAns({category}){
+  console.log(category);
   return (
+    <div className='QAContainer'>
+  <h4>{category.category_id}. {category.category_name}</h4>
+  {category.questions.map((que)=> 
+  // console.log("answers", que.answers)
     <>
-      {/* <div className='QACategory'>
-    {qa.category.name}
-    </div> */}
-      <div className='QAContainer'>
-        {/* <h3>{index ? `${index}. ` : ""}{qa.question?.question ?? "N/A"}</h3> */}
-        <h3>{index ? `${index}. ` : ""}{qa.question}</h3>
-        <div className='answerContainer'>
-          <GetAnswer qa={qa} />
-        </div>
+      <h3>{`${que.CatWiseQueIndex} ${que.question}`}</h3>
+      <div className='answerContainer'>
+        
+        <GetNewAnswer ans={que}/>
       </div>
-    </>
+      </>
+  )}
+  {/* <GetNewAnswer cat={category}/> */}
+  </div>
+
   )
 }
 
+ 
 // function NestedQueAns({ que, index, appInputs }) {
 //   const childQue = que.nestedQue;
 //   // console.log(childQue);
@@ -169,105 +204,216 @@ function QueAns({ qa, index }) {
 //   )
 // }
 
-function GetAnswer({ qa }) {
-  //console.log("QA: ", qa.answers[0].answer);
-  switch (qa) {
-    case 1: // TextBox
+// old function for getting answers --start----
+// function GetAnswer({ qa }) {
+//   //console.log("QA: ", qa.answers[0].answer);
+//   switch (qa) {
+//     case 1: // TextBox
+//       // console.log(qa.answers);
+//       return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>);
+
+//     case 3: //Select Dropdown predefined
+//     case 4: // Select Dropdown dynamic
+//       // console.log(qa)app_questions.answers.;
+//       return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
+
+//     case 5: //Multiselect Dropdown predefined
+//     case 6: // Multiselect dropdown dynamic
+//       // console.log(qa)app_questions.answers.;
+//       return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
+
+//     case 14: //Select (projectName) with TextBox
+//       return qa.answers.map((ans, i) => {
+//         const ansObj = JSON.parse(ans.answer);
+//         return (
+//           <Fragment key={i}>
+//             <p>{ansObj.option}</p>
+//             <p>{ansObj.projectName}</p>
+//           </Fragment>)
+//       });
+
+//     case 7: // Picture Choice predefined
+//       return qa.answers.map((ans, i) => {
+//         const ansObj = JSON.parse(ans.answer);
+//         return (
+//           <Fragment key={i}>
+//             <img src={`/images/${ansObj.brand}`} alt={ansObj.brand} />
+//             {ansObj.desc && <p>{ansObj.desc}</p>}
+//           </Fragment>)
+//       });
+
+//     case 13: // Add Multiple section Image Upload
+//       return qa.answers.map((ans, i) => {
+//         const ansObj = JSON.parse(ans.answer);
+//         return (
+//           <Fragment key={i}>
+//             {ansObj.desc && <p><b>{ansObj.desc}</b></p>}
+//             <div style={{ display: 'flex', alignItems: 'center', gap: '3em' }}>
+//               {ansObj.files.map((img) => (
+//                 <LazyImage name={img} style={{ width: '10vw' }} />
+//               ))}
+//             </div>
+//           </Fragment>)
+//       });
+
+//     case 9:
+//       return qa.answers.map((ans, i) => {
+//         const ansObj = JSON.parse(ans.answer);
+//         return (
+//           <Fragment key={i}>
+//             <div style={{ display: 'flex', marginBottom: '30px', gap: '3em' }}>
+//               <p style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}><b>{ansObj.variation} :</b></p>
+//               {ansObj.files.map((img, i) => (
+//                 <div key={i} style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+//                   <LazyImage name={img} style={{ width: '10vw' }} />
+//                 </div>
+//               ))}
+//             </div>
+//           </Fragment>)
+//       });
+
+//     case 8: // Multiselect Picture Choice
+//       if (qa.id === 23) {
+//         const ansObj = JSON.parse(qa.answers[0].answer);
+//         return (
+//           <>
+//             {ansObj.option.map((opt, i) => <p key={i}>{opt}</p>)}
+//             {ansObj.desc && <p><b>Description: </b>{ansObj.desc}</p>}
+//           </>
+//         )
+//       } else {
+//         return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
+//       }
+
+//     case 10: // Single Choice predefinded
+//       if (qa.question.id === 24) {
+//         const ansObj = JSON.parse(qa.answers[0].answer);
+//         return (
+//           <>
+//             {/* {ansObj.option.map((opt, i) => <p key={i}>{opt}</p>)} */}
+//             {ansObj.option && <p><b>Investment: </b>{ansObj.option}</p>}
+//             {ansObj.amount && <p><b>Amount: </b>&nbsp;€{ansObj.amount} Cost per tons (in Euros)</p>}
+//           </>
+//         )
+//       } else {
+//         return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
+//       }
+
+//     case 11: // Multiple Choice (Checkbox) predefined
+//     case 15: // Confirm Checkbox
+//     case 12: // Nested questions
+//     case 2: // Date
+//     default:
+//       return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
+//   }
+// }
+// old function for getting answers --end----
+
+
+function GetNewAnswer({ ans }) {
+  //console.log("QA: ", ans);
+  // ans.answers.map((ans) => {
+  //   console.log("JSONP", JSON.parse(ans.answer));
+    
+  // });
+  // cat.questions.map((que) => {
+    switch (ans.question_type_id) {
+      case 1: // TextBox
       // console.log(qa.answers);
-      return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>);
-
-    case 3: //Select Dropdown predefined
-    case 4: // Select Dropdown dynamic
-      // console.log(qa)app_questions.answers.;
-      return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
-
-    case 5: //Multiselect Dropdown predefined
-    case 6: // Multiselect dropdown dynamic
-      // console.log(qa)app_questions.answers.;
-      return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
-
-    case 14: //Select (projectName) with TextBox
-      return qa.answers.map((ans, i) => {
-        const ansObj = JSON.parse(ans.answer);
-        return (
-          <Fragment key={i}>
-            <p>{ansObj.option}</p>
-            <p>{ansObj.projectName}</p>
-          </Fragment>)
-      });
-
-    case 7: // Picture Choice predefined
-      return qa.answers.map((ans, i) => {
-        const ansObj = JSON.parse(ans.answer);
-        return (
-          <Fragment key={i}>
-            <img src={`/images/${ansObj.brand}`} alt={ansObj.brand} />
-            {ansObj.desc && <p>{ansObj.desc}</p>}
-          </Fragment>)
-      });
-
-    case 13: // Add Multiple section Image Upload
-      return qa.answers.map((ans, i) => {
-        const ansObj = JSON.parse(ans.answer);
-        return (
-          <Fragment key={i}>
-            {ansObj.desc && <p><b>{ansObj.desc}</b></p>}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '3em' }}>
-              {ansObj.files.map((img) => (
-                <LazyImage name={img} style={{ width: '10vw' }} />
-              ))}
-            </div>
-          </Fragment>)
-      });
-
-    case 9:
-      return qa.answers.map((ans, i) => {
-        const ansObj = JSON.parse(ans.answer);
-        return (
-          <Fragment key={i}>
-            <div style={{ display: 'flex', marginBottom: '30px', gap: '3em' }}>
-              <p style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}><b>{ansObj.variation} :</b></p>
-              {ansObj.files.map((img, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
-                  <LazyImage name={img} style={{ width: '10vw' }} />
+        return ans.answers.map((ans, i) => <p key={i}>{ans.answer}</p>);
+      case 3: //Select Dropdown predefined
+      case 4: // Select Dropdown dynamic
+        return ans.answers.map((ans, i) => <p key={i}>{ans.answer}</p>);
+      case 5: //Multiselect Dropdown predefined
+      case 6: // Multiselect dropdown dynamic
+        return ans.answers.map((ans, i) => <p key={i}>{ans.answer}</p>);
+      case 14: //Select (projectName) with TextBox
+        return ans.answers.map((ans, i) => {
+          //console.log("Proj", ans);
+          const ansObj = JSON.parse(ans.answer);
+          return (
+            <Fragment key={i}>
+              <p>{ansObj.option}</p>
+              <p>{ansObj.projectName}</p>
+            </Fragment>)
+        });
+        case 7: // Picture Choice predefined
+          return ans.answers.map((ans, i) => {
+            const ansObj = JSON.parse(ans.answer);
+            return (
+              <Fragment key={i}>
+                <img src={`/images/${ansObj.brand}`} alt={ansObj.brand} />
+                {ansObj.desc && <p>{ansObj.desc}</p>}
+              </Fragment>)
+          });
+    
+        case 13: // Add Multiple section Image Upload
+          return ans.answers.map((ans, i) => {
+            const ansObj = JSON.parse(ans.answer);
+            return (
+              <Fragment key={i}>
+                {ansObj.desc && <p><b>{ansObj.desc}</b></p>}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '3em' }}>
+                  {ansObj.files.map((img) => (
+                    <LazyImage name={img} style={{ width: '10vw' }} />
+                  ))}
                 </div>
-              ))}
-            </div>
-          </Fragment>)
-      });
-
-    case 8: // Multiselect Picture Choice
-      if (qa.id === 23) {
-        const ansObj = JSON.parse(qa.answers[0].answer);
-        return (
-          <>
-            {ansObj.option.map((opt, i) => <p key={i}>{opt}</p>)}
-            {ansObj.desc && <p><b>Description: </b>{ansObj.desc}</p>}
-          </>
-        )
-      } else {
-        return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
+              </Fragment>)
+          });
+    
+        case 9:
+          return ans.answers.map((ans, i) => {
+            const ansObj = JSON.parse(ans.answer);
+            return (
+              <Fragment key={i}>
+                <div style={{ display: 'flex', marginBottom: '30px', gap: '3em' }}>
+                  <p style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}><b>{ansObj.variation} :</b></p>
+                  {ansObj.files.map((img, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                      <LazyImage name={img} style={{ width: '10vw' }} />
+                    </div>
+                  ))}
+                </div>
+              </Fragment>)
+          });
+    
+        case 8: // Multiselect Picture Choice
+          if (ans.id === 23) {
+            const ansObj = JSON.parse(ans.answers[0].answer);
+            return (
+              <>
+                {ansObj.option.map((opt, i) => <p key={i}>{opt}</p>)}
+                {ansObj.desc && <p><b>Description: </b>{ansObj.desc}</p>}
+              </>
+            )
+          } else {
+            return ans.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
+          }
+    
+        case 10: // Single Choice predefinded
+          if (ans.id === 24) {
+            //console.log("yes", JSON.parse(ans.answers[0].answer));
+            const ansObj = JSON.parse(ans.answers[0].answer);
+            //console.log("AnsObj", ansObj);
+            return (
+              <>
+                {/* {ansObj.option.map((opt, i) => <p key={i}>{opt}</p>)} */}
+                {ansObj.option && <p><b>Investment: </b>{ansObj.option}</p>}
+                {ansObj.amount && <p><b>Amount: </b>&nbsp;€{ansObj.amount} Cost per tons (in Euros)</p>}
+              </>
+            )
+          } else {
+            return ans.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
+          }
+    
+        case 11: // Multiple Choice (Checkbox) predefined
+        case 15: // Confirm Checkbox
+        case 12: // Nested questions
+        case 2: // Date
+        default:
+          return ans.answers.map((ans, i) =><p key={i}>{ans.answer}</p> );
       }
-
-    case 10: // Single Choice predefinded
-      if (qa.question.id === 24) {
-        const ansObj = JSON.parse(qa.answers[0].answer);
-        return (
-          <>
-            {/* {ansObj.option.map((opt, i) => <p key={i}>{opt}</p>)} */}
-            {ansObj.option && <p><b>Investment: </b>{ansObj.option}</p>}
-            {ansObj.amount && <p><b>Amount: </b>&nbsp;€{ansObj.amount} Cost per tons (in Euros)</p>}
-          </>
-        )
-      } else {
-        return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
-      }
-
-    case 11: // Multiple Choice (Checkbox) predefined
-    case 15: // Confirm Checkbox
-    case 12: // Nested questions
-    case 2: // Date
-    default:
-      return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
+ 
   }
-}
+
+  

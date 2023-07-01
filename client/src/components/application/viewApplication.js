@@ -148,7 +148,7 @@ export default function ViewApplication() {
     </div>
   )
 }
-
+// old function ---start--------
 // function QueAns({ qa, index }) {
 //   //console.log("QA: ", qa);
 //   // ans.map((ans, i) => console.log("answer", ans.answer));
@@ -167,23 +167,25 @@ export default function ViewApplication() {
 //     </>
 //   )
 // }
+// old function ---end----
 
 function NewQuesAns({category}){
   console.log(category);
   return (
     <div className='QAContainer'>
-  <h4>{category.category_id}. {category.category_name}</h4>
+    <div className='rectangle'>
+  <h3 className='categoryTxt'>{category.category_id}. {category.category_name}</h3>
+    </div>
   {category.questions.map((que)=> 
   // console.log("answers", que.answers)
     <>
-      <h3>{`${que.CatWiseQueIndex} ${que.question}`}</h3>
+      <h4>{`${que.CatWiseQueIndex} ${que.question}`}</h4>
       <div className='answerContainer'>
         
         <GetNewAnswer ans={que}/>
       </div>
       </>
   )}
-  {/* <GetNewAnswer cat={category}/> */}
   </div>
 
   )

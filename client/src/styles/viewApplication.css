@@ -54,3 +54,18 @@
   padding: 8px 16px;
   /* color: white; */
 }
+
+.categoryTxt{
+  font-size: 23px;
+  font-weight: 400;
+}
+.rectangle {
+  border: 1px solid #E6EDFE;
+  align-items: center;
+  display: flex;
+  height: 9vh;
+  padding: 20px;
+  width: 41vw;
+  background-color: #E6EDFE;
+  border-radius: 14px;
+}

@@ -179,7 +179,7 @@ function NewQuesAns({category}){
   {category.questions.map((que)=> 
   // console.log("answers", que.answers)
     <>
-      <h4>{`${que.CatWiseQueIndex} ${que.question}`}</h4>
+      <h4 style={{color: '#03297D'}}>{`${que.CatWiseQueIndex} ${que.question}`}</h4>
       <div className='answerContainer'>
         
         <GetNewAnswer ans={que}/>

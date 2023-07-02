@@ -50,7 +50,7 @@ export default function RadioImage({ question, nav, index, value = {}, onKeyUp }
       element.scrollIntoView({ behavior: 'smooth' });
     }
   }
-  //const isInputValid = input.desc?.length < 1000;
+  const isInputValid = input?.desc?.length === 0 || input?.desc?.length < 1000;
   return (
     <div className="questionContainer">
       <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}</h2>
@@ -67,7 +67,7 @@ export default function RadioImage({ question, nav, index, value = {}, onKeyUp }
         </RadioGroup>
 
         <div style={{ flexGrow: 1, flexShrink: 0, height: "inherit", backgroundColor: "#CAD9FF", color: "var(--Color-Primary)", padding: 16 }}>
-          <h3 style={{ fontSize: 18 }}>Global Brand Position</h3>
+          <h3 style={{ fontSize: 18}}>Global Brand Position</h3>
           <TextField
             multiline
             rows={6}
@@ -90,16 +90,17 @@ export default function RadioImage({ question, nav, index, value = {}, onKeyUp }
             }}
             placeholder="Enter your description here"
             sx={{
+              // padding: '24px 24px',
               '& .MuiInputBase-multiline.MuiInputBase-root': { borderRadius: 0, padding: 0, color: "var(--Color-Primary)" },
               '& .MuiInputBase-multiline.MuiInputBase-root .MuiOutlinedInput-notchedOutline': { borderColor: "var(--Color-Primary)" },
               '& .MuiInputBase-multiline.MuiInputBase-root.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: "var(--Color-Primary)" },
             }}
           />
-          {/* {!isInputValid && (
+          {!isInputValid && input.desc?.length > 0 && (
         <p style={{ fontSize: 12, color: 'red', marginLeft: '21px' }}>
           Input length should not exceed 1000 characters.
         </p>
-          )} */}
+          )}
           {/* <div style={{ position: "absolute", bottom: 32, right: 24, color: "hsl(0, 0%, 90%)" }}>{`${input.desc?.length ?? 0} / 1000`}</div> */}
         </div>
       </div>

@@ -29,23 +29,57 @@ export default function PreviewApp({ open, handleClose, handleDraft, handleSubmi
   )
 }
 
-function NewQuesAns({ category, answers, answerFiles, uploadedImageName, uploadedImageData }) {
+function NewQuesAns({ category, answers, uploadedImageName, uploadedImageData }) {
   // console.log(category);
   return (
     <div className='QAContainer'>
       <div className='rectangle'>
         <h3 className='categoryTxt'>{category.category_id}. {category.category_name}</h3>
       </div>
-      {/* console.log(que); */}
-      {category.questions.map((que) => {
-        return (answers[que.id] &&
-          <Fragment key={que.id}>
-            <h4 style={{ color: '#03297D' }}>{`${que.CatWiseQueIndex} ${que.question}`}</h4>
-            <div className='answerContainer'>
-              <GetAnswer question={que} answers={answers} uploadedImageName={uploadedImageName[que.id]} uploadedImageData={uploadedImageData} />
-            </div>
-          </Fragment>
-        )
+      {category.questions.map((que, queIndex) => {
+        if (que.question_type_id === 12) {
+          return (
+            <Fragment key={que.id}>
+              <h4 style={{ color: '#03297D' }}>{`${que.CatWiseQueIndex} ${que.question}`}</h4>
+              <div className='answerContainer'>
+                <div className="nestedContainer">
+                  {que.id === 7 ? (
+                    que.nestedQue.map((nestQue, nestIndex) => {
+                      const inputAns = answers[nestQue.id];
+                      console.log(nestQue);
+                      return (
+                        <div key={nestIndex} className="nested-answer">
+                          <p className="nested">{nestQue.question}</p>
+                          {inputAns ? inputAns.map((ans, ansIndex) => <p key={ansIndex}>{ans}</p>) : <p>N/A</p>}
+                        </div>
+                      );
+                    })
+                  ) : (
+                    que.nestedQue.map((nestQue, nestIndex) => {
+                      const inputAns = answers[nestQue.id];
+                      const prevQue = category.questions[queIndex - 1].nestedQue.map((nestQue) => answers[nestQue.id]);
+                      return (
+                        <div key={nestIndex} className="nested-answer">
+                          <p className="nested">{nestQue.question}</p>
+                          {inputAns ? inputAns.map((ans, ansIndex) => <p key={ansIndex}>{prevQue[nestIndex][ansIndex]} {ans}</p>) : <p>N/A</p>}
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            </Fragment>
+          )
+        } else {
+          return (answers[que.id] &&
+            <Fragment key={que.id}>
+              <h4 style={{ color: '#03297D' }}>{`${que.CatWiseQueIndex} ${que.question}`}</h4>
+              <div className='answerContainer'>
+                <GetAnswer question={que} answers={answers} uploadedImageName={uploadedImageName[que.id]} uploadedImageData={uploadedImageData} />
+              </div>
+            </Fragment>
+          )
+        }
       })}
     </div>
   )
@@ -148,6 +182,7 @@ function GetAnswer({ question, answers, uploadedImageName, uploadedImageData }) 
       }
     case 12: // Nested questions
       console.log("Q_TYPE_12:", answers[question.id]);
+      console.log("Q_ID: ", question);
       return null;
 
     case 11: // Multiple Choice (Checkbox) predefined

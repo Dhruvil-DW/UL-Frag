@@ -175,13 +175,13 @@ function NewQuesAns({ category }) {
       <div className='rectangle'>
         <h3 className='categoryTxt'>{category.category_id}. {category.category_name}</h3>
       </div>
-      {category.questions.map((que) =>
+      {category.questions.map((que, index) =>
         // console.log("answers", que.answers)
         <Fragment key={que.id}>
           <h4 style={{ color: '#03297D' }}>{`${que.CatWiseQueIndex} ${que.question}`}</h4>
           <div className='answerContainer'>
 
-            <GetNewAnswer ans={que} />
+            <GetNewAnswer ans={que} index={index} category={category}/>
           </div>
         </Fragment>
       )}
@@ -311,7 +311,7 @@ function NewQuesAns({ category }) {
 // old function for getting answers --end----
 
 
-function GetNewAnswer({ ans }) {
+function GetNewAnswer({ ans, index, category }) {
   //console.log("QA: ", ans);
   // ans.answers.map((ans) => {
   //   console.log("JSONP", JSON.parse(ans.answer));
@@ -330,7 +330,6 @@ function GetNewAnswer({ ans }) {
       return ans.answers.map((ans, i) => <p key={i}>{ans.answer}</p>);
     case 14: //Select (projectName) with TextBox
       return ans.answers.map((ans, i) => {
-        //console.log("Proj", ans);
         const ansObj = JSON.parse(ans.answer);
         return (
           <Fragment key={i}>
@@ -406,9 +405,91 @@ function GetNewAnswer({ ans }) {
       } else {
         return ans.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
       }
+    // case 12: // Nested questions
+    //  //console.log("ANS", ans);
+    // //console.log("Q_TYPE_12:", ans.answers);
+    // if(ans.id === 7){
+    //   return ans.nestedQue.map((que, i) => {
+    //      const answers = ans.answers?.find((ans) => ans.question_id === que.id)?.answers;
+    //     return (
+    //       <>
+    //       <div key={i} className='nested-answer'>
+    //       <p className='nested'>
+    //         {que.question}
+    //       </p>
+    //       {answers ? answers.map(ans => <p>{ans.answer}</p>) : <p>N/A</p>}
+    //       </div>
+    //       </>
+    //       )
+    //     });
+    // } else {
+    //   // console.log("Category", category.questions[index-1].answers);
+    //   const prevAns = category.questions[index-1].answers;
+    //   return ans.nestedQue.map((que, i) => {
+    //     const country = prevAns.find((prev) => prev.question_id ===  que.question_opt);
+    //     //console.log("country", country.answers.map(newAns => newAns.answer));
+
+    //      const answers = ans.answers?.find((ans) => ans.question_id === que.id)?.answers;
+    //     return (
+    //       <>
+    //       <p>
+    //         <b>{que.question}</b>
+    //       </p>
+    //       {country ? country.answers.map(newAns => <p>{newAns.answer}</p>) : <p>N/A</p>}
+    //       {answers ? answers.map(ans => <p>{ans.answer}</p>) : <p>N/A</p>}
+    //         </>
+    //       )
+    //     });
+    // }
     case 12: // Nested questions
-      console.log("Q_TYPE_12:", ans);
-      return null;
+  // console.log("ANS", ans);
+  // console.log("Q_TYPE_12:", ans.answers);
+  return (
+    <div className="nestedContainer">
+      {ans.id === 7 ? (
+          ans.nestedQue.map((que, i) => {
+            const answers = ans.answers?.find((ans) => ans.question_id === que.id)?.answers;
+            return (
+              <div key={i} className="nested-answer">
+                <p className="nested">
+                  {que.question}
+                </p>
+                {answers ? answers.map(ans => <p>{ans.answer}</p>) : <p>N/A</p>}
+              </div>
+            );
+          })
+        
+      ) : (
+        ans.nestedQue.map((que, i) => {
+          const prevAns = category.questions[index - 1].answers;
+          const country = prevAns.find((prev) => prev.question_id === que.question_opt)?.answers;
+          const answers = ans.answers?.find((ans) => ans.question_id === que.id)?.answers;
+          return (
+            <div key={i}>
+              <p>
+                <b>{que.question}</b>
+              </p>
+              {/* {country ? country.map(newAns => <p>{newAns.answer}</p>) : <p>N/A</p>} */}
+              {/* {answers ? answers.map((ans, index) => <p><b>{country[index]?.answer}</b> {ans.answer}</p>) : <p>N/A</p>} */}
+              {answers ? (
+                answers.map((ans, index) => (
+                <p key={index}>
+                <b>{country[index]?.answer}:</b> {ans.answer}
+                </p>
+                ))
+              ) : (
+              country.map((c, index) => (
+              <p key={index}>
+                <b>{c.answer}:</b> N/A
+              </p>
+            ))
+            )}
+            </div>
+          );
+        })
+      )}
+    </div>
+  );
 
     case 11: // Multiple Choice (Checkbox) predefined
     case 15: // Confirm Checkbox

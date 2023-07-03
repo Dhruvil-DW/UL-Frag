@@ -17,7 +17,7 @@ export default function App() {
   const token = authState.token;
   const userdata = authState.userdata;
 
-  console.log(userdata)
+  // console.log(userdata)
   return (
     <BrowserRouter>
       <Routes>

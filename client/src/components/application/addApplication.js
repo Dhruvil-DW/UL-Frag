@@ -11,6 +11,7 @@ import WelcomeScreen from "./welcomeScreen/welcomeScreen";
 import { useAxios } from "../../hooks/useAxios";
 import { promptActions, promptContext } from "../../context/promptContext";
 import { useGetAnswer, useGetCountry, useGetQuestions, useGetRegion } from "./addAppAPIs";
+import PreviewApp from "./previewApplication";
 export const ApplicationContext = createContext();
 
 export default function AddApplication() {
@@ -23,6 +24,7 @@ export default function AddApplication() {
   const [removeFiles, setRemoveFiles] = useState([]);
   const containerRef = useRef(null);
   const { postData } = useAxios();
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   // console.log("INPUTS: ", inputs);
 
@@ -269,9 +271,13 @@ export default function AddApplication() {
     postData(`/application/draft?app_id=${appId ?? ""}`, formData, (data) => { navigate(`/application/drafted`, { state: { app_id: data.app_id } }) });
   }
 
-  // console.debug("QUESTIONS: ", catWiseQues);
-  // let count = 1;
-  // if (true) return (<LoadingAddApp />)
+  function handlePreview() {
+    setPreviewOpen(true);
+  }
+  function closePreview() {
+    setPreviewOpen(false);
+  }
+
   if (catQue.status === "loading" || (appId && !(Object.keys(inputs).length))) return (<LoadingAddApp />)
   return (
     <ApplicationContext.Provider value={{ catWiseQues, inputs, currentQue, handleAnswerChange, handleFilesChange, handleRemoveFilesChange, handleRemoveFiles, handleImageInputChange, regions: regionList.data, country: countryList.data, resetInputCountry, resetMarket }}>
@@ -323,11 +329,21 @@ export default function AddApplication() {
           </ErrorBoundary>
 
           <div className='actionBtnCont'>
-            <Button variant="outlined" color="secondary" onClick={handleDraft}>Save as Draft</Button>
-            <Button variant="outlined" color="secondary" onClick={handleSubmit}>Submit</Button>
+            {/* <Button variant="outlined" color="secondary" onClick={handleDraft}>Save as Draft</Button> */}
+            {/* <Button variant="outlined" color="secondary" onClick={handleSubmit}>Submit</Button> */}
+            <Button variant="outlined" color="secondary" onClick={handlePreview}>Preview</Button>
           </div>
         </div>
-
+        <PreviewApp
+          open={previewOpen}
+          handleClose={closePreview}
+          handleDraft={handleDraft}
+          handleSubmit={handleSubmit}
+          answers={inputs}
+          catWiseQues={catWiseQues}
+          uploadedImageName={imageInputs}
+          uploadedImageData={allFiles}
+        />
       </main>
     </ApplicationContext.Provider>
   )
@@ -335,11 +351,6 @@ export default function AddApplication() {
 
 function LoadingAddApp() {
   return (
-    // <Dialog open PaperProps={{ sx: { bgcolor: "transparent", boxShadow: 'none' } }} >
-    //   <div style={{ height: 200, width: 200, color: "white", display: "flex", justifyContent: "center", alignItems: "center" }}>
-    //     <CircularProgress color="inherit" />
-    //   </div>
-    // </Dialog>
     <main className="appFormContainer">
       <aside className="sidebar"></aside>
       <div className="formRelative" style={{ color: "black", display: "flex", justifyContent: "center", alignItems: "center" }}>

@@ -39,11 +39,10 @@ export default function ViewApplication() {
       questions.data.forEach((cat) => {
         const questionWithAns = [];
         cat.questions.forEach((que) => {
-          if(que.question_type_id === 12) {
-            debugger;
-            const answer = queAns
-            .filter((qa) => [que.id + 1, que.id + 2, que.id + 3 ].includes(qa.question_id))
-            .map(obj => ({ question_id: obj.question_id, answer: obj.answers[0].answer }))
+          if (que.question_type_id === 12) {
+            // debugger;
+            const answer = queAns.filter((qa) => [que.id + 1, que.id + 2, que.id + 3].includes(qa.question_id))
+            // .map(obj => ({ question_id: obj.question_id, answer: obj.answers[0].answer }))
             if (answer) {
               questionWithAns.push({ ...que, answers: answer });
             }
@@ -62,7 +61,7 @@ export default function ViewApplication() {
       //console.log(finalResult);
     }
   }, [questions.data, queAns]);
-  
+
   function getAppQuestions() {
     getData(`user/viewapplication/${appId}`, {},
       (data) => {
@@ -89,7 +88,7 @@ export default function ViewApplication() {
       navigate("/dashboard");
     });
   }
-// console.log("resultqueans", result[0].category_name);
+  // console.log("resultqueans", result[0].category_name);
   return (
     <div className='appFormContainer'>
       <div className='sidebar viewSidebar'>
@@ -143,7 +142,7 @@ export default function ViewApplication() {
       </div>
       <div className='QAWrapper'>
         {/* {queAns.map((qa, index) => <QueAns key={qa.id} index={index + 1} qa={qa} />)} */}
-        {result.map((cat) => <NewQuesAns category={cat} />)}
+        {result.map((cat) => <NewQuesAns key={cat.category_id} category={cat} />)}
       </div>
     </div>
   )
@@ -169,29 +168,29 @@ export default function ViewApplication() {
 // }
 // old function ---end----
 
-function NewQuesAns({category}){
-  console.log(category);
+function NewQuesAns({ category }) {
+  // console.log(category);
   return (
     <div className='QAContainer'>
-    <div className='rectangle'>
-  <h3 className='categoryTxt'>{category.category_id}. {category.category_name}</h3>
-    </div>
-  {category.questions.map((que)=> 
-  // console.log("answers", que.answers)
-    <>
-      <h4 style={{color: '#03297D'}}>{`${que.CatWiseQueIndex} ${que.question}`}</h4>
-      <div className='answerContainer'>
-        
-        <GetNewAnswer ans={que}/>
+      <div className='rectangle'>
+        <h3 className='categoryTxt'>{category.category_id}. {category.category_name}</h3>
       </div>
-      </>
-  )}
-  </div>
+      {category.questions.map((que) =>
+        // console.log("answers", que.answers)
+        <Fragment key={que.id}>
+          <h4 style={{ color: '#03297D' }}>{`${que.CatWiseQueIndex} ${que.question}`}</h4>
+          <div className='answerContainer'>
+
+            <GetNewAnswer ans={que} />
+          </div>
+        </Fragment>
+      )}
+    </div>
 
   )
 }
 
- 
+
 // function NestedQueAns({ que, index, appInputs }) {
 //   const childQue = que.nestedQue;
 //   // console.log(childQue);
@@ -316,106 +315,107 @@ function GetNewAnswer({ ans }) {
   //console.log("QA: ", ans);
   // ans.answers.map((ans) => {
   //   console.log("JSONP", JSON.parse(ans.answer));
-    
+
   // });
   // cat.questions.map((que) => {
-    switch (ans.question_type_id) {
-      case 1: // TextBox
+  switch (ans.question_type_id) {
+    case 1: // TextBox
       // console.log(qa.answers);
-        return ans.answers.map((ans, i) => <p key={i}>{ans.answer}</p>);
-      case 3: //Select Dropdown predefined
-      case 4: // Select Dropdown dynamic
-        return ans.answers.map((ans, i) => <p key={i}>{ans.answer}</p>);
-      case 5: //Multiselect Dropdown predefined
-      case 6: // Multiselect dropdown dynamic
-        return ans.answers.map((ans, i) => <p key={i}>{ans.answer}</p>);
-      case 14: //Select (projectName) with TextBox
-        return ans.answers.map((ans, i) => {
-          //console.log("Proj", ans);
-          const ansObj = JSON.parse(ans.answer);
-          return (
-            <Fragment key={i}>
-              <p>{ansObj.option}</p>
-              <p>{ansObj.projectName}</p>
-            </Fragment>)
-        });
-        case 7: // Picture Choice predefined
-          return ans.answers.map((ans, i) => {
-            const ansObj = JSON.parse(ans.answer);
-            return (
-              <Fragment key={i}>
-                <img src={`/images/${ansObj.brand}`} alt={ansObj.brand} />
-                {ansObj.desc && <p>{ansObj.desc}</p>}
-              </Fragment>)
-          });
-    
-        case 13: // Add Multiple section Image Upload
-          return ans.answers.map((ans, i) => {
-            const ansObj = JSON.parse(ans.answer);
-            return (
-              <Fragment key={i}>
-                {ansObj.desc && <p><b>{ansObj.desc}</b></p>}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '3em' }}>
-                  {ansObj.files.map((img) => (
-                    <LazyImage name={img} style={{ width: '10vw' }} />
-                  ))}
+      return ans.answers.map((ans, i) => <p key={i}>{ans.answer}</p>);
+    case 3: //Select Dropdown predefined
+    case 4: // Select Dropdown dynamic
+      return ans.answers.map((ans, i) => <p key={i}>{ans.answer}</p>);
+    case 5: //Multiselect Dropdown predefined
+    case 6: // Multiselect dropdown dynamic
+      return ans.answers.map((ans, i) => <p key={i}>{ans.answer}</p>);
+    case 14: //Select (projectName) with TextBox
+      return ans.answers.map((ans, i) => {
+        //console.log("Proj", ans);
+        const ansObj = JSON.parse(ans.answer);
+        return (
+          <Fragment key={i}>
+            <p>{ansObj.option}</p>
+            <p>{ansObj.projectName}</p>
+          </Fragment>)
+      });
+    case 7: // Picture Choice predefined
+      return ans.answers.map((ans, i) => {
+        const ansObj = JSON.parse(ans.answer);
+        return (
+          <Fragment key={i}>
+            <img src={`/images/${ansObj.brand}`} alt={ansObj.brand} />
+            {ansObj.desc && <p>{ansObj.desc}</p>}
+          </Fragment>)
+      });
+
+    case 13: // Add Multiple section Image Upload
+      return ans.answers.map((ans, i) => {
+        const ansObj = JSON.parse(ans.answer);
+        return (
+          <Fragment key={i}>
+            {ansObj.desc && <p><b>{ansObj.desc}</b></p>}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '3em' }}>
+              {ansObj.files.map((img) => (
+                <LazyImage name={img} style={{ width: '10vw' }} />
+              ))}
+            </div>
+          </Fragment>)
+      });
+
+    case 9:
+      return ans.answers.map((ans, i) => {
+        const ansObj = JSON.parse(ans.answer);
+        return (
+          <Fragment key={i}>
+            <div style={{ display: 'flex', marginBottom: '30px', gap: '3em' }}>
+              <p style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}><b>{ansObj.variation} :</b></p>
+              {ansObj.files.map((img, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <LazyImage name={img} style={{ width: '10vw' }} />
                 </div>
-              </Fragment>)
-          });
-    
-        case 9:
-          return ans.answers.map((ans, i) => {
-            const ansObj = JSON.parse(ans.answer);
-            return (
-              <Fragment key={i}>
-                <div style={{ display: 'flex', marginBottom: '30px', gap: '3em' }}>
-                  <p style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}><b>{ansObj.variation} :</b></p>
-                  {ansObj.files.map((img, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
-                      <LazyImage name={img} style={{ width: '10vw' }} />
-                    </div>
-                  ))}
-                </div>
-              </Fragment>)
-          });
-    
-        case 8: // Multiselect Picture Choice
-          if (ans.id === 23) {
-            const ansObj = JSON.parse(ans.answers[0].answer);
-            return (
-              <>
-                {ansObj.option.map((opt, i) => <p key={i}>{opt}</p>)}
-                {ansObj.desc && <p><b>Description: </b>{ansObj.desc}</p>}
-              </>
-            )
-          } else {
-            return ans.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
-          }
-    
-        case 10: // Single Choice predefinded
-          if (ans.id === 24) {
-            //console.log("yes", JSON.parse(ans.answers[0].answer));
-            const ansObj = JSON.parse(ans.answers[0].answer);
-            //console.log("AnsObj", ansObj);
-            return (
-              <>
-                {/* {ansObj.option.map((opt, i) => <p key={i}>{opt}</p>)} */}
-                {ansObj.option && <p><b>Investment: </b>{ansObj.option}</p>}
-                {ansObj.amount && <p><b>Amount: </b>&nbsp;€{ansObj.amount} Cost per tons (in Euros)</p>}
-              </>
-            )
-          } else {
-            return ans.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
-          }
-    
-        case 11: // Multiple Choice (Checkbox) predefined
-        case 15: // Confirm Checkbox
-        case 12: // Nested questions
-        case 2: // Date
-        default:
-          return ans.answers.map((ans, i) =><p key={i}>{ans.answer}</p> );
+              ))}
+            </div>
+          </Fragment>)
+      });
+
+    case 8: // Multiselect Picture Choice
+      if (ans.id === 23) {
+        const ansObj = JSON.parse(ans.answers[0].answer);
+        return (
+          <>
+            {ansObj.option.map((opt, i) => <p key={i}>{opt}</p>)}
+            {ansObj.desc && <p><b>Description: </b>{ansObj.desc}</p>}
+          </>
+        )
+      } else {
+        return ans.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
       }
- 
+
+    case 10: // Single Choice predefinded
+      if (ans.id === 24) {
+        //console.log("yes", JSON.parse(ans.answers[0].answer));
+        const ansObj = JSON.parse(ans.answers[0].answer);
+        //console.log("AnsObj", ansObj);
+        return (
+          <>
+            {/* {ansObj.option.map((opt, i) => <p key={i}>{opt}</p>)} */}
+            {ansObj.option && <p><b>Investment: </b>{ansObj.option}</p>}
+            {ansObj.amount && <p><b>Amount: </b>&nbsp;€{ansObj.amount} Cost per tons (in Euros)</p>}
+          </>
+        )
+      } else {
+        return ans.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
+      }
+    case 12: // Nested questions
+      console.log("Q_TYPE_12:", ans);
+      return null;
+
+    case 11: // Multiple Choice (Checkbox) predefined
+    case 15: // Confirm Checkbox
+    case 2: // Date
+    default:
+      return ans.answers.map((ans, i) => <p key={i}>{ans.answer}</p>);
   }
 
-  
+}
+

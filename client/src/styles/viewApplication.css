@@ -33,7 +33,13 @@
 .answerContainer {
   padding-left: 2.5rem;
 }
-
+.nested{
+  font-weight: 700;
+}
+.nestedContainer {
+  display: flex;
+  gap: 5rem;
+}
 .answerContainer ol,
 .answerContainer ul {
   padding: 0;

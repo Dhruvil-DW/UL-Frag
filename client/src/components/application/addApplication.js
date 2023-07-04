@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Dialog } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { Fragment, createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import QuestionType from "./questionTypes";
 import NavSideBar from "./navSideBar";
@@ -154,6 +154,7 @@ export default function AddApplication() {
   const handleSubmit = () => {
     // console.log({ inputs });
     if (!(inputs[1]?.option && inputs[1]?.projectName)) {
+      navigate(document.getElementById(1).scrollIntoView({ behavior: 'smooth' }));
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please enter project name" } });
       return;
     }
@@ -217,6 +218,7 @@ export default function AddApplication() {
 
   function handleDraft() {
     if (!(inputs[1]?.option && inputs[1]?.projectName)) {
+      navigate(document.getElementById(1).scrollIntoView({ behavior: 'smooth' }));
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please enter project name" } });
       return;
     }
@@ -272,6 +274,10 @@ export default function AddApplication() {
   }
 
   function handlePreview() {
+    if (!(inputs[1]?.option && inputs[1]?.projectName)) {
+      promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please enter project name" } });
+      return;
+    }
     setPreviewOpen(true);
   }
   function closePreview() {
@@ -329,7 +335,7 @@ export default function AddApplication() {
           </ErrorBoundary>
 
           <div className='actionBtnCont'>
-            {/* <Button variant="outlined" color="secondary" onClick={handleDraft}>Save as Draft</Button> */}
+            <Button variant="outlined" color="secondary" onClick={handleDraft}>Save as Draft</Button>
             {/* <Button variant="outlined" color="secondary" onClick={handleSubmit}>Submit</Button> */}
             <Button variant="outlined" color="secondary" onClick={handlePreview}>Preview</Button>
           </div>

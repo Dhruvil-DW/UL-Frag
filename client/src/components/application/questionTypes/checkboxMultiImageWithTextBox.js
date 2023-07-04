@@ -46,7 +46,7 @@ export default function CheckBoxImageWithTextBox({ question, nav, index, value =
   const isInputValid = input.desc?.length < 1000;
   return (
     <>
-      <div className="questionContainer">
+      <div className="questionContainer fixWidth">
         {/* {question.id === 23 &&
         <p className="addText">Performance input</p>
       } */}
@@ -60,7 +60,7 @@ export default function CheckBoxImageWithTextBox({ question, nav, index, value =
             {question.question}
           </span>
         </h2>
-        <div style={{ fontSize: 14, color: "#00000080", margin: "-12px 0 -12px auto" }}>You can select any two of them</div>
+        <div style={{ fontSize: 14, color: "#00000080", margin: "-12px 1px -12px auto" }}>You can select any two of them</div>
         <div className="optionContainer">
           {question.question_opt?.map((opt) => (
             <div key={opt} className="imageBoxContainer" onClick={() => handleInputChange(opt)}>

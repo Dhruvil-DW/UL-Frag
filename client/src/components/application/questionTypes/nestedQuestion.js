@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ApplicationContext } from "../addApplication";
 import ArrowLeftRoundIcon from "../../../assets/icons/arrowLeftRoundIcon";
 import { Autocomplete, Checkbox, TextField } from "@mui/material";
@@ -8,24 +8,31 @@ import { showPickerOnFocus } from "../../../utils/globalFunctions/showPickerOnFo
 import TooltipIcon from "../../../assets/icons/tooltipIcon";
 import Tooltip from "@mui/material/Tooltip";
 import { getInputDate } from "../../../utils/globalFunctions/dateFns";
-import { promptActions, promptContext } from "../../../context/promptContext";
+// import { promptActions, promptContext } from "../../../context/promptContext";
 
 export default function NestedQuestion({ question, nav, index, onKeyUp }) {
   const { inputs, handleAnswerChange } = useContext(ApplicationContext);
-  const { promptDispatch } = useContext(promptContext);
+  // const { promptDispatch } = useContext(promptContext);
+  const [errorMsg, setErrorMsg] = useState({});
   // console.log(question);
   // console.log(childQuestionData[question.id]);
   function handleNestedDateSelection(value, id, index, country, relQueId) {
-    const timer = 4000;
+    // const timer = 4000;
     // console.log({ id, country, relQueId });
     if (id !== 12) {
-      const index = inputs[relQueId - 1]?.indexOf(country);
-      // console.log({ index });
-      if (index !== -1) {
-        const prevQueDate = inputs[id - 1]?.[index];
+      const indexPrev = inputs[relQueId - 1]?.indexOf(country);
+      // console.log({ indexPrev });
+      if (indexPrev !== -1) {
+        const prevQueDate = inputs[id - 1]?.[indexPrev];
         if (!prevQueDate) {
-          const msg = `Please select ${id === 13 ? "lead market" : "rollout market"} date of ${country} first`
-          promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg, timer } });
+          // const msg = `Please select ${id === 13 ? "lead market" : "rollout market"} date of ${country} first`
+          // promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg, timer } });
+          const msg = `Please select ${id === 13 ? "lead market" : "rollout market"} date`
+          setErrorMsg((prevObj) => {
+            const prevArr = prevObj?.[id] ?? [];
+            prevArr[index] = msg;
+            return { ...prevObj, [id]: prevArr };
+          })
           return;
         }
         const prevQueDateArr = prevQueDate.split("-");
@@ -34,20 +41,32 @@ export default function NestedQuestion({ question, nav, index, onKeyUp }) {
         // console.log({ dateDiff });
 
         if (dateDiff <= 0) {
-          const msg = `${id === 13 ? "Rollout market" : "Impacted market"} date must be after ${id === 13 ? "lead market" : "rollout market"} date of ${country}`
-          promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg, timer } });
+          // const msg = `${id === 13 ? "Rollout market" : "Impacted market"} date must be after ${id === 13 ? "lead market" : "rollout market"} date of ${country}`
+          // promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg, timer } });
+          const msg = `date must be after ${id === 13 ? "lead market" : "rollout market"} date`
+          setErrorMsg((prevObj) => {
+            const prevArr = prevObj?.[id] ?? [];
+            prevArr[index] = msg;
+            return { ...prevObj, [id]: prevArr };
+          })
           return;
         }
         // console.log({ prevQueDate, value });
       }
       if (id === 14) {
-        const index = inputs[relQueId - 2]?.indexOf(country);
-        // console.log({ index });
-        if (index !== -1) {
-          const prevQueDate = inputs[id - 2]?.[index];
+        const indexPrev = inputs[relQueId - 2]?.indexOf(country);
+        // console.log({ indexPrev });
+        if (indexPrev !== -1) {
+          const prevQueDate = inputs[id - 2]?.[indexPrev];
           if (!prevQueDate) {
-            const msg = `Please select lead market date of ${country} first`
-            promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg, timer }});
+            // const msg = `Please select lead market date of ${country} first`
+            // promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg, timer } });
+            const msg = `select lead market date first`
+            setErrorMsg((prevObj) => {
+              const prevArr = prevObj?.[id] ?? [];
+              prevArr[index] = msg;
+              return { ...prevObj, [id]: prevArr };
+            })
             return;
           }
           const prevQueDateArr = prevQueDate.split("-");
@@ -56,14 +75,25 @@ export default function NestedQuestion({ question, nav, index, onKeyUp }) {
           // console.log({ dateDiff });
 
           if (dateDiff <= 0) {
-            const msg = `Impacted market date must be after lead market date of ${country}`
-            promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg, timer }});
+            // const msg = `Impacted market date must be after lead market date of ${country}`
+            // promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: msg, timer } });
+            const msg = `date must be after lead market date`
+            setErrorMsg((prevObj) => {
+              const prevArr = prevObj?.[id] ?? [];
+              prevArr[index] = msg;
+              return { ...prevObj, [id]: prevArr };
+            })
             return;
           }
           // console.log({ prevQueDate, value });
         }
       }
     }
+    setErrorMsg((prevObj) => {
+      const prevArr = prevObj?.[id] ?? [];
+      prevArr[index] = "";
+      return { ...prevObj, [id]: prevArr };
+    });
     const dateArr = inputs[id] ?? [];
     dateArr[index] = value;
     handleAnswerChange(id, dateArr);
@@ -130,9 +160,9 @@ export default function NestedQuestion({ question, nav, index, onKeyUp }) {
                 ))}
                 {question.id === 11 && (
                   inputs[que.question_opt] ? inputs[que.question_opt].map((ans, index) => (
-                    <div key={index} style={{ fontSize: 14, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 8 }}>
-                      <p>{ans}</p>
-                      <TextField type="date" className="whiteDatePicker" color="secondary" value={inputs[que.id]?.[index] ?? ""} onChange={(e) => handleNestedDateSelection(e.target.value, que.id, index, ans, que.question_opt)} inputProps={{ onFocus: showPickerOnFocus, min: getInputDate() }} />
+                    <div key={index} style={{ fontSize: 14, display: "flex", justifyContent: "space-between", gap: 8, marginBottom: 8 }}>
+                      <p style={{ lineHeight: 2 }}>{ans}</p>
+                      <TextField type="date" className="whiteDatePicker" color="secondary" value={inputs[que.id]?.[index] ?? ""} onChange={(e) => handleNestedDateSelection(e.target.value, que.id, index, ans, que.question_opt)} inputProps={{ onFocus: showPickerOnFocus, min: getInputDate() }} helperText={errorMsg?.[que.id]?.[index] ?? ""} FormHelperTextProps={{ className: "dateError" }} />
                     </div>
                   )) : <p style={{ fontSize: 14 }}>Please Select Market First</p>
                 )}

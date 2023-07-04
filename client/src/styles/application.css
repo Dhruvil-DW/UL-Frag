@@ -83,3 +83,12 @@ section>.pageWrapper {
   position: relative;
   z-index: 1;
 }
+
+.MuiFormHelperText-root.dateError {
+  color: red;
+  margin: 0;
+  width: 180px;
+  text-align: end;
+  font-size: 10px;
+
+}

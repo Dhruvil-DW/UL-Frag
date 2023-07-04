@@ -33,13 +33,16 @@
 .answerContainer {
   padding-left: 2.5rem;
 }
-.nested{
+
+.nested {
   font-weight: 700;
 }
+
 .nestedContainer {
   display: flex;
   gap: 5rem;
 }
+
 .answerContainer ol,
 .answerContainer ul {
   padding: 0;
@@ -61,10 +64,11 @@
   /* color: white; */
 }
 
-.categoryTxt{
+.categoryTxt {
   font-size: 23px;
   font-weight: 400;
 }
+
 .rectangle {
   border: 1px solid #E6EDFE;
   align-items: center;
@@ -75,3 +79,38 @@
   background-color: #E6EDFE;
   border-radius: 14px;
 }
+
+
+
+/* Preview Application START */
+.sidebarTopArea {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+}
+
+.sidebarTopArea .btnBack {
+  position: absolute;
+  left: 16px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+
+.sidebarMidArea {
+  height: calc(100vh - 140px);
+}
+
+.btnSidebarBottom {
+  display: flex;
+  gap: 8px;
+}
+
+.btnSidebarBottom button.MuiButton-root.MuiButtonBase-root {
+  /* padding: 4px 8px; */
+  min-width: 124px;
+}
+
+/* Preview Application END */

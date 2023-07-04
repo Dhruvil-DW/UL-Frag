@@ -32,7 +32,7 @@ export default function CheckBoxImage({ question, nav, index, value = [], onKeyU
   }
 
   return (
-    <div className="questionContainer">
+    <div className="questionContainer fixWidth">
       {/* <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}
       <Tooltip className="tooltip" title={question.description} placement="bottom-end" arrow>
             <span style={{ marginLeft: 7, verticalAlign: "middle", display: "inline-flex"}}>

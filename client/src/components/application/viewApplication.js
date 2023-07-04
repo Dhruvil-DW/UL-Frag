@@ -3,7 +3,6 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import CategoryIcon from '../../assets/icons/categoryIcon';
 import UserIcon from '../../assets/icons/userIcon';
 import CalenderIcon from '../../assets/icons/calenderIcon';
-import PageIcon from '../../assets/icons/pageIcon';
 import { useAxios } from '../../hooks/useAxios';
 import { formatDate } from '../../utils/globalFunctions/dateFns';
 import { Button } from '@mui/material';
@@ -42,7 +41,6 @@ export default function ViewApplication() {
           if (que.question_type_id === 12) {
             // debugger;
             const answer = queAns.filter((qa) => [que.id + 1, que.id + 2, que.id + 3].includes(qa.question_id))
-            // .map(obj => ({ question_id: obj.question_id, answer: obj.answers[0].answer }))
             if (answer) {
               questionWithAns.push({ ...que, answers: answer });
             }
@@ -147,26 +145,7 @@ export default function ViewApplication() {
     </div>
   )
 }
-// old function ---start--------
-// function QueAns({ qa, index }) {
-//   //console.log("QA: ", qa);
-//   // ans.map((ans, i) => console.log("answer", ans.answer));
-//   return (
-//     <>
-//       {/* <div className='QACategory'>
-//     {qa.category.name}
-//     </div> */}
-//       <div className='QAContainer'>
-//         {/* <h3>{index ? `${index}. ` : ""}{qa.question?.question ?? "N/A"}</h3> */}
-//         <h3>{index ? `${index}. ` : ""}{qa.question}</h3>
-//         <div className='answerContainer'>
-//           <GetAnswer qa={qa} />
-//         </div>
-//       </div>
-//     </>
-//   )
-// }
-// old function ---end----
+
 
 function NewQuesAns({ category }) {
   // console.log(category);
@@ -181,7 +160,7 @@ function NewQuesAns({ category }) {
           <h4 style={{ color: '#03297D' }}>{`${que.CatWiseQueIndex} ${que.question}`}</h4>
           <div className='answerContainer'>
 
-            <GetNewAnswer ans={que} index={index} category={category}/>
+            <GetNewAnswer ans={que} index={index} category={category} />
           </div>
         </Fragment>
       )}
@@ -189,126 +168,6 @@ function NewQuesAns({ category }) {
 
   )
 }
-
-
-// function NestedQueAns({ que, index, appInputs }) {
-//   const childQue = que.nestedQue;
-//   // console.log(childQue);
-
-//   return (
-//     <div className='QAContainer'>
-//       <h3>{`${index}. `}{que.question}</h3>
-//       <div className='nestedConteiner'>
-//         {childQue.map(question => <QueAns key={question.id} que={question} ansData={appInputs[question.id]} />)}
-//       </div>
-//     </div>
-//   )
-// }
-
-// old function for getting answers --start----
-// function GetAnswer({ qa }) {
-//   //console.log("QA: ", qa.answers[0].answer);
-//   switch (qa) {
-//     case 1: // TextBox
-//       // console.log(qa.answers);
-//       return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>);
-
-//     case 3: //Select Dropdown predefined
-//     case 4: // Select Dropdown dynamic
-//       // console.log(qa)app_questions.answers.;
-//       return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
-
-//     case 5: //Multiselect Dropdown predefined
-//     case 6: // Multiselect dropdown dynamic
-//       // console.log(qa)app_questions.answers.;
-//       return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
-
-//     case 14: //Select (projectName) with TextBox
-//       return qa.answers.map((ans, i) => {
-//         const ansObj = JSON.parse(ans.answer);
-//         return (
-//           <Fragment key={i}>
-//             <p>{ansObj.option}</p>
-//             <p>{ansObj.projectName}</p>
-//           </Fragment>)
-//       });
-
-//     case 7: // Picture Choice predefined
-//       return qa.answers.map((ans, i) => {
-//         const ansObj = JSON.parse(ans.answer);
-//         return (
-//           <Fragment key={i}>
-//             <img src={`/images/${ansObj.brand}`} alt={ansObj.brand} />
-//             {ansObj.desc && <p>{ansObj.desc}</p>}
-//           </Fragment>)
-//       });
-
-//     case 13: // Add Multiple section Image Upload
-//       return qa.answers.map((ans, i) => {
-//         const ansObj = JSON.parse(ans.answer);
-//         return (
-//           <Fragment key={i}>
-//             {ansObj.desc && <p><b>{ansObj.desc}</b></p>}
-//             <div style={{ display: 'flex', alignItems: 'center', gap: '3em' }}>
-//               {ansObj.files.map((img) => (
-//                 <LazyImage name={img} style={{ width: '10vw' }} />
-//               ))}
-//             </div>
-//           </Fragment>)
-//       });
-
-//     case 9:
-//       return qa.answers.map((ans, i) => {
-//         const ansObj = JSON.parse(ans.answer);
-//         return (
-//           <Fragment key={i}>
-//             <div style={{ display: 'flex', marginBottom: '30px', gap: '3em' }}>
-//               <p style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}><b>{ansObj.variation} :</b></p>
-//               {ansObj.files.map((img, i) => (
-//                 <div key={i} style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
-//                   <LazyImage name={img} style={{ width: '10vw' }} />
-//                 </div>
-//               ))}
-//             </div>
-//           </Fragment>)
-//       });
-
-//     case 8: // Multiselect Picture Choice
-//       if (qa.id === 23) {
-//         const ansObj = JSON.parse(qa.answers[0].answer);
-//         return (
-//           <>
-//             {ansObj.option.map((opt, i) => <p key={i}>{opt}</p>)}
-//             {ansObj.desc && <p><b>Description: </b>{ansObj.desc}</p>}
-//           </>
-//         )
-//       } else {
-//         return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
-//       }
-
-//     case 10: // Single Choice predefinded
-//       if (qa.question.id === 24) {
-//         const ansObj = JSON.parse(qa.answers[0].answer);
-//         return (
-//           <>
-//             {/* {ansObj.option.map((opt, i) => <p key={i}>{opt}</p>)} */}
-//             {ansObj.option && <p><b>Investment: </b>{ansObj.option}</p>}
-//             {ansObj.amount && <p><b>Amount: </b>&nbsp;€{ansObj.amount} Cost per tons (in Euros)</p>}
-//           </>
-//         )
-//       } else {
-//         return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
-//       }
-
-//     case 11: // Multiple Choice (Checkbox) predefined
-//     case 15: // Confirm Checkbox
-//     case 12: // Nested questions
-//     case 2: // Date
-//     default:
-//       return qa.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
-//   }
-// }
-// old function for getting answers --end----
 
 
 function GetNewAnswer({ ans, index, category }) {
@@ -405,91 +264,47 @@ function GetNewAnswer({ ans, index, category }) {
       } else {
         return ans.answers.map((ans, i) => <p key={i}>{ans.answer}</p>)
       }
-    // case 12: // Nested questions
-    //  //console.log("ANS", ans);
-    // //console.log("Q_TYPE_12:", ans.answers);
-    // if(ans.id === 7){
-    //   return ans.nestedQue.map((que, i) => {
-    //      const answers = ans.answers?.find((ans) => ans.question_id === que.id)?.answers;
-    //     return (
-    //       <>
-    //       <div key={i} className='nested-answer'>
-    //       <p className='nested'>
-    //         {que.question}
-    //       </p>
-    //       {answers ? answers.map(ans => <p>{ans.answer}</p>) : <p>N/A</p>}
-    //       </div>
-    //       </>
-    //       )
-    //     });
-    // } else {
-    //   // console.log("Category", category.questions[index-1].answers);
-    //   const prevAns = category.questions[index-1].answers;
-    //   return ans.nestedQue.map((que, i) => {
-    //     const country = prevAns.find((prev) => prev.question_id ===  que.question_opt);
-    //     //console.log("country", country.answers.map(newAns => newAns.answer));
 
-    //      const answers = ans.answers?.find((ans) => ans.question_id === que.id)?.answers;
-    //     return (
-    //       <>
-    //       <p>
-    //         <b>{que.question}</b>
-    //       </p>
-    //       {country ? country.answers.map(newAns => <p>{newAns.answer}</p>) : <p>N/A</p>}
-    //       {answers ? answers.map(ans => <p>{ans.answer}</p>) : <p>N/A</p>}
-    //         </>
-    //       )
-    //     });
-    // }
     case 12: // Nested questions
-  // console.log("ANS", ans);
-  // console.log("Q_TYPE_12:", ans.answers);
-  return (
-    <div className="nestedContainer">
-      {ans.id === 7 ? (
-          ans.nestedQue.map((que, i) => {
-            const answers = ans.answers?.find((ans) => ans.question_id === que.id)?.answers;
-            return (
-              <div key={i} className="nested-answer">
-                <p className="nested">
-                  {que.question}
-                </p>
-                {answers ? answers.map(ans => <p>{ans.answer}</p>) : <p>N/A</p>}
-              </div>
-            );
-          })
-        
-      ) : (
-        ans.nestedQue.map((que, i) => {
-          const prevAns = category.questions[index - 1].answers;
-          const country = prevAns.find((prev) => prev.question_id === que.question_opt)?.answers;
-          const answers = ans.answers?.find((ans) => ans.question_id === que.id)?.answers;
-          return (
-            <div key={i}>
-              <p>
-                <b>{que.question}</b>
-              </p>
-              {/* {country ? country.map(newAns => <p>{newAns.answer}</p>) : <p>N/A</p>} */}
-              {/* {answers ? answers.map((ans, index) => <p><b>{country[index]?.answer}</b> {ans.answer}</p>) : <p>N/A</p>} */}
-              {answers ? (
-                answers.map((ans, index) => (
-                <p key={index}>
-                <b>{country[index]?.answer}:</b> {ans.answer}
-                </p>
-                ))
-              ) : (
-              country.map((c, index) => (
-              <p key={index}>
-                <b>{c.answer}:</b> N/A
-              </p>
-            ))
-            )}
-            </div>
-          );
-        })
-      )}
-    </div>
-  );
+      // console.log("ANS", ans);
+      // console.log("Q_TYPE_12:", ans.answers);
+      return (
+        <div className="nestedContainer">
+          {ans.id === 7 ? (
+            ans.nestedQue.map((que, i) => {
+              const answers = ans.answers?.find((ans) => ans.question_id === que.id)?.answers;
+              return (
+                <div key={i} className="nested-answer">
+                  <p className="nested">
+                    {que.question}
+                  </p>
+                  {answers ? answers.map(ans => <p>{ans.answer}</p>) : <p>N/A</p>}
+                </div>
+              );
+            })
+
+          ) : (
+            ans.nestedQue.map((que, i) => {
+              const prevAns = category.questions[index - 1].answers;
+              const country = prevAns.find((prev) => prev.question_id === que.question_opt)?.answers;
+              const answers = ans.answers?.find((ans) => ans.question_id === que.id)?.answers;
+              console.log({ country, answers });
+              return (
+                <div key={i}>
+                  <p>
+                    <b>{que.question}</b>
+                  </p>
+                  {answers ? (
+                    answers?.map((ans, index) => <p key={index}><b>{country[index]?.answer}:</b> {ans.answer}</p>)
+                  ) : (
+                    country?.map((c, index) => <p key={index}><b>{c.answer}:</b> N/A</p>)
+                  )}
+                </div>
+              );
+            })
+          )}
+        </div>
+      );
 
     case 11: // Multiple Choice (Checkbox) predefined
     case 15: // Confirm Checkbox

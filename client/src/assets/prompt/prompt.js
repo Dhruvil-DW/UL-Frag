@@ -10,15 +10,22 @@ export default function Prompt() {
   }, [promptState]);
 
   return (
-    <Modal open={promptState?.length > 0 ?? false}>
-      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} open={promptState?.length > 0 ?? false}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {promptState?.map((prompt) => (
-            <CustAlert key={prompt.id} data={prompt} />
-          ))}
-        </div>
-      </Snackbar>
-    </Modal>
+    // <Modal open={promptState?.length > 0 ?? false}>
+    //   <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} open={promptState?.length > 0 ?? false}>
+    //     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+    //       {promptState?.map((prompt) => (
+    //         <CustAlert key={prompt.id} data={prompt} />
+    //       ))}
+    //     </div>
+    //   </Snackbar>
+    // </Modal>
+    <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} open={promptState?.length > 0 ?? false}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {promptState?.map((prompt) => (
+        <CustAlert key={prompt.id} data={prompt} />
+      ))}
+    </div>
+    </Snackbar>
   );
 }
 

@@ -18,7 +18,7 @@ const promptReducer = (state, action) => {
     case promptActions.SHOW_PROMPT:
       const newPrompt = {
         id: Math.floor(Math.random() * 1000),
-        timer: action.payload.timer ?? 2000,
+        timer: action.payload.timer ?? 4000,
         type: action.payload.type ?? 'error', // 'success' | 'error' \ 'info' | 'warn'
         message: action.payload.message ?? 'Something Went Wrong',
       };

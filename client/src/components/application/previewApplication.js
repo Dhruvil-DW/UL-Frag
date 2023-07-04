@@ -49,7 +49,6 @@ function NewQuesAns({ category, answers, uploadedImageName, uploadedImageData })
                   {que.id === 7 ? (
                     que.nestedQue.map((nestQue, nestIndex) => {
                       const inputAns = answers[nestQue.id];
-                      console.log(nestQue);
                       return (
                         <div key={nestIndex} className="nested-answer">
                           <p className="nested">{nestQue.question}</p>

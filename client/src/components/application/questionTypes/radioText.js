@@ -6,19 +6,24 @@ import TooltipIcon from "../../../assets/icons/tooltipIcon";
 
 export default function RadioText({ question, nav, index, value = "", onKeyUp }) {
   const { handleAnswerChange } = useContext(ApplicationContext);
+  // const [input, setInput] = useState(question.question_opt.includes(value) ? value : "Any other");
   const [input, setInput] = useState(value);
-  // const [textInput, setTextInput] = useState((value && !(question.question_opt.includes(value))) ? value : "");
+  const [textInput, setTextInput] = useState((value && !(question.question_opt.includes(value))) ? value : "");
   const defferInput = useDeferredValue(input);
-  // const defferTextInput = useDeferredValue(textInput);
+  const defferTextInput = useDeferredValue(textInput);
   function handleInputChange(__event, value) {
     setInput(value);
   }
-  // function handleTextChange(e) {
-  //   setTextInput(e.target.value);
-  // }
+  function handleTextChange(e) {
+    setTextInput(e.target.value);
+  }
   useEffect(() => {
-      handleAnswerChange(question.id, defferInput);
-  }, [handleAnswerChange, question.id, defferInput])
+    if(defferInput === 'Any other'){
+      handleAnswerChange(question.id, defferTextInput)
+    } else {
+      handleAnswerChange(question.id, defferInput); 
+    }
+  }, [handleAnswerChange, question.id, defferInput, defferTextInput])
 
   function BasicExample(nav) {
     const element = document.getElementById(nav);
@@ -55,12 +60,34 @@ export default function RadioText({ question, nav, index, value = "", onKeyUp })
         }
         </span>
         </h2>
-      <RadioGroup value={value} onChange={handleInputChange} name={question.id.toString()}>
+      <RadioGroup value={input} onChange={handleInputChange} name={question.id.toString()}>
         {question.question_opt?.map((opt) => (
-          <FormControlLabel key={opt} label={opt} value={opt} control={<Radio />} />
-        ))}
-      {/* {input === "Any other" && <TextField variant="outlined" color="secondary" placeholder="Enter any other investment" name="Other Category" value={textInput} onKeyUp={onKeyUp} 
-      onChange={handleTextChange} />} */}
+          <div key={opt}>
+            <FormControlLabel key={opt} label={opt} value={opt} control={<Radio />} />
+            {opt === 'Any other' && input === 'Any other' && (
+              <TextField
+              fullWidth
+              id="OtherInvestmentField"
+              variant="outlined"
+              color="secondary"
+              name="OtherInvestment"
+              placeholder="Enter other launch phase"
+              value={textInput}
+              onKeyUp={onKeyUp}
+              onChange={handleTextChange}
+            />
+            )}
+          </div>
+            ))}
+        {/* {input.investment === "Any other" && (
+          <TextField variant="outlined" 
+          color="secondary" 
+          placeholder="Enter Category Name" 
+          name="Other Category" 
+          value={textInput} 
+          onKeyUp={onKeyUp} 
+          onChange={handleTextChange} />
+        )} */}
       </RadioGroup>
       <div className='navBtnCont'>
           <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>

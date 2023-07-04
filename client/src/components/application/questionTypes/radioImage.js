@@ -66,7 +66,7 @@ export default function RadioImage({ question, nav, index, value = {}, onKeyUp }
           </div>
         </RadioGroup>
 
-        <div style={{ flexGrow: 1, flexShrink: 0, height: "inherit", backgroundColor: "#CAD9FF", color: "var(--Color-Primary)", padding: 16 }}>
+        <div style={{ flexGrow: 1, flexShrink: 0, height: "inherit", backgroundColor: "#CAD9FF", color: "var(--Color-Primary)", padding: '20px 28px' }}>
           <h3 style={{ fontSize: 18}}>Global Brand Position</h3>
           <TextField
             multiline

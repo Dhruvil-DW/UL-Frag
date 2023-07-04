@@ -7,8 +7,9 @@ import TooltipIcon from "../../../assets/icons/tooltipIcon";
 export default function RadioText({ question, nav, index, value = "", onKeyUp }) {
   const { handleAnswerChange } = useContext(ApplicationContext);
   // const [input, setInput] = useState(question.question_opt.includes(value) ? value : "Any other");
-  const [input, setInput] = useState(value);
-  const [textInput, setTextInput] = useState((value && !(question.question_opt.includes(value))) ? value : "");
+  // const [textInput, setTextInput] = useState((value && !(question.question_opt.includes(value))) ? value : "");
+  const [input, setInput] = useState(value ? (question.question_opt.includes(value) ? value : "Any other") : "");
+  const [textInput, setTextInput] = useState(value && !(question.question_opt.includes(value)) ? value : "");
   const defferInput = useDeferredValue(input);
   const defferTextInput = useDeferredValue(textInput);
   function handleInputChange(__event, value) {

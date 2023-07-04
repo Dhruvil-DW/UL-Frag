@@ -1,6 +1,7 @@
 import { Button, Dialog } from "@mui/material";
 import { Fragment } from "react";
 import { LazyImage } from "../../assets/image/lazyImage";
+import ArrowLeftRoundIcon from "../../assets/icons/arrowLeftRoundIcon";
 
 export default function PreviewApp({ open, handleClose, handleDraft, handleSubmit, answers, catWiseQues, uploadedImageName, uploadedImageData }) {
   // console.log({ catWiseQues });
@@ -11,16 +12,18 @@ export default function PreviewApp({ open, handleClose, handleDraft, handleSubmi
     <Dialog fullScreen open={open} onClose={handleClose}>
       <div className="appFormContainer">
         <div className="sidebar viewSidebar">
-          <Button variant="outlined" onClick={handleClose} sx={{ mt: 2 }}>Back</Button>
-          <div>Preview Application</div>
-          <div className="buttonContainer">
+          <div className="sidebarTopArea">
+            <div className="btnBack" onClick={handleClose}><ArrowLeftRoundIcon /></div>
+            <p>Preview Application</p>
+          </div>
+          <div className="sidebarMidArea">{answers?.[1]?.projectName ?? "N/A"}</div>
+          <div className="btnSidebarBottom">
             <Button variant="outlined" onClick={handleDraft}>Save as Draft</Button>
             <Button variant="outlined" onClick={handleSubmit}>Submit</Button>
           </div>
         </div>
         <div className="QAWrapper">
           <div className="previewQA">
-
             {catWiseQues.map((cat) => <NewQuesAns key={cat.category_id} category={cat} answers={answers} uploadedImageName={uploadedImageName} uploadedImageData={uploadedImageData} />)}
           </div>
         </div>

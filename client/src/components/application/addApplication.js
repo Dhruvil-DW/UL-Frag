@@ -11,6 +11,7 @@ import WelcomeScreen from "./welcomeScreen/welcomeScreen";
 import { useAxios } from "../../hooks/useAxios";
 import { promptActions, promptContext } from "../../context/promptContext";
 import { useGetAnswer, useGetCountry, useGetQuestions, useGetRegion } from "./addAppAPIs";
+import { element } from "prop-types";
 export const ApplicationContext = createContext();
 
 export default function AddApplication() {
@@ -152,6 +153,7 @@ export default function AddApplication() {
   const handleSubmit = () => {
     // console.log({ inputs });
     if (!(inputs[1]?.option && inputs[1]?.projectName)) {
+      navigate(document.getElementById(1).scrollIntoView({ behavior: 'smooth' }));
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please enter project name" } });
       return;
     }
@@ -215,6 +217,7 @@ export default function AddApplication() {
 
   function handleDraft() {
     if (!(inputs[1]?.option && inputs[1]?.projectName)) {
+      navigate(document.getElementById(1).scrollIntoView({ behavior: 'smooth' }));
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please enter project name" } });
       return;
     }

@@ -184,7 +184,7 @@ export default function TextBoxVariationImage({ question, nav, index, value, onK
   });
 
   return (
-    <div data-que-type={question.question_type_id} className="questionContainer">
+    <div data-que-type={question.question_type_id} className="questionContainer fixWidth">
       <div style={{ display: "flex", gap: "3rem" }}>
         <div className="queBox">
           {/* <h2 className="question">{`${question.CatWiseQueIndex} ${question.question}`}
@@ -213,7 +213,7 @@ export default function TextBoxVariationImage({ question, nav, index, value, onK
                   {input.length > 1 && (<Button variant="contained" style={{ width: '100%', maxWidth: 500, height: '55px', color: 'black', background: '#F9F9F9', boxShadow: "none" }} onClick={() => removeVariation(index)}>- Remove Variation</Button>)}
                 </div>
                 <div className="uploadContainer">
-                  <UploadDocVariation que_id={question.id} label='Upload Cabin Photos' files={variantFiles[index] ?? []} uploadedFiles={element.files} onUpload={(e) => onUpload(index, e)} onRemove={(e, i) => onRemove(index, e, i)} onRemoveUploaded={onRemoveUploaded} required={false} />
+                  <UploadDocVariation que_id={question.id} label='Upload Image variation Photos' files={variantFiles[index] ?? []} uploadedFiles={element.files} onUpload={(e) => onUpload(index, e)} onRemove={(e, i) => onRemove(index, e, i)} onRemoveUploaded={onRemoveUploaded} required={false} />
                 </div>
               </div>
             ))}

@@ -43,7 +43,7 @@ export default function SelectSingleWithTextStatic({ question, nav, index, value
       />
       <TextField variant="outlined" color="secondary" placeholder="Enter name" name="projectName" value={input.projectName ?? ""} onChange={(e) => setInput(prevInput => ({ ...prevInput, [e.target.name]: e.target.value }))} disabled={!Boolean(input.option)} 
       onKeyUp={onKeyUp} />
-
+      {!(input?.option && input?.projectName) ? <p style={{ fontSize: 12, color: "red", margin: '-0.3rem 0px 0px 21px' }}>*Please enter project name</p> : ''}
       <div className='navBtnCont'>
         {question.id !== 1 && <div className="prevBtn" tabIndex={-1} onClick={() => BasicExample((nav) - 1)}><ArrowLeftRoundIcon /></div>}
         <div className="nextBtn" tabIndex={-1} onClick={() => BasicExample((nav) + 1)}><ArrowLeftRoundIcon /></div>

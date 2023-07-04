@@ -275,6 +275,7 @@ export default function AddApplication() {
 
   function handlePreview() {
     if (!(inputs[1]?.option && inputs[1]?.projectName)) {
+      navigate(document.getElementById(1).scrollIntoView({ behavior: 'smooth' }));
       promptDispatch({ type: promptActions.SHOW_PROMPT, payload: { message: "Please enter project name" } });
       return;
     }

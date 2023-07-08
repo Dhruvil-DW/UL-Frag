@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react'
+import React, { Fragment, useContext, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import CategoryIcon from '../../assets/icons/categoryIcon';
 import UserIcon from '../../assets/icons/userIcon';
@@ -14,9 +14,12 @@ import UserAddIcon from "../../assets/icons/userAdd";
 import { collabActions, collabContext } from '../../context/collabContext';
 import { useListCollab } from '../collaborator/collabAPI';
 import { useGetQuestions } from './addAppAPIs';
+import download from 'downloadjs';
 
 export default function ViewApplication() {
   const { appId } = useParams();
+   const viewRef = useRef(null);
+  // const [exportData, setExportData] = useState([]);
   const { getData, updateData } = useAxios();
   const navigate = useNavigate();
   const { authState } = useContext(authContext);
@@ -30,7 +33,7 @@ export default function ViewApplication() {
   //console.log("QuesAns", queAns);
   const listOfCollab = useListCollab(appId);
   const questions = useGetQuestions();
-  //console.log(questions.data);
+  console.log(questions.data);
 
   useEffect(() => {
     if (questions.data && queAns.length) {
@@ -60,6 +63,9 @@ export default function ViewApplication() {
     }
   }, [questions.data, queAns]);
 
+  function getExport(){
+  getData(`user/get/export/${appId}`, { responseType : "blob"}, (data)=> download(data))
+}
   function getAppQuestions() {
     getData(`user/viewapplication/${appId}`, {},
       (data) => {
@@ -88,7 +94,7 @@ export default function ViewApplication() {
   }
   // console.log("resultqueans", result[0].category_name);
   return (
-    <div className='appFormContainer'>
+    <div className='appFormContainer' id="appForm" ref={viewRef}>
       <div className='sidebar viewSidebar'>
         <div className="navLinkContainer">
           <Link to='/dashboard'>
@@ -133,6 +139,9 @@ export default function ViewApplication() {
             </div> */}
             <div className="buttonContainer">
               {appData.application_status_id === 1 && <Button variant="contained" startIcon={<UserAddIcon />} onClick={() => collabDispatch({ type: collabActions.SHOW_COLLAB, payload: { app_id: appId } })}>Invite</Button>}
+              {appData.application_status_id === 2 && 
+              <Button variant="contained" onClick={getExport}>Export</Button>
+                }
               <Button variant="outlined" startIcon={<LogoutArrowIcon />} onClick={() => navigate('/logout')}>Logout</Button>
             </div>
           </>
@@ -288,7 +297,7 @@ function GetNewAnswer({ ans, index, category }) {
               const prevAns = category.questions[index - 1].answers;
               const country = prevAns.find((prev) => prev.question_id === que.question_opt)?.answers;
               const answers = ans.answers?.find((ans) => ans.question_id === que.id)?.answers;
-              console.log({ country, answers });
+              // console.log({ country, answers });
               return (
                 <div key={i}>
                   <p>

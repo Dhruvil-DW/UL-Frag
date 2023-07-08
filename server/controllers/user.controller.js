@@ -11,6 +11,11 @@ const generateToken = require('../config/jwt.config');
 const seq = require('../config/sequelize.config');
 const { Op, where } = require("sequelize");
 const sendEmail = require('../config/mail.config');
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
+// const image = '../../client/public/images/';
+// const image = './6_Surf-Logo 2_c3bd0a2a.png';
+const path = require('path');
 
 function addProfileDetails(req, res) {
     // console.log(req.body);
@@ -214,6 +219,156 @@ function viewApplications(req, res) {
     })();
 }
 
+function getExportPDF(req, res){
+    const app_id = req.params.app_id;
+    (async () => {
+        const appData = await seq.seqFindByPk(Application, app_id, ["id", "project_name", "application_status_id", "updated_at"],
+            [
+                { model: User, attributes: ['id', 'unique_id', "first_name", "last_name", "email"] },
+                { model: ApplicationStatus, attributes: ['id', 'status'] },
+                { model: ApplicationInvite, attributes: ["id"], include: { model: User, attributes: ["id", "email", "first_name", "last_name"] } }
+            ]
+        );
+        if (appData === 500) return res.status(500).send({ message: "Error while getting application" });
+        const appQueRes = await seq.seqFindAll(AppQuestion, ["id", "question_id", "app_id"], { app_id: app_id },
+            [
+                { model: Question, attributes: ["id", "category_id", "question_type_id", "question", "status", "parent_id"], include: [{model: Category, attributes: ['id', 'name']}] },
+                { model: Answers, attributes: ["id", "app_question_id", "answer"]}
+            ]
+        );
+
+        //console.log("APPQues", appQueRes);
+        if (appQueRes === 500) return res.status(500).send({ message: "Error while getting application" });
+        
+        const doc = new PDFDocument();
+        const outputPath = 'output.pdf'; // Set the output file path
+        const stream = fs.createWriteStream(outputPath); // Pipe the PDF document to a writable stream
+        doc.pipe(stream);
+    
+        doc.fontSize(14).font('Helvetica-Bold').text(`Project Name: ${appData.project_name}`);
+        doc.fontSize(14).font('Helvetica-Bold').text(`Status: ${appData.application_status.status}`).moveDown(0.7);
+
+        const categoryWiseQuesData = getCatWiseQues(appQueRes);
+    // console.log(categoryWiseQuesData[0].category_name);
+        categoryWiseQuesData.forEach((category) => {
+        //console.log(category.questions);
+        doc.fillColor('black');
+
+        doc.fontSize(16).fillColor('#002F98').text(`${category.category_id}. ${category.category_name}`,{continued: false,}).moveDown(0.5);
+
+        category.questions.forEach((que)=> {
+            //console.log(que.question.id);
+            doc.fontSize(12).fillColor('#03297D').text(`${que.CatWiseQueIndex} ${que.question.question}`, {continued: false}).moveDown(0.5);
+            switch (que.question.question_type_id) {
+                case 1: // TextBox
+                 que.answers.forEach((newAns,i) => doc.fillColor('black').text(`${newAns.answer}`,{continued: false, }).moveDown(0.5));
+                break;
+                case 3: //Select Dropdown predefined
+                case 4: // Select Dropdown dynamic
+                 que.answers.forEach((newAns,i) => doc.fillColor('black').text(`${newAns.answer}`,{continued: false}).moveDown(0.5));
+                 break;
+                case 5: //Multiselect Dropdown predefined
+                case 6: // Multiselect dropdown dynamic
+                 que.answers.forEach((newAns, i) => doc.fillColor('black').text(`${newAns.answer}`,{continued: false}).moveDown(0.5));
+                 break;
+                case 14: //Select (projectName) with TextBox
+                //console.log("Que-type", que.question.question_type_id);
+                     que.answers.forEach((ans, i) => {
+                      const ansObj = JSON.parse(ans.answer);
+                        doc.fillColor('black').text(`${ansObj.option}`,{continued: false}).moveDown(0.5);
+                        doc.fillColor('black').text(`${ansObj.projectName}`,{continued: false}).moveDown(0.5); 
+                    });
+                    break;
+                case 7:  // Picture choice predefined
+                    que.answers.forEach((ans) => {
+                        const ansObj = JSON.parse(ans.answer);
+                        // const imagePath = path.join(__dirname, '../controllers/public', 'brand_robjin.png');
+                        // console.log(`${image}`);
+                        // const imagePath = path.join(__dirname, '../client/public/images/');
+                        //console.log(imagePath);
+                        //  doc.image(`${image}${ansObj.brand}`);
+                        //  doc.image('public/testimg.jpg',{fit: [250, 300],
+                        //  align: 'center',
+                        //  valign: 'center'});
+                        //  <img src={`/images/${ansObj.brand}`} alt={ansObj.brand} />
+                        {ansObj.desc && doc.fillColor('black').text(`${ansObj.desc}`,{continued: false}).moveDown(0.5)}
+                    })
+                    break;
+                case 8: // Multiselect Picture Choice
+                    if(que.question.id === 23){
+                        const ansObj = JSON.parse(que.answers[0].answer);
+                        {ansObj.option.forEach((opt, i) => doc.fillColor('black').text(`${opt}`,{continued: false}).moveDown(0.5))}
+                        {ansObj.desc && doc.fillColor('black').text(`Description: ${ansObj.desc}`,{continued: false}).moveDown(0.5)}
+                    } else {
+                        que.answers.forEach((newAns, i) => doc.fillColor('black').text(`${newAns.answer}`,{continued: false}).moveDown(0.5));
+                    }
+                    break;
+                case 9: 
+                    que.answers.forEach((newAns)=> {
+                        const ansObj = JSON.parse(newAns.answer);
+                        doc.fillColor('black').text(`${ansObj.variation}`,{continued: false}).moveDown(0.5);
+                        // {ansObj.files.forEach((img)=> {
+                        //     // console.log("img", img);
+                        //     const imagePath = path.resolve('public', img);
+                        //     console.log("Path: ", imagePath);
+                        //     const imageAsBase64 = fs.readFileSync(imagePath, 'base64');
+                        //     //imagePath = imagePath.replace(new RegExp(/\\/g),'/')
+                        //     // console.log(imageAsBase64);
+                        //     doc.image(`data:image;base64,${imageAsBase64}`);
+                        //     // doc.file(imageAsBase64);
+                        // })}
+                    })
+                    break;
+                case 13: // Add Multiple section Image Upload
+                    que.answers.forEach((newAns) => {
+                        const ansObj = JSON.parse(newAns.answer);
+                        doc.fillColor('black').text(`${ansObj.desc}`,{continued: false}).moveDown(0.5);
+                        // {ansObj.files.forEach((img)=> {
+                        //     // console.log("img", img);
+                        //     const imagePath = path.resolve('public', img);
+                        //     console.log("Path: ", imagePath);
+                        //     const imageAsBase64 = fs.readFileSync(imagePath, 'base64');
+                        //     //imagePath = imagePath.replace(new RegExp(/\\/g),'/')
+                        //     // console.log(imageAsBase64);
+                        //     doc.image(`data:image;base64,${imageAsBase64}`);
+                        //     // doc.file(imageAsBase64);
+                        // })}
+                    })
+                    break;
+                case 10: // Single Choice predefinded
+                if(que.question.id === 24){
+                    const ansObj = JSON.parse(que.answers[0].answer);
+                    {ansObj.option && doc.fillColor('black').text(`Investment: ${ansObj.option}`,{continued: false}).moveDown(0.5)}
+                    {ansObj.amount && doc.fillColor('black').text(`Amount: € ${ansObj.amount} Cost per tons (in Euros)`,{continued: false}).moveDown(0.5)}
+                } else {
+                    que.answers.forEach((newAns, i) => doc.fillColor('black').text(`${newAns.answer}`,{continued: false}).moveDown(0.5));
+                }
+                    break;
+                    // case 12: // Nested questions
+                    // if(que.question.id === 7){
+
+                    // } else {
+
+                    // }
+                    // break;
+                    case 11: // Multiple Choice (Checkbox) predefined
+                    case 15: // Confirm Checkbox
+                    case 2: // Date
+                    default:
+                    que.answers.forEach((newAns,i) => doc.fillColor('black').text(`${newAns.answer}`,{continued: false}).moveDown(0.5));
+                    break;
+              }    
+        })
+    })
+
+    doc.end();
+
+    res.contentType("application/pdf");
+    res.attachment("output.pdf");
+    fs.createReadStream(outputPath).pipe(res);
+        // res.status(200).send({ApplicationData: appData, QuesAns : appQueRes});
+    })();
+}
 
 function getInvitedApplications(req, res) {
     console.log("GET_INVITED_APP");
@@ -289,6 +444,38 @@ function getInvitedApplications(req, res) {
     //     res.status(200).send(getInviteRes);
     // })();
 }
+function getCatWiseQues(questions) {
+    const result = [];
+    // let count = 0;
+    let CatWiseQueIndex;
+  
+    for (let i = 0; i < questions.length; i++) {
+      const que = questions[i];
+  
+      if (result[que.question.category_id - 1]) {
+        CatWiseQueIndex += 1;
+        result[que.question.category_id - 1].questions.push({
+          ...que,
+        //   serial: count++,
+          CatWiseQueIndex: `${que.question.category_id}.${CatWiseQueIndex}`
+        });
+      } else {
+        CatWiseQueIndex = 1;
+        result[que.question.category_id - 1] = {
+          category_id: que.question.category_id,
+          category_name: que.question.category.name,
+        //   serial: count++,
+          questions: [{
+            ...que,
+            // serial: count++,
+            CatWiseQueIndex: `${que.question.category_id}.${CatWiseQueIndex}`
+          }]
+        };
+      }
+    }
+  
+    return result;
+}
 
 module.exports = {
     addProfileDetails,
@@ -297,5 +484,6 @@ module.exports = {
     getMyApplications,
     getApprovedApplications,
     viewApplications,
+    getExportPDF,
     getInvitedApplications
 }

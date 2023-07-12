@@ -11,13 +11,13 @@ const generateToken = require('../config/jwt.config');
 const seq = require('../config/sequelize.config');
 const { Op, where } = require("sequelize");
 const sendEmail = require('../config/mail.config');
-const PDFDocument = require('pdfkit');
+// const PDFDocument = require('pdfkit');
 const fs = require('fs');
 // const image = '../../client/public/images/';
 // const image = './6_Surf-Logo 2_c3bd0a2a.png';
 const path = require('path');
 // const jsPDF = require('jspdf');
-const pdfCreatorNode = require("pdf-creator-node");
+// const pdfCreatorNode = require("pdf-creator-node");
 // const generateHTML = require('./pdf.controller')
 
 function addProfileDetails(req, res) {

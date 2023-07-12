@@ -16,6 +16,9 @@ const fs = require('fs');
 // const image = '../../client/public/images/';
 // const image = './6_Surf-Logo 2_c3bd0a2a.png';
 const path = require('path');
+// const jsPDF = require('jspdf');
+const pdfCreatorNode = require("pdf-creator-node");
+// const generateHTML = require('./pdf.controller')
 
 function addProfileDetails(req, res) {
     // console.log(req.body);
@@ -219,7 +222,7 @@ function viewApplications(req, res) {
     })();
 }
 
-function getExportPDF(req, res){
+/*function getExportPDF(req, res){
     const app_id = req.params.app_id;
     (async () => {
         const appData = await seq.seqFindByPk(Application, app_id, ["id", "project_name", "application_status_id", "updated_at"],
@@ -236,10 +239,10 @@ function getExportPDF(req, res){
                 { model: Answers, attributes: ["id", "app_question_id", "answer"]}
             ]
         );
-
-        //console.log("APPQues", appQueRes);
         if (appQueRes === 500) return res.status(500).send({ message: "Error while getting application" });
         
+        
+
         const doc = new PDFDocument();
         const outputPath = 'output.pdf'; // Set the output file path
         const stream = fs.createWriteStream(outputPath); // Pipe the PDF document to a writable stream
@@ -250,6 +253,7 @@ function getExportPDF(req, res){
 
         const categoryWiseQuesData = getCatWiseQues(appQueRes);
     // console.log(categoryWiseQuesData[0].category_name);
+        
         categoryWiseQuesData.forEach((category) => {
         //console.log(category.questions);
         doc.fillColor('black');
@@ -257,7 +261,8 @@ function getExportPDF(req, res){
         doc.fontSize(16).fillColor('#002F98').text(`${category.category_id}. ${category.category_name}`,{continued: false,}).moveDown(0.5);
 
         category.questions.forEach((que)=> {
-            //console.log(que.question.id);
+            
+            //console.log(que);
             doc.fontSize(12).fillColor('#03297D').text(`${que.CatWiseQueIndex} ${que.question.question}`, {continued: false}).moveDown(0.5);
             switch (que.question.question_type_id) {
                 case 1: // TextBox
@@ -307,16 +312,16 @@ function getExportPDF(req, res){
                     que.answers.forEach((newAns)=> {
                         const ansObj = JSON.parse(newAns.answer);
                         doc.fillColor('black').text(`${ansObj.variation}`,{continued: false}).moveDown(0.5);
-                        // {ansObj.files.forEach((img)=> {
-                        //     // console.log("img", img);
-                        //     const imagePath = path.resolve('public', img);
-                        //     console.log("Path: ", imagePath);
-                        //     const imageAsBase64 = fs.readFileSync(imagePath, 'base64');
-                        //     //imagePath = imagePath.replace(new RegExp(/\\/g),'/')
-                        //     // console.log(imageAsBase64);
-                        //     doc.image(`data:image;base64,${imageAsBase64}`);
-                        //     // doc.file(imageAsBase64);
-                        // })}
+                        //{ansObj.files.forEach((img)=> {
+                            // console.log("img", img);
+                            //const imagePath = path.resolve('public', img);
+                            // console.log("Path: ", imagePath);
+                            // const imageAsBase64 = fs.readFileSync(imagePath, 'base64');
+                            //imagePath = imagePath.replace(new RegExp(/\\/g),'/')
+                            // console.log(`./public/${img}`);
+                            // doc.image(`data:image;base64,${imageAsBase64}`);
+                            // doc.file(imageAsBase64);
+                        //})}
                     })
                     break;
                 case 13: // Add Multiple section Image Upload
@@ -366,10 +371,57 @@ function getExportPDF(req, res){
     res.contentType("application/pdf");
     res.attachment("output.pdf");
     fs.createReadStream(outputPath).pipe(res);
-        // res.status(200).send({ApplicationData: appData, QuesAns : appQueRes});
+        // res.status(200).send({Application: appData, QuesAns : appQueRes});
     })();
+}*/
+function getExportPDF(req, res){
+    var template = fs.readFileSync(path.join(__dirname, '../export.html'), 'utf8');
+    var options = {
+        format: "A4",
+        orientation: "portrait",
+        border: "10mm",
+    };
+    const app_id = req.params.app_id;
+    (async () => {
+        const appData = await seq.seqFindByPk(Application, app_id, ["id", "project_name", "application_status_id", "updated_at"],
+            [
+                { model: User, attributes: ['id', 'unique_id', "first_name", "last_name", "email"] },
+                { model: ApplicationStatus, attributes: ['id', 'status'] },
+                { model: ApplicationInvite, attributes: ["id"], include: { model: User, attributes: ["id", "email", "first_name", "last_name"] } }
+            ]
+        );
+        if (appData === 500) return res.status(500).send({ message: "Error while getting application" });
+        const appQueRes = await seq.seqFindAll(AppQuestion, ["id", "question_id", "app_id"], { app_id: app_id },
+            [
+                { model: Question, attributes: ["id", "category_id", "question_type_id", "question", "status", "parent_id"], include: [{model: Category, attributes: ['id', 'name']}] },
+                { model: Answers, attributes: ["id", "app_question_id", "answer"]}
+            ]
+        );
+        if (appQueRes === 500) return res.status(500).send({ message: "Error while getting application" });
+        
+        //console.log(template)
+        const appQues = getCatWiseQues(appQueRes);
+        
+        // var newData = {
+        //     project_name: appData.project_name
+        // }
+            var document = {
+                html: template,
+                data: {
+                    project_name: appData.project_name,
+                    application_status: appData.application_status.status,
+                    appQue:appQues
+                }, 
+                path: './dhruvi.pdf',
+                
+            }
+            pdfCreatorNode.create(document, options).then((res) => {
+                console.log(res);
+            })
+            // console.log(document.data);
+            
+    })();  
 }
-
 function getInvitedApplications(req, res) {
     console.log("GET_INVITED_APP");
     const userId = req.userdata.user_id;

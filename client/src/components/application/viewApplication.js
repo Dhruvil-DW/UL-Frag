@@ -15,6 +15,8 @@ import { collabActions, collabContext } from '../../context/collabContext';
 import { useListCollab } from '../collaborator/collabAPI';
 import { useGetQuestions } from './addAppAPIs';
 import download from 'downloadjs';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 export default function ViewApplication() {
   const { appId } = useParams();
@@ -66,6 +68,60 @@ export default function ViewApplication() {
   function getExport(){
   getData(`user/get/export/${appId}`, { responseType : "blob"}, (data)=> download(data))
 }
+
+const customData = {
+  project_name: appData.project_name,
+  application_status: appData.application_status?.status ?? "N/A",
+  category: queAns.find((item) => item.question_id === 3)?.answers[0]?.answer ?? "N/A",
+  user_name: `${appData.User?.first_name ?? "N/A"} ${appData.User?.last_name ?? ""}`,
+  updated_at: formatDate(appData.updated_at) ?? "N/A"
+};
+// console.log(customData.project_name);
+// const handleDownload = () => {
+//     // const content = viewRef.current.children;
+//   // console.log(viewRef.current.children);
+//     const qa = viewRef.current.children[1];
+//     qa.style.overflowY = 'visible';
+    
+//     html2canvas(qa,{
+//       width: qa.clientWidth,
+//       height: qa.scrollHeight,
+//       autoPaging:true
+//         // width: 2480,
+//         // height: 3508
+//       }).then((canvas) => {
+//         let imgWidth = 700;
+//         let pageHeight = 780;
+//         let imgHeight =
+//         ((canvas.height * imgWidth) / 2454)*1.34;
+//         //console.log("Canvas", imgHeight);
+//         let heightLeft = imgHeight;
+//         const imgData = canvas.toDataURL('image/png');
+//       const doc = new jsPDF("landscape", "pt", [700, 780]);
+//       doc.setFontSize(10).setTextColor(3, 41, 125).setFont('Poppins').text("Project Name:" + customData.project_name, 70,10, {align:'left'});
+//       doc.setFontSize(10).text("Status:" + customData.application_status, 70,20, {align:'left'});
+//       doc.setFontSize(10).text("Category:" + customData.category, 70,30, {align:'left'});
+//       doc.setFontSize(10).text("User Name:" + customData.user_name, 70,40, {align:'left'});
+//       // doc.setFontSize(11).setTextColor(3, 41, 125).setFont('Poppins').text("Project Name:" + customData.project_name, 70,20, {align:'left'});
+//       // doc.setFontSize(11).text("Status:" + customData.application_status, 200,20, {align:'left'});
+//       // doc.setFontSize(11).text("Category:" + customData.category, 300,20, {align:'left'});
+//       // doc.setFontSize(11).text("User Name:" + customData.user_name, 500,20, {align:'left'});
+//       // doc.setFontSize(10).text("Last Edited:"+ customData.updated_at, 50,50, {align:'left'});
+//       let position = 50;
+//       doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, null, 'NONE');
+//       heightLeft -= pageHeight;
+//       while (heightLeft > 0) {
+//         position = heightLeft - imgHeight + 120;
+
+//         doc.addPage();
+//         doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+//         heightLeft -= pageHeight;
+//       }
+      
+//       doc.save(`${appData.project_name}.pdf`);
+//     });
+//     qa.style.overflowY = 'auto';
+// };
   function getAppQuestions() {
     getData(`user/viewapplication/${appId}`, {},
       (data) => {
@@ -105,10 +161,10 @@ export default function ViewApplication() {
           </Link>
           <div className='detailsContainer' style={{ marginTop: 38 }}>
             {/* <h2 style={{ textAlign: "center" }}>{appData.project_name ?? "N/A"}</h2> */}
-            <h2 style={{ marginLeft: "2rem", maxWidth: 250, textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap", fontWeight: 400 }}>{appData.project_name ?? "N/A"}</h2>
+            <h2 style={{ marginLeft: "1rem", maxWidth: 250, textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap", fontWeight: 400 }}>{appData.project_name ?? "N/A"}</h2>
             {/* <p className='viewSidebarIconText'><PageIcon />{appData.application_status?.status ?? "N/A"}</p> */}
-            <Button variant='outlined' sx={{ marginLeft: '2rem' }}>{appData.application_status?.status ?? "N/A"}</Button>
-            <p style={{ marginLeft: '2rem' }}>{queAns.find((item) => item.question_id === 3)?.answers[0]?.answer ?? "N/A"}</p>
+            <Button variant='outlined' sx={{ marginLeft: '1rem' }}>{appData.application_status?.status ?? "N/A"}</Button>
+            <p style={{ marginLeft: '1rem' }}>{queAns.find((item) => item.question_id === 3)?.answers[0]?.answer ?? "N/A"}</p>
             <p className='viewSidebarIconText'><UserIcon />{`${appData.User?.first_name ?? "N/A"} ${appData.User?.last_name ?? ""}`}</p>
             <p className='viewSidebarIconText'><CalenderIcon />{formatDate(appData.updated_at) ?? "N/A"}</p>
           </div>
@@ -140,7 +196,9 @@ export default function ViewApplication() {
             <div className="buttonContainer">
               {appData.application_status_id === 1 && <Button variant="contained" startIcon={<UserAddIcon />} onClick={() => collabDispatch({ type: collabActions.SHOW_COLLAB, payload: { app_id: appId } })}>Invite</Button>}
               {appData.application_status_id === 2 && 
-              <Button variant="contained" onClick={getExport}>Export</Button>
+              <>
+                <Button variant="contained" onClick={getExport}>Export</Button>
+              </>
                 }
               <Button variant="outlined" startIcon={<LogoutArrowIcon />} onClick={() => navigate('/logout')}>Logout</Button>
             </div>

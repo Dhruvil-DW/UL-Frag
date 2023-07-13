@@ -70,124 +70,105 @@ export default function ViewApplication() {
   }
 
 
-  async function createPDF() {
-    const content = viewRef.current.children;
-    const QAContainer = content[1].getElementsByClassName("QAContainer");
-    // QA.style.overflowY = 'visible';
-    // console.log(QA.clientWidth);
-    const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: [297, 210] });
-    console.log({ QAContainer });
-    let pageY = 20;
-    for (const QA_Cont of QAContainer) {
-      // Add Title of Section
-      const title = QA_Cont.getElementsByTagName("h3")[0].innerHTML;
-      doc.setTextColor(3, 41, 125).text(title, 10, pageY).setTextColor(0, 0, 0);
-      pageY += 10;
-      if (pageY > 287) {
-        doc.addPage();
-        pageY = 20;
-      }
-      // console.log(doc.getFontList());
-      // Add Questions
-      const questions = [...QA_Cont.getElementsByTagName("h4")];
-      const answerContainer = QA_Cont.getElementsByClassName("answerContainer");
-      console.log(questions);
+  // async function createPDF() {
+  //   const content = viewRef.current.children;
+  //   const QAContainer = content[1].getElementsByClassName("QAContainer");
+  //   // QA.style.overflowY = 'visible';
+  //   // console.log(QA.clientWidth);
+  //   const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: [297, 210] });
+  //   console.log({ QAContainer });
+  //   let pageY = 20;
+  //   for (const QA_Cont of QAContainer) {
+  //     // Add Title of Section
+  //     const title = QA_Cont.getElementsByTagName("h3")[0].innerHTML;
+  //     doc.setTextColor(3, 41, 125).text(title, 10, pageY).setTextColor(0, 0, 0);
+  //     pageY += 10;
+  //     if (pageY > 287) {
+  //       doc.addPage();
+  //       pageY = 20;
+  //     }
+  //     // console.log(doc.getFontList());
+  //     // Add Questions
+  //     const questions = [...QA_Cont.getElementsByTagName("h4")];
+  //     const answerContainer = QA_Cont.getElementsByClassName("answerContainer");
+  //     console.log(questions);
 
-      for (const QueIndex in questions) {
-        if (QueIndex === "length") break;
-        const question = questions[QueIndex].innerHTML;
-        const answers = answerContainer[QueIndex].getElementsByTagName("p");
-        doc.text(question, 10, pageY);
-        pageY += 10;
-        if (pageY > 287) {
-          doc.addPage();
-          pageY = 20;
-        }
-        for await (const ans of answers) {
-          console.log(ans);
-          const answer = ans.innerHTML;
-          // doc.text(answer, 10, pageY);
-          doc.html(ans, { html2canvas: { height: ans.clientHeight, width: ans.clientWidth, x: 10, y: pageY }, width: ans.clientHeight });
-          pageY += 10;
-          if (pageY > 287) {
-            doc.addPage();
-            pageY = 20;
-          }
-        }
-      }
-
-    }
-    // for (const QAWrapper of QA.getElementsByClassName("QAContainer")) {
-    //   console.log(QAWrapper.getElementsByTagName("h3")[0].innerHTML);
-    //   doc.text(QAWrapper.getElementsByTagName("h3")[0].innerHTML, 20, 20);
-    // }
-    // for (const image of QA.getElementsByTagName("img")) {
-    //   console.log({ startY });
-    //   if (image.clientWidth > image.clientHeight) {
-    //     doc.addImage(image, "JPEG", 10, startY, 50, 0);
-    //   } else {
-    //     doc.addImage(image, "JPEG", 10, startY, 0, 50);
-    //   }
-    //   startY += 55;
-    // }
-    // await doc.html();
-    doc.save("TEST");
-    // QA.style.overflowY = 'auto';
-  }
-  const customData = {
-    project_name: appData.project_name,
-    application_status: appData.application_status?.status ?? "N/A",
-    category: queAns.find((item) => item.question_id === 3)?.answers[0]?.answer ?? "N/A",
-    user_name: `${appData.User?.first_name ?? "N/A"} ${appData.User?.last_name ?? ""}`,
-    updated_at: formatDate(appData.updated_at) ?? "N/A"
-  };
-  // console.log(customData.project_name);
-  // const handleDownload = () => {
-  //     // const content = viewRef.current.children;
-  //   // console.log(viewRef.current.children);
-  //     const qa = viewRef.current.children[1];
-  //     qa.style.overflowY = 'visible';
-
-  //     html2canvas(qa,{
-  //       width: qa.clientWidth,
-  //       height: qa.scrollHeight,
-  //       autoPaging:true
-  //         // width: 2480,
-  //         // height: 3508
-  //       }).then((canvas) => {
-  //         let imgWidth = 700;
-  //         let pageHeight = 780;
-  //         let imgHeight =
-  //         ((canvas.height * imgWidth) / 2454)*1.34;
-  //         //console.log("Canvas", imgHeight);
-  //         let heightLeft = imgHeight;
-  //         const imgData = canvas.toDataURL('image/png');
-  //       const doc = new jsPDF("landscape", "pt", [700, 780]);
-  //       doc.setFontSize(10).setTextColor(3, 41, 125).setFont('Poppins').text("Project Name:" + customData.project_name, 70,10, {align:'left'});
-  //       doc.setFontSize(10).text("Status:" + customData.application_status, 70,20, {align:'left'});
-  //       doc.setFontSize(10).text("Category:" + customData.category, 70,30, {align:'left'});
-  //       doc.setFontSize(10).text("User Name:" + customData.user_name, 70,40, {align:'left'});
-  //       // doc.setFontSize(11).setTextColor(3, 41, 125).setFont('Poppins').text("Project Name:" + customData.project_name, 70,20, {align:'left'});
-  //       // doc.setFontSize(11).text("Status:" + customData.application_status, 200,20, {align:'left'});
-  //       // doc.setFontSize(11).text("Category:" + customData.category, 300,20, {align:'left'});
-  //       // doc.setFontSize(11).text("User Name:" + customData.user_name, 500,20, {align:'left'});
-  //       // doc.setFontSize(10).text("Last Edited:"+ customData.updated_at, 50,50, {align:'left'});
-  //       let position = 50;
-  //       doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, null, 'NONE');
-  //       heightLeft -= pageHeight;
-  //       while (heightLeft > 0) {
-  //         position = heightLeft - imgHeight + 120;
-
+  //     for (const QueIndex in questions) {
+  //       if (QueIndex === "length") break;
+  //       const question = questions[QueIndex].innerHTML;
+  //       const answers = answerContainer[QueIndex].getElementsByTagName("p");
+  //       doc.text(question, 10, pageY);
+  //       pageY += 10;
+  //       if (pageY > 287) {
   //         doc.addPage();
-  //         doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-  //         heightLeft -= pageHeight;
+  //         pageY = 20;
   //       }
+  //       for await (const ans of answers) {
+  //         console.log(ans);
+  //         const answer = ans.innerHTML;
+  //         // doc.text(answer, 10, pageY);
+  //         doc.html(ans, { html2canvas: { height: ans.clientHeight, width: ans.clientWidth, x: 10, y: pageY }, width: ans.clientHeight });
+  //         pageY += 10;
+  //         if (pageY > 287) {
+  //           doc.addPage();
+  //           pageY = 20;
+  //         }
+  //       }
+  //     }
+  //   }
+const customData = {
+  project_name: appData.project_name,
+  application_status: appData.application_status?.status ?? "N/A",
+  category: queAns.find((item) => item.question_id === 3)?.answers[0]?.answer ?? "N/A",
+  user_name: `${appData.User?.first_name ?? "N/A"} ${appData.User?.last_name ?? ""}`,
+  updated_at: formatDate(appData.updated_at) ?? "N/A"
+};
+// console.log(customData.project_name);
+const handleDownload = () => {
+    // const content = viewRef.current.children;
+  // console.log(viewRef.current.children);
+    const qa = viewRef.current.children[1];
+    qa.style.overflowY = 'visible';
+    
+    html2canvas(qa,{
+      width: qa.clientWidth,
+      height: qa.scrollHeight,
+      autoPaging:true
+        // width: 2480,
+        // height: 3508
+      }).then((canvas) => {
+        let imgWidth = 700;
+        let pageHeight = 780;
+        let imgHeight =
+        ((canvas.height * imgWidth) / 2454)*1.34;
+        //console.log("Canvas", imgHeight);
+        let heightLeft = imgHeight;
+        const imgData = canvas.toDataURL('image/png');
+      const doc = new jsPDF("landscape", "pt", [700, 780]);
+      doc.setFontSize(10).setTextColor(3, 41, 125).setFont('Poppins').text("Project Name:" + customData.project_name, 70,10, {align:'left'});
+      doc.setFontSize(10).text("Status:" + customData.application_status, 70,20, {align:'left'});
+      doc.setFontSize(10).text("Category:" + customData.category, 70,30, {align:'left'});
+      doc.setFontSize(10).text("User Name:" + customData.user_name, 70,40, {align:'left'});
+      // doc.setFontSize(11).setTextColor(3, 41, 125).setFont('Poppins').text("Project Name:" + customData.project_name, 70,20, {align:'left'});
+      // doc.setFontSize(11).text("Status:" + customData.application_status, 200,20, {align:'left'});
+      // doc.setFontSize(11).text("Category:" + customData.category, 300,20, {align:'left'});
+      // doc.setFontSize(11).text("User Name:" + customData.user_name, 500,20, {align:'left'});
+      // doc.setFontSize(10).text("Last Edited:"+ customData.updated_at, 50,50, {align:'left'});
+      let position = 50;
+      doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, null, 'NONE');
+      heightLeft -= pageHeight;
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight + 120;
 
-  //       doc.save(`${appData.project_name}.pdf`);
-  //     });
-  //     qa.style.overflowY = 'auto';
-  // };
-
+        doc.addPage();
+        doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      
+      doc.save(`${appData.project_name}.pdf`);
+    });
+    qa.style.overflowY = 'auto';
+};
   function getAppQuestions() {
     getData(`user/viewapplication/${appId}`, {},
       (data) => {
@@ -261,11 +242,11 @@ export default function ViewApplication() {
             </div> */}
             <div className="buttonContainer">
               {appData.application_status_id === 1 && <Button variant="contained" startIcon={<UserAddIcon />} onClick={() => collabDispatch({ type: collabActions.SHOW_COLLAB, payload: { app_id: appId } })}>Invite</Button>}
-              {appData.application_status_id === 1 &&
-                <>
-                  <Button variant="contained" onClick={createPDF}>Export</Button>
-                </>
-              }
+              {appData.application_status_id === 2 && 
+              <>
+                <Button variant="contained" onClick={handleDownload}>Export</Button>
+              </>
+                }
               <Button variant="outlined" startIcon={<LogoutArrowIcon />} onClick={() => navigate('/logout')}>Logout</Button>
             </div>
           </>
@@ -447,4 +428,5 @@ function GetNewAnswer({ ans, index, category }) {
   }
 
 }
+
 

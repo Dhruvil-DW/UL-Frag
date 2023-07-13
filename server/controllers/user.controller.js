@@ -401,10 +401,7 @@ function getExportPDF(req, res){
         
         //console.log(template)
         const appQues = getCatWiseQues(appQueRes);
-        
-        // var newData = {
-        //     project_name: appData.project_name
-        // }
+        // console.log('appQues',appQues);
             var document = {
                 html: template,
                 data: {

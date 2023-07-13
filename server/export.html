@@ -10,16 +10,15 @@
     <table>
         <tr>
             <td>Project Name: {{project_name}}</td>
-            <td>Application Status: {{application_status}}</td>
-        
+            <td>Application Status: {{application_status}}</td> 
     </tr>
 </table>
         <h2>Questions and Answers data</h2>
         {{#each appQue}}
-        <p>{{this.category_id}}{{this.category_name}}</p>
-        {{#each appQue.questions}}
-        <p>{{this.CatWiseQueIndex}}{{this.question}}</p>
-        {{/each}}
+        {{this.category_id}}{{this.category_name}}
+            {{#each this.questions}}
+                {{this.question.question}}
+            {{/each}}
         {{/each}}
 </body>
 </html>

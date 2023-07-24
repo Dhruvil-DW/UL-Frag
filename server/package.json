@@ -25,6 +25,8 @@
     "mysql2": "^3.3.1",
     "pdf-creator-node": "^2.3.5",
     "pdfkit": "^0.13.0",
+    "puppeteer": "^20.9.0",
+    "requireg": "^0.2.2",
     "sequelize": "^6.31.1",
     "sequelize-cli": "^6.6.0"
   }

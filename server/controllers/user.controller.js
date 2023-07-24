@@ -19,6 +19,7 @@ const path = require('path');
 // const jsPDF = require('jspdf');
 const pdfCreatorNode = require("pdf-creator-node");
 // const generateHTML = require('./pdf.controller')
+const PDFDocument = require('pdfkit');
 
 function addProfileDetails(req, res) {
     // console.log(req.body);
@@ -426,45 +427,23 @@ function getExportPDFNew(req, res) {
         format: "A4",
         orientation: "portrait",
         border: "10mm",
+        phantomPath: require('requireg')('phantomjs').path
+        // phantomPath: "../node_modules/phantomjs-prebuild/bin/phantomjs"
     };
+    // console.log('path', __dirname, options.phantomPath);
     const app_id = req.params.app_id;
     (async () => {
-        // const appData = await seq.seqFindByPk(Application, app_id, ["id", "project_name", "application_status_id", "updated_at"],
-        //     [
-        //         { model: User, attributes: ['id', 'unique_id', "first_name", "last_name", "email"] },
-        //         { model: ApplicationStatus, attributes: ['id', 'status'] },
-        //         { model: ApplicationInvite, attributes: ["id"], include: { model: User, attributes: ["id", "email", "first_name", "last_name"] } }
-        //     ]
-        // );
-        // if (appData === 500) return res.status(500).send({ message: "Error while getting application" });
-        // const appQueRes = await seq.seqFindAll(AppQuestion, ["id", "question_id", "app_id"], { app_id: app_id },
-        //     [
-        //         { model: Question, attributes: ["id", "category_id", "question_type_id", "question", "status", "parent_id"], include: [{ model: Category, attributes: ['id', 'name'] }] },
-        //         { model: Answers, attributes: ["id", "app_question_id", "answer"] }
-        //     ]
-        // );
-        // if (appQueRes === 500) return res.status(500).send({ message: "Error while getting application" });
-
-        // //console.log(template)
-        // const appQues = getCatWiseQues(appQueRes);
-
 
         const categories = (await seq.seqFindAll(Category, ['id', 'name'])).map(o => o.dataValues);
         const questions = (await seq.seqFindAll(Question, ['id', 'category_id', 'question_type_id', 'question', 'parent_id'])).map(o => o.dataValues);
         const appQuestions = (await seq.seqFindAll(AppQuestion, ['id', 'question_id'], { app_id: app_id })).map(o => o.dataValues.id);
         const answers = (await seq.seqFindAll(Answers, ['question_id', 'answer'], { app_question_id: appQuestions })).map(o => o.dataValues);
-        console.log('appQues', categories, appQuestions, answers
-            // appQues.map(el => el.questions = el.questions.map(o => o.dataValues).map(e => e.question.dataValues))
-        );
+        console.log('appQues', categories, appQuestions, answers);
         const finalRes = getFinalExport(categories, questions, answers);
         var document = {
             html: template,
             data: {
-                // project_name: appData.project_name,
-                // categories: categories,
-                finalRes: finalRes,
-                // application_status: appData.application_status.status,
-                // appQue: appQues,
+                finalRes: finalRes
             },
             path: './application_' + app_id + '.pdf',
 
@@ -477,10 +456,28 @@ function getExportPDFNew(req, res) {
                 console.error(error);
                 res.status(500).send("PDF could not be created");
             });
-        // console.log(document.data);
-
-        // res.status(200).send({ finalRes });
     })();
+}
+
+function getExportPDFNew2(req, res) {
+    const app_id = req.params.app_id;
+    const doc = new PDFDocument();
+    doc.pipe(fs.createWriteStream('output_' + app_id + '.pdf'));
+    doc
+        .font(__dirname + '/../fonts/Poppins-Regular.ttf')
+        .fontSize(12)
+        .text('Some text with an embedded font!', 100, 100);
+    doc
+        .addPage()
+        .fontSize(25)
+        .text('Here is some vector graphics...', 100, 100);
+    doc.image(__dirname + '/../public/49_MicrosoftTeams-image_7bc3a7aa.png', {
+        fit: [250, 300],
+        align: 'center',
+        valign: 'center'
+    });
+    doc.end();
+
 }
 
 const getFinalExport = (categories, questions, answers) => {
@@ -647,5 +644,6 @@ module.exports = {
     viewApplications,
     getExportPDF,
     getExportPDFNew,
+    getExportPDFNew2,
     getInvitedApplications
 }

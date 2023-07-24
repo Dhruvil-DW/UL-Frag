@@ -82,24 +82,24 @@
   <h3>{{this.no}}. {{this.name}}</h3>
   <!-- </div> -->
   {{#each this.questions}}
-  {{#ifCond this.no "==" '0'}}
+  <!-- {{#ifCond this.no "==" '0'}}
   <div class="questions_sub">{{this.question}}</div>
-  {{/ifCond}}
-  {{#ifCond this.no "!=" '0'}}
+  {{/ifCond}} -->
+  <!-- {{#ifCond this.no "!=" '0'}} -->
   <div class="questions">{{this.no}} {{this.question}}</div>
-  {{/ifCond}}
+  <!-- {{/ifCond}} -->
   {{#each this.answers}}
-  {{#ifCond this.ans_type "!=" 'image'}}
+  <!-- {{#ifCond this.ans_type "!=" 'image'}} -->
   <div class="answers">{{this.answer}}</div>
-  {{/ifCond}}
-  {{#ifCond this.ans_type "==" 'image'}}
+  <!-- {{/ifCond}} -->
+  <!-- {{#ifCond this.ans_type "==" 'image'}}
   {{#ifCond this.question_id "==" '15'}}
   <img class="images_client" src="data:image/png;base64,{{this.answer}}" alt="image">
   {{/ifCond}}
   {{#ifCond this.question_id "!=" '15'}}
   <img class="images" src="data:image/png;base64,{{this.answer}}" alt="image">
   {{/ifCond}}
-  {{/ifCond}}
+  {{/ifCond}} -->
   {{/each}}
   {{/each}}
   {{/each}}

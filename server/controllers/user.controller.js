@@ -429,43 +429,42 @@ function getExportPDFNew(req, res) {
     };
     const app_id = req.params.app_id;
     (async () => {
-        const appData = await seq.seqFindByPk(Application, app_id, ["id", "project_name", "application_status_id", "updated_at"],
-            [
-                { model: User, attributes: ['id', 'unique_id', "first_name", "last_name", "email"] },
-                { model: ApplicationStatus, attributes: ['id', 'status'] },
-                { model: ApplicationInvite, attributes: ["id"], include: { model: User, attributes: ["id", "email", "first_name", "last_name"] } }
-            ]
-        );
-        if (appData === 500) return res.status(500).send({ message: "Error while getting application" });
-        const appQueRes = await seq.seqFindAll(AppQuestion, ["id", "question_id", "app_id"], { app_id: app_id },
-            [
-                { model: Question, attributes: ["id", "category_id", "question_type_id", "question", "status", "parent_id"], include: [{ model: Category, attributes: ['id', 'name'] }] },
-                { model: Answers, attributes: ["id", "app_question_id", "answer"] }
-            ]
-        );
-        if (appQueRes === 500) return res.status(500).send({ message: "Error while getting application" });
+        // const appData = await seq.seqFindByPk(Application, app_id, ["id", "project_name", "application_status_id", "updated_at"],
+        //     [
+        //         { model: User, attributes: ['id', 'unique_id', "first_name", "last_name", "email"] },
+        //         { model: ApplicationStatus, attributes: ['id', 'status'] },
+        //         { model: ApplicationInvite, attributes: ["id"], include: { model: User, attributes: ["id", "email", "first_name", "last_name"] } }
+        //     ]
+        // );
+        // if (appData === 500) return res.status(500).send({ message: "Error while getting application" });
+        // const appQueRes = await seq.seqFindAll(AppQuestion, ["id", "question_id", "app_id"], { app_id: app_id },
+        //     [
+        //         { model: Question, attributes: ["id", "category_id", "question_type_id", "question", "status", "parent_id"], include: [{ model: Category, attributes: ['id', 'name'] }] },
+        //         { model: Answers, attributes: ["id", "app_question_id", "answer"] }
+        //     ]
+        // );
+        // if (appQueRes === 500) return res.status(500).send({ message: "Error while getting application" });
 
-        //console.log(template)
-        const appQues = getCatWiseQues(appQueRes);
-        const bitmap = fs.readFileSync(__dirname + "/../public/Coat.png");
-        const logo = bitmap.toString('base64');
+        // //console.log(template)
+        // const appQues = getCatWiseQues(appQueRes);
+
+
         const categories = (await seq.seqFindAll(Category, ['id', 'name'])).map(o => o.dataValues);
         const questions = (await seq.seqFindAll(Question, ['id', 'category_id', 'question_type_id', 'question', 'parent_id'])).map(o => o.dataValues);
         const appQuestions = (await seq.seqFindAll(AppQuestion, ['id', 'question_id'], { app_id: app_id })).map(o => o.dataValues.id);
         const answers = (await seq.seqFindAll(Answers, ['question_id', 'answer'], { app_question_id: appQuestions })).map(o => o.dataValues);
-        console.log('appQues', appQues, categories, appQuestions, answers
+        console.log('appQues', categories, appQuestions, answers
             // appQues.map(el => el.questions = el.questions.map(o => o.dataValues).map(e => e.question.dataValues))
         );
         const finalRes = getFinalExport(categories, questions, answers);
         var document = {
             html: template,
             data: {
-                project_name: appData.project_name,
-                categories: categories,
+                // project_name: appData.project_name,
+                // categories: categories,
                 finalRes: finalRes,
-                application_status: appData.application_status.status,
-                appQue: appQues,
-                logo: logo
+                // application_status: appData.application_status.status,
+                // appQue: appQues,
             },
             path: './application_' + app_id + '.pdf',
 

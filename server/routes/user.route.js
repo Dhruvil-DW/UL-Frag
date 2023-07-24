@@ -14,6 +14,7 @@ router.put('/profile/update', authMiddleware.checkAuth, userController.updatePro
 router.get('/get/myapplications', authMiddleware.checkAuth, userController.getMyApplications);
 router.get('/get/approvedapplications', authMiddleware.checkAuth, userController.getApprovedApplications);
 router.get('/get/invitedapplications', authMiddleware.checkAuth, userController.getInvitedApplications);
-router.get('/get/export/:app_id', authMiddleware.checkAuth, userController.getExportPDF);
+router.get('/get/exportold/:app_id', authMiddleware.checkAuth, userController.getExportPDF);
+router.get('/get/export/:app_id', authMiddleware.checkAuth, userController.getExportPDFNew);
 router.get('/viewapplication/:app_id', authMiddleware.checkAuth, userController.viewApplications);
 module.exports = router;

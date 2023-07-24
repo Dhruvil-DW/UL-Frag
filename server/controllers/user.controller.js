@@ -17,7 +17,7 @@ const fs = require('fs');
 // const image = './6_Surf-Logo 2_c3bd0a2a.png';
 const path = require('path');
 // const jsPDF = require('jspdf');
-// const pdfCreatorNode = require("pdf-creator-node");
+const pdfCreatorNode = require("pdf-creator-node");
 // const generateHTML = require('./pdf.controller')
 
 function addProfileDetails(req, res) {
@@ -207,18 +207,18 @@ function viewApplications(req, res) {
         const AppQueRes = await seq.seqFindAll(AppQuestion, ["id", "question_id", "app_id"], { app_id: app_id },
             [
                 // { model: Question, attributes: ["id", "category_id", "question_type_id", "question", "status", "parent_id"], include: [{model: Category, attributes: ['id', 'name']}] },
-                { model: Answers, attributes: ["id", "app_question_id", "answer"]}
+                { model: Answers, attributes: ["id", "app_question_id", "answer"] }
             ]
         );
         // const AppQuesRes = await seq.seqFindAll(Question, ["id","category_id", "question_type_id", "question", "status", "parent_id"],{},
         //     [
         //        {model: Category, attributes: ['id', 'name'] },
         //        {model : AppQuestion, attributes: ["id", "question_id", "app_id"], include:[{ model: Answers, attributes: ["id", "app_question_id", "answer"] }]  },
-                
+
         //     ]
         // );
         //console.log("RESPONSE: ", AppQuesRes);
-        res.status(200).send({ Application: AppData, QueAns : AppQueRes});
+        res.status(200).send({ Application: AppData, QueAns: AppQueRes });
     })();
 }
 
@@ -374,7 +374,7 @@ function viewApplications(req, res) {
         // res.status(200).send({Application: appData, QuesAns : appQueRes});
     })();
 }*/
-function getExportPDF(req, res){
+function getExportPDF(req, res) {
     var template = fs.readFileSync(path.join(__dirname, '../export.html'), 'utf8');
     var options = {
         format: "A4",
@@ -393,32 +393,144 @@ function getExportPDF(req, res){
         if (appData === 500) return res.status(500).send({ message: "Error while getting application" });
         const appQueRes = await seq.seqFindAll(AppQuestion, ["id", "question_id", "app_id"], { app_id: app_id },
             [
-                { model: Question, attributes: ["id", "category_id", "question_type_id", "question", "status", "parent_id"], include: [{model: Category, attributes: ['id', 'name']}] },
-                { model: Answers, attributes: ["id", "app_question_id", "answer"]}
+                { model: Question, attributes: ["id", "category_id", "question_type_id", "question", "status", "parent_id"], include: [{ model: Category, attributes: ['id', 'name'] }] },
+                { model: Answers, attributes: ["id", "app_question_id", "answer"] }
             ]
         );
         if (appQueRes === 500) return res.status(500).send({ message: "Error while getting application" });
-        
+
         //console.log(template)
         const appQues = getCatWiseQues(appQueRes);
         // console.log('appQues',appQues);
-            var document = {
-                html: template,
-                data: {
-                    project_name: appData.project_name,
-                    application_status: appData.application_status.status,
-                    appQue:appQues
-                }, 
-                path: './dhruvi.pdf',
-                
-            }
-            pdfCreatorNode.create(document, options).then((res) => {
-                console.log(res);
-            })
-            // console.log(document.data);
-            
-    })();  
+        var document = {
+            html: template,
+            data: {
+                project_name: appData.project_name,
+                application_status: appData.application_status.status,
+                appQue: appQues
+            },
+            path: './dhruvi.pdf',
+
+        }
+        pdfCreatorNode.create(document, options).then((res) => {
+            console.log(res);
+        })
+        // console.log(document.data);
+
+    })();
 }
+
+function getExportPDFNew(req, res) {
+    var template = fs.readFileSync(path.join(__dirname, '../export.html'), 'utf8');
+    var options = {
+        format: "A4",
+        orientation: "portrait",
+        border: "10mm",
+    };
+    const app_id = req.params.app_id;
+    (async () => {
+        const appData = await seq.seqFindByPk(Application, app_id, ["id", "project_name", "application_status_id", "updated_at"],
+            [
+                { model: User, attributes: ['id', 'unique_id', "first_name", "last_name", "email"] },
+                { model: ApplicationStatus, attributes: ['id', 'status'] },
+                { model: ApplicationInvite, attributes: ["id"], include: { model: User, attributes: ["id", "email", "first_name", "last_name"] } }
+            ]
+        );
+        if (appData === 500) return res.status(500).send({ message: "Error while getting application" });
+        const appQueRes = await seq.seqFindAll(AppQuestion, ["id", "question_id", "app_id"], { app_id: app_id },
+            [
+                { model: Question, attributes: ["id", "category_id", "question_type_id", "question", "status", "parent_id"], include: [{ model: Category, attributes: ['id', 'name'] }] },
+                { model: Answers, attributes: ["id", "app_question_id", "answer"] }
+            ]
+        );
+        if (appQueRes === 500) return res.status(500).send({ message: "Error while getting application" });
+
+        //console.log(template)
+        const appQues = getCatWiseQues(appQueRes);
+        const bitmap = fs.readFileSync(__dirname + "/../public/Coat.png");
+        const logo = bitmap.toString('base64');
+        const categories = (await seq.seqFindAll(Category, ['id', 'name'])).map(o => o.dataValues);
+        const questions = (await seq.seqFindAll(Question, ['id', 'category_id', 'question_type_id', 'question', 'parent_id'])).map(o => o.dataValues);
+        const appQuestions = (await seq.seqFindAll(AppQuestion, ['id', 'question_id'], { app_id: app_id })).map(o => o.dataValues.id);
+        const answers = (await seq.seqFindAll(Answers, ['question_id', 'answer'], { app_question_id: appQuestions })).map(o => o.dataValues);
+        console.log('appQues', appQues, categories, appQuestions, answers
+            // appQues.map(el => el.questions = el.questions.map(o => o.dataValues).map(e => e.question.dataValues))
+        );
+        const finalRes = getFinalExport(categories, questions, answers);
+        var document = {
+            html: template,
+            data: {
+                project_name: appData.project_name,
+                categories: categories,
+                finalRes: finalRes,
+                application_status: appData.application_status.status,
+                appQue: appQues,
+                logo: logo
+            },
+            path: './application_' + app_id + '.pdf',
+
+        }
+        pdfCreatorNode.create(document, options)
+            .then((filepath) => {
+                console.log('document', filepath);
+                res.status(200).sendFile(filepath.filename);
+            }).catch((error) => {
+                console.error(error);
+                res.status(500).send("PDF could not be created");
+            });
+        // console.log(document.data);
+
+        // res.status(200).send({ finalRes });
+    })();
+}
+
+const getFinalExport = (categories, questions, answers) => {
+    categories.map((cat, catIndex) => {
+        cat.no = catIndex + 1;
+        cat.questions = questions.filter(el => el.category_id == cat.id);
+        let queCounter = 1;
+        cat.questions.map((que, queIndex) => {
+            que.answers = answers.filter(el => el.question_id == que.id);
+            if (que.answers.length > 0) {
+                if (que.id == 1) {
+                    let values = Object.values(JSON.parse(que.answers[0].answer));
+                    que.answers = values.map(ob => ob = { question_id: que.answers[0].question_id, answer: ob });
+                } else if (que.id == 15) {
+                    let values = Object.values(JSON.parse(que.answers[0].answer));
+                    que.answers = values.map((ob, index) => ob = index == 0 ?
+                        { question_id: que.answers[0].question_id, ans_type: 'image', answer: fs.readFileSync(__dirname + '/../../client/public/images/' + ob).toString('base64') }
+                        : { question_id: que.answers[0].question_id, answer: ob });
+                } else if (que.id == 23) {
+                    let values = Object.values(JSON.parse(que.answers[0].answer)).flat();
+                    que.answers = values.map((ob, index) => ob = {
+                        question_id: que.answers[0].question_id,
+                        answer: (index == values.length - 1 ? "Description: " : "") + ob
+                    });
+                } else if (que.id == 24) {
+                    let values = Object.values(JSON.parse(que.answers[0].answer));
+                    que.answers = values.map((ob, index) => ob = {
+                        question_id: que.answers[0].question_id,
+                        answer: (index == 0 ? "Investment: " + ob : "Amount: €" + ob + " Cost per tons (in Euros)")
+                    });
+                } else if (que.id == 27 || que.id == 28 || que.id == 29) {
+                    que.answers = que.answers.map(ans =>
+                        Object.values(JSON.parse(ans.answer)).flat().map((ob, index) => ob = index == 0 ?
+                            { question_id: que.answers[0].question_id, answer: ob }
+                            : {
+                                question_id: que.answers[0].question_id, ans_type: 'image',
+                                answer: fs.readFileSync(__dirname + '/../public/' + ob).toString('base64')
+                            })
+                    ).flat();
+                }
+            } else {
+                (que.id != 7 && que.id != 11) && delete cat.questions[queIndex];
+            }
+            que.no = que.id <= 7 || que.id == 11 || que.id >= 15 ? (cat.no + '.' + queCounter++) : 0;
+        });
+    });
+    return categories;
+}
+
 function getInvitedApplications(req, res) {
     console.log("GET_INVITED_APP");
     const userId = req.userdata.user_id;
@@ -493,36 +605,37 @@ function getInvitedApplications(req, res) {
     //     res.status(200).send(getInviteRes);
     // })();
 }
+
 function getCatWiseQues(questions) {
     const result = [];
     // let count = 0;
     let CatWiseQueIndex;
-  
+
     for (let i = 0; i < questions.length; i++) {
-      const que = questions[i];
-  
-      if (result[que.question.category_id - 1]) {
-        CatWiseQueIndex += 1;
-        result[que.question.category_id - 1].questions.push({
-          ...que,
-        //   serial: count++,
-          CatWiseQueIndex: `${que.question.category_id}.${CatWiseQueIndex}`
-        });
-      } else {
-        CatWiseQueIndex = 1;
-        result[que.question.category_id - 1] = {
-          category_id: que.question.category_id,
-          category_name: que.question.category.name,
-        //   serial: count++,
-          questions: [{
-            ...que,
-            // serial: count++,
-            CatWiseQueIndex: `${que.question.category_id}.${CatWiseQueIndex}`
-          }]
-        };
-      }
+        const que = questions[i];
+
+        if (result[que.question.category_id - 1]) {
+            CatWiseQueIndex += 1;
+            result[que.question.category_id - 1].questions.push({
+                ...que,
+                //   serial: count++,
+                CatWiseQueIndex: `${que.question.category_id}.${CatWiseQueIndex}`
+            });
+        } else {
+            CatWiseQueIndex = 1;
+            result[que.question.category_id - 1] = {
+                category_id: que.question.category_id,
+                category_name: que.question.category.name,
+                //   serial: count++,
+                questions: [{
+                    ...que,
+                    // serial: count++,
+                    CatWiseQueIndex: `${que.question.category_id}.${CatWiseQueIndex}`
+                }]
+            };
+        }
     }
-  
+
     return result;
 }
 
@@ -534,5 +647,6 @@ module.exports = {
     getApprovedApplications,
     viewApplications,
     getExportPDF,
+    getExportPDFNew,
     getInvitedApplications
 }

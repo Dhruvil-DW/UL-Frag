@@ -1,24 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"> -->
+  <title>Document</title>
+  <style>
+    /* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap'); */
+    /* @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700;800&display=swap'); */
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/poppins/v20/pxiEyp8kv8JHgFVrJJnecmNE.woff2) format('woff2');
+      unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    }
+
+    * {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
+      font-style: normal !important;
+    }
+
+    h3 {
+      color: #002F98;
+      font-size: 28px;
+      background: #E6EDFE;
+      width: 100%;
+      padding: 24px;
+      border-radius: 12px;
+    }
+
+    div.questions {
+      color: rgb(3, 41, 125);
+      font-weight: bold;
+      font-size: 22px;
+      padding: 12px 0;
+    }
+
+    div.questions_sub {
+      color: #000;
+      font-weight: bold;
+      font-size: 22px;
+      padding: 12px 0;
+    }
+
+    div.answers {
+      color: black;
+      font-size: 22px;
+      padding: 12px 0 12px 24px;
+    }
+
+    img.images {
+      width: 200px;
+      padding: 12px 0 12px 24px;
+    }
+
+    img.images_client {
+      width: 100px;
+      padding: 12px 0 12px 24px;
+    }
+  </style>
 </head>
+
 <body>
-    <h1>Application Data</h1>
-    <table>
-        <tr>
-            <td>Project Name: {{project_name}}</td>
-            <td>Application Status: {{application_status}}</td> 
+  <!-- <h1>Application Data</h1>
+  <table>
+    <tr>
+      <td>Project Name: {{project_name}}</td>
+      <td>Application Status: {{application_status}}</td>
     </tr>
-</table>
-        <h2>Questions and Answers data</h2>
-        {{#each appQue}}
-        {{this.category_id}}{{this.category_name}}
-            {{#each this.questions}}
-                {{this.question.question}}
-            {{/each}}
-        {{/each}}
+  </table>
+  <h2>Questions and Answers data</h2> -->
+  {{#each finalRes}}
+  <!-- <div> -->
+  <h3>{{this.no}}. {{this.name}}</h3>
+  <!-- </div> -->
+  {{#each this.questions}}
+  {{#ifCond this.no "==" '0'}}
+  <div class="questions_sub">{{this.question}}</div>
+  {{/ifCond}}
+  {{#ifCond this.no "!=" '0'}}
+  <div class="questions">{{this.no}} {{this.question}}</div>
+  {{/ifCond}}
+  {{#each this.answers}}
+  {{#ifCond this.ans_type "!=" 'image'}}
+  <div class="answers">{{this.answer}}</div>
+  {{/ifCond}}
+  {{#ifCond this.ans_type "==" 'image'}}
+  {{#ifCond this.question_id "==" '15'}}
+  <img class="images_client" src="data:image/png;base64,{{this.answer}}" alt="image">
+  {{/ifCond}}
+  {{#ifCond this.question_id "!=" '15'}}
+  <img class="images" src="data:image/png;base64,{{this.answer}}" alt="image">
+  {{/ifCond}}
+  {{/ifCond}}
+  {{/each}}
+  {{/each}}
+  {{/each}}
+  <!-- <img width="30%" src="data:image/png;base64,{{logo}}" alt="Logo"> -->
 </body>
+
 </html>

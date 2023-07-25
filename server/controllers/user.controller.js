@@ -23,6 +23,7 @@ const PDFDocument = require('pdfkit');
 const blobStream = require('blob-stream');
 const puppeteer = require('puppeteer');
 const ejs = require("ejs");
+const os = require('os');
 
 function addProfileDetails(req, res) {
     // console.log(req.body);
@@ -482,16 +483,6 @@ function getExportPDFPdfKit(req, res) {
         console.log('appQues', categories, appQuestions, answers);
         const finalRes = getFinalExport(categories, questions, answers);
 
-        doc.font(__dirname + '/../fonts/Poppins-Regular.ttf')
-        // .text('', 30, 30);
-        // doc
-        //     .fontSize(25)
-        //     .text('Here is some vector graphics...', 30, 100);
-        // doc.image(__dirname + '/../public/Coat.png', {
-        //     fit: [250, 250],
-        //     align: 'center',
-        //     valign: 'center'
-        // });
         finalRes.map(cat => {
             doc
                 .font(__dirname + '/../fonts/Poppins-Regular.ttf')
@@ -551,19 +542,34 @@ function getExportPDFPuppet(req, res) {
     let browser;
     const app_id = req.params.app_id;
     (async () => {
+        const appData = await seq.seqFindByPk(Application, app_id, ["id", "user_id", "updated_at"],
+            [
+                { model: User, attributes: ['id', "first_name", "last_name"] }
+            ]
+        );
         const categories = (await seq.seqFindAll(Category, ['id', 'name'])).map(o => o.dataValues);
         const questions = (await seq.seqFindAll(Question, ['id', 'category_id', 'question_type_id', 'question', 'parent_id'])).map(o => o.dataValues);
         const appQuestions = (await seq.seqFindAll(AppQuestion, ['id', 'question_id'], { app_id: app_id })).map(o => o.dataValues.id);
         const answers = (await seq.seqFindAll(Answers, ['question_id', 'answer'], { app_question_id: appQuestions })).map(o => o.dataValues);
-        console.log('appQues', categories, appQuestions, answers);
+        // console.log('appQues', categories, appQuestions, answers);
         const finalRes = getFinalExport(categories, questions, answers);
+        console.log(appData.dataValues.updated_at)
 
-        browser = await puppeteer.launch({
+        browser = await puppeteer.launch(os.platform() != 'win32' ? {
             // For Ubutnu, remove if doesn't work in windows
             executablePath: '/usr/bin/chromium-browser'
-        });
+        } : {});
         const [page] = await browser.pages();
-        const html = await ejs.renderFile("template.ejs", { finalRes: finalRes });
+        const date = new Date(appData.dataValues.updated_at);
+        const html = await ejs.renderFile("template.ejs", {
+            categories: finalRes,
+            meta: {
+                title: finalRes[0].questions[0].answers[1].answer,
+                category: finalRes[0].questions[2].answers[0].answer,
+                user: appData.User.first_name + ' ' + appData.User.last_name,
+                date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear()
+            }
+        });
         // const html = fs.readFileSync(`${__dirname}/../export.html`, 'utf8')
         await page.setContent(html);
 

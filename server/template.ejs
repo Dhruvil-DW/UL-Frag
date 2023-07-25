@@ -29,9 +29,16 @@
 
     html {
       -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
 
-    h3 {
+    h1 {
+      font-weight: bold;
+      font-size: 36px;
+      /* margin-bottom: 36px; */
+    }
+
+    h2 {
       color: #002F98;
       font-size: 24px;
       background: #E6EDFE;
@@ -70,8 +77,12 @@
 </head>
 
 <body>
-  <% finalRes.forEach(function(cat) { %>
-    <h3> <%= cat.no %>. <%= cat.name %> </h3>
+  <h1><%= meta.title %></h1>
+  <div>category: <%= meta.category %></div>
+  <div>User: <%= meta.user %></div>
+  <div>Date: <%= meta.date %></div>
+  <% categories.forEach(function(cat) { %>
+    <h2> <%= cat.no %>. <%= cat.name %> </h2>
     <% cat.questions.forEach(function(que) { %>
       <% if (que.no == 0) { %>
         <div class="questions questions_sub"><%= que.question %></div>

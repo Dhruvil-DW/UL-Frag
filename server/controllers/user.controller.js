@@ -558,22 +558,22 @@ function getExportPDFPuppet(req, res) {
         console.log('appQues', categories, appQuestions, answers);
         const finalRes = getFinalExport(categories, questions, answers);
 
-        browser = await puppeteer.launch();
+        browser = await puppeteer.launch({
+            // For Ubutnu, remove if doesn't work in windows
+            executablePath: '/usr/bin/chromium-browser'
+        });
         const [page] = await browser.pages();
         const html = await ejs.renderFile("template.ejs", { finalRes: finalRes });
         // const html = fs.readFileSync(`${__dirname}/../export.html`, 'utf8')
         await page.setContent(html);
-        // await page.pdf({
-        //     format: 'A4',
-        //     path: `${__dirname}/../puppeteer_${app_id}.pdf`
-        // })
+
         const pdf = await page.pdf({
             format: "A4", margin: {
                 top: 40,
                 bottom: 40,
                 left: 30,
                 right: 30
-            }, 
+            },
             // path: `${__dirname}/../puppeteer_${app_id}.pdf`
         });
         res.contentType("application/pdf");

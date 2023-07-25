@@ -244,12 +244,12 @@ export default function ViewApplication() {
             </div> */}
             <div className="buttonContainer">
               {appData.application_status_id === 1 && <Button variant="contained" startIcon={<UserAddIcon />} onClick={() => collabDispatch({ type: collabActions.SHOW_COLLAB, payload: { app_id: appId } })}>Invite</Button>}
-              {appData.application_status_id === 2 &&
+              {(appData.application_status_id === 2 || appData.application_status_id === 3) &&
                 <>
                   <Button variant="contained"
                     // onClick={createPDF}
                     onClick={getExport}
-                  >Export</Button>
+                  >Download</Button>
                 </>
               }
               <Button variant="outlined" startIcon={<LogoutArrowIcon />} onClick={() => navigate('/logout')}>Logout</Button>

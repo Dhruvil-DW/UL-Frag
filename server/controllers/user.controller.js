@@ -20,6 +20,9 @@ const path = require('path');
 const pdfCreatorNode = require("pdf-creator-node");
 // const generateHTML = require('./pdf.controller')
 const PDFDocument = require('pdfkit');
+const blobStream = require('blob-stream');
+const puppeteer = require('puppeteer');
+const ejs = require("ejs");
 
 function addProfileDetails(req, res) {
     // console.log(req.body);
@@ -421,7 +424,7 @@ function getExportPDF(req, res) {
     })();
 }
 
-function getExportPDFNew(req, res) {
+function getExportPDFPdfCreator(req, res) {
     var template = fs.readFileSync(path.join(__dirname, '../export.html'), 'utf8');
     var options = {
         format: "A4",
@@ -459,25 +462,135 @@ function getExportPDFNew(req, res) {
     })();
 }
 
-function getExportPDFNew2(req, res) {
+function getExportPDFPdfKit(req, res) {
     const app_id = req.params.app_id;
-    const doc = new PDFDocument();
-    doc.pipe(fs.createWriteStream('output_' + app_id + '.pdf'));
-    doc
-        .font(__dirname + '/../fonts/Poppins-Regular.ttf')
-        .fontSize(12)
-        .text('Some text with an embedded font!', 100, 100);
-    doc
-        .addPage()
-        .fontSize(25)
-        .text('Here is some vector graphics...', 100, 100);
-    doc.image(__dirname + '/../public/49_MicrosoftTeams-image_7bc3a7aa.png', {
-        fit: [250, 300],
-        align: 'center',
-        valign: 'center'
+    const doc = new PDFDocument({
+        margins: {
+            top: 40,
+            bottom: 40,
+            left: 40,
+            right: 40
+        }
     });
-    doc.end();
+    const stream = doc.pipe(blobStream());
+    doc.pipe(fs.createWriteStream('output_' + app_id + '.pdf'));
+    (async () => {
+        const categories = (await seq.seqFindAll(Category, ['id', 'name'])).map(o => o.dataValues);
+        const questions = (await seq.seqFindAll(Question, ['id', 'category_id', 'question_type_id', 'question', 'parent_id'])).map(o => o.dataValues);
+        const appQuestions = (await seq.seqFindAll(AppQuestion, ['id', 'question_id'], { app_id: app_id })).map(o => o.dataValues.id);
+        const answers = (await seq.seqFindAll(Answers, ['question_id', 'answer'], { app_question_id: appQuestions })).map(o => o.dataValues);
+        console.log('appQues', categories, appQuestions, answers);
+        const finalRes = getFinalExport(categories, questions, answers);
 
+        doc.font(__dirname + '/../fonts/Poppins-Regular.ttf')
+        // .text('', 30, 30);
+        // doc
+        //     .fontSize(25)
+        //     .text('Here is some vector graphics...', 30, 100);
+        // doc.image(__dirname + '/../public/Coat.png', {
+        //     fit: [250, 250],
+        //     align: 'center',
+        //     valign: 'center'
+        // });
+        finalRes.map(cat => {
+            doc
+                .font(__dirname + '/../fonts/Poppins-Regular.ttf')
+                .fontSize(18)
+                .fill('#002F98')
+                .text(cat.no + '. ' + cat.name, {
+                    lineGap: 20
+                });
+            cat.questions.map(que => {
+                doc
+                    .font(__dirname + '/../fonts/Poppins-SemiBold.ttf')
+                    .fontSize(12)
+                    .fill(que.no == 0 ? '#000' : '#03297D')
+                    .text(que.no == 0 ? que.question : (que.no + ' ' + que.question), {
+                        lineGap: 0,
+                        paragraphGap: 16
+                    });
+                let imgCounter = 0;
+                que.answers.map(ans => {
+                    if (ans.ans_type == 'image') {
+                        imgCounter++;
+                        doc.image(ans.answer, 18 + doc.x + (imgCounter > 1 && 110), doc.y, {
+                            // width: ans.question_id == 15 ? 50 : 100,
+                            fit: [100, 100],
+                            align: 'center', valign: 'center'
+                        });
+                    } else {
+                        imgCounter = 0;
+                        doc
+                            .font(__dirname + '/../fonts/Poppins-Regular.ttf')
+                            .fontSize(12)
+                            .fill('#000')
+                            .text(ans.answer, {
+                                indent: 18,
+                                lineGap: 0,
+                                paragraphGap: 16
+                            });
+                    }
+                });
+            });
+
+        });
+        doc.end();
+        stream.on('finish', function () {
+            const blob = stream.toBlob('application/pdf');
+            res.type(blob.type);
+            blob.arrayBuffer().then((buf) => {
+                res.status(200).send(Buffer.from(buf));
+            })
+        }).on('error', function () {
+            res.status(500).send("PDF could not be created");
+        });
+    })();
+}
+
+function getExportPDFPuppet(req, res) {
+    let browser;
+    const app_id = req.params.app_id;
+    (async () => {
+        const categories = (await seq.seqFindAll(Category, ['id', 'name'])).map(o => o.dataValues);
+        const questions = (await seq.seqFindAll(Question, ['id', 'category_id', 'question_type_id', 'question', 'parent_id'])).map(o => o.dataValues);
+        const appQuestions = (await seq.seqFindAll(AppQuestion, ['id', 'question_id'], { app_id: app_id })).map(o => o.dataValues.id);
+        const answers = (await seq.seqFindAll(Answers, ['question_id', 'answer'], { app_question_id: appQuestions })).map(o => o.dataValues);
+        console.log('appQues', categories, appQuestions, answers);
+        const finalRes = getFinalExport(categories, questions, answers);
+
+        browser = await puppeteer.launch();
+        const [page] = await browser.pages();
+        const html = await ejs.renderFile("template.ejs", { finalRes: finalRes });
+        // const html = fs.readFileSync(`${__dirname}/../export.html`, 'utf8')
+        await page.setContent(html);
+        // await page.pdf({
+        //     format: 'A4',
+        //     path: `${__dirname}/../puppeteer_${app_id}.pdf`
+        // })
+        const pdf = await page.pdf({
+            format: "A4", margin: {
+                top: 40,
+                bottom: 40,
+                left: 30,
+                right: 30
+            }, 
+            // path: `${__dirname}/../puppeteer_${app_id}.pdf`
+        });
+        res.contentType("application/pdf");
+
+        // optionally:
+        res.setHeader(
+            "Content-Disposition",
+            "attachment; filename=export.pdf"
+        );
+
+        res.send(pdf);
+    })()
+        .catch(err => {
+            console.error(err);
+            res.sendStatus(500);
+        })
+        .finally(() => browser?.close());
 }
 
 const getFinalExport = (categories, questions, answers) => {
@@ -494,7 +607,11 @@ const getFinalExport = (categories, questions, answers) => {
                 } else if (que.id == 15) {
                     let values = Object.values(JSON.parse(que.answers[0].answer));
                     que.answers = values.map((ob, index) => ob = index == 0 ?
-                        { question_id: que.answers[0].question_id, ans_type: 'image', answer: fs.readFileSync(__dirname + '/../../client/public/images/' + ob).toString('base64') }
+                        {
+                            question_id: que.answers[0].question_id, ans_type: 'image',
+                            answer: fs.readFileSync(__dirname + '/../../client/public/images/' + ob).toString('base64')
+                            // answer: __dirname + '/../../client/public/images/' + ob
+                        }
                         : { question_id: que.answers[0].question_id, answer: ob });
                 } else if (que.id == 23) {
                     let values = Object.values(JSON.parse(que.answers[0].answer)).flat();
@@ -515,6 +632,7 @@ const getFinalExport = (categories, questions, answers) => {
                             : {
                                 question_id: que.answers[0].question_id, ans_type: 'image',
                                 answer: fs.readFileSync(__dirname + '/../public/' + ob).toString('base64')
+                                // answer: __dirname + '/../public/' + ob
                             })
                     ).flat();
                 }
@@ -643,7 +761,8 @@ module.exports = {
     getApprovedApplications,
     viewApplications,
     getExportPDF,
-    getExportPDFNew,
-    getExportPDFNew2,
+    getExportPDFPdfCreator,
+    getExportPDFPdfKit,
+    getExportPDFPuppet,
     getInvitedApplications
 }

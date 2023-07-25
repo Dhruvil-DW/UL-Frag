@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"> -->
+  <title>Document</title>
+  <style>
+    /* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap'); */
+    /* @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700;800&display=swap'); */
+
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/poppins/v20/pxiEyp8kv8JHgFVrJJnecmNE.woff2) format('woff2');
+      unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    }
+
+    * {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
+      font-style: normal !important;
+    }
+
+    html {
+      -webkit-print-color-adjust: exact;
+    }
+
+    h3 {
+      color: #002F98;
+      font-size: 24px;
+      background: #E6EDFE;
+      width: 100%;
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    div.questions {
+      color: rgb(3, 41, 125);
+      font-weight: bold;
+      font-size: 18px;
+      padding: 12px 24px;
+    }
+
+    div.questions_sub {
+      color: #000;
+    }
+
+    div.answers {
+      color: black;
+      font-size: 18px;
+      padding: 12px 0 12px 24px;
+    }
+
+    img.images {
+      width: 200px;
+      padding: 12px 0 12px 24px;
+    }
+
+    img.images_client {
+      width: 100px;
+      padding: 12px 0 12px 24px;
+    }
+  </style>
+</head>
+
+<body>
+  <% finalRes.forEach(function(cat) { %>
+    <h3> <%= cat.no %>. <%= cat.name %> </h3>
+    <% cat.questions.forEach(function(que) { %>
+      <% if (que.no == 0) { %>
+        <div class="questions questions_sub"><%= que.question %></div>
+      <% } else { %>
+          <div class="questions"><%= que.no %> <%= que.question %></div>
+      <% } %>
+      <% que.answers.forEach(function(ans) { %>
+        <% if (ans.ans_type == 'image') { %>
+          <% if (ans.question_id == 15) { %>
+            <img class="images_client" src="data:image/png;base64,<%= ans.answer %>" alt="image">
+          <% } else { %>
+            <img class="images" src="data:image/png;base64,<%= ans.answer %>" alt="image">
+          <% } %>
+        <% } else { %>
+        <div class="answers"><%= ans.answer %></div>
+        <% } %>
+      <% }); %>
+    <% }); %>
+  <% }); %>
+</body>
+
+</html>

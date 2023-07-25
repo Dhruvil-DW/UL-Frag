@@ -15,7 +15,9 @@ router.get('/get/myapplications', authMiddleware.checkAuth, userController.getMy
 router.get('/get/approvedapplications', authMiddleware.checkAuth, userController.getApprovedApplications);
 router.get('/get/invitedapplications', authMiddleware.checkAuth, userController.getInvitedApplications);
 router.get('/get/exportold/:app_id', authMiddleware.checkAuth, userController.getExportPDF);
-router.get('/get/export/:app_id', authMiddleware.checkAuth, userController.getExportPDFNew);
-router.get('/get/exportnew/:app_id', authMiddleware.checkAuth, userController.getExportPDFNew2);
+router.get('/get/exportpdfcreator/:app_id', authMiddleware.checkAuth, userController.getExportPDFPdfCreator);
+router.get('/get/exportpdfkit/:app_id', authMiddleware.checkAuth, userController.getExportPDFPdfKit);
+router.get('/get/export/:app_id', authMiddleware.checkAuth, userController.getExportPDFPuppet);
 router.get('/viewapplication/:app_id', authMiddleware.checkAuth, userController.viewApplications);
+
 module.exports = router;

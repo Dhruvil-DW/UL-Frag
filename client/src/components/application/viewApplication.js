@@ -37,6 +37,8 @@ export default function ViewApplication() {
   const questions = useGetQuestions();
   console.log(questions.data);
 
+  const [showDownload, setShowDownload] = useState(false);
+
   useEffect(() => {
     if (questions.data && queAns.length) {
       const finalResult = [];
@@ -65,8 +67,8 @@ export default function ViewApplication() {
     }
   }, [questions.data, queAns]);
 
-  function getExport() {
-    getData(`user/get/export/${appId}`, { responseType: "blob" }, (data) => download(data))
+  function getExport(type) {
+    getData(`user/get/export/${appId}/?type=${type}`, { responseType: "blob" }, (data) => download(data))
   }
 
 
@@ -246,10 +248,14 @@ export default function ViewApplication() {
               {appData.application_status_id === 1 && <Button variant="contained" startIcon={<UserAddIcon />} onClick={() => collabDispatch({ type: collabActions.SHOW_COLLAB, payload: { app_id: appId } })}>Invite</Button>}
               {(appData.application_status_id === 2 || appData.application_status_id === 3) &&
                 <>
-                  <Button variant="contained"
-                    // onClick={createPDF}
-                    onClick={getExport}
-                  >Download</Button>
+                  {/* {showDownload && <div className='downloadBtnPopup'>
+                    <div onClick={() => getExport('pdf')}>Save as PDF</div>
+                    <div onClick={() => getExport('doc')}>Save as Doc</div>
+                  </div>} */}
+                  <div style={{ width: '200px', textAlign: 'center' }}>Download application as</div>
+                  <Button variant="contained" className="downloadBtnCustom" onClick={() => getExport('pdf')}>PDF</Button>
+                  <Button variant="contained" className="downloadBtnCustom" onClick={() => getExport('doc')}>Doc</Button>
+                  <div className='downloadBtnSep'></div>
                 </>
               }
               <Button variant="outlined" startIcon={<LogoutArrowIcon />} onClick={() => navigate('/logout')}>Logout</Button>

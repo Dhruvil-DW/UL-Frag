@@ -24,6 +24,7 @@ const blobStream = require('blob-stream');
 const puppeteer = require('puppeteer');
 const ejs = require("ejs");
 const os = require('os');
+const HtmlDocx = require('html-docx-js');
 
 function addProfileDetails(req, res) {
     // console.log(req.body);
@@ -541,6 +542,7 @@ function getExportPDFPdfKit(req, res) {
 function getExportPDFPuppet(req, res) {
     let browser;
     const app_id = req.params.app_id;
+    const type = req.query.type;
     (async () => {
         const appData = await seq.seqFindByPk(Application, app_id, ["id", "user_id", "updated_at"],
             [
@@ -551,15 +553,8 @@ function getExportPDFPuppet(req, res) {
         const questions = (await seq.seqFindAll(Question, ['id', 'category_id', 'question_type_id', 'question', 'parent_id'])).map(o => o.dataValues);
         const appQuestions = (await seq.seqFindAll(AppQuestion, ['id', 'question_id'], { app_id: app_id })).map(o => o.dataValues.id);
         const answers = (await seq.seqFindAll(Answers, ['question_id', 'answer'], { app_question_id: appQuestions })).map(o => o.dataValues);
-        // console.log('appQues', categories, appQuestions, answers);
         const finalRes = getFinalExport(categories, questions, answers);
-        console.log(appData.dataValues.updated_at)
 
-        browser = await puppeteer.launch(os.platform() != 'win32' ? {
-            // For Ubutnu, remove if doesn't work in windows
-            executablePath: '/usr/bin/chromium-browser'
-        } : {});
-        const [page] = await browser.pages();
         const date = new Date(appData.dataValues.updated_at);
         const html = await ejs.renderFile("template.ejs", {
             categories: finalRes,
@@ -570,27 +565,48 @@ function getExportPDFPuppet(req, res) {
                 date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear()
             }
         });
-        // const html = fs.readFileSync(`${__dirname}/../export.html`, 'utf8')
-        await page.setContent(html);
 
-        const pdf = await page.pdf({
-            format: "A4", margin: {
-                top: 40,
-                bottom: 40,
-                left: 30,
-                right: 30
-            },
-            // path: `${__dirname}/../puppeteer_${app_id}.pdf`
-        });
-        res.contentType("application/pdf");
+        if (type == 'doc') {
+            var docx = HtmlDocx.asBlob(html);
+            console.log('docx', Buffer.from(await docx.arrayBuffer()));
+            // fs.writeFile('helloworld3.docx', Buffer.from(await docx.arrayBuffer()), function (err) {
+            //     if (err) return console.log(err);
+            //     console.log('done');
+            // });
 
-        // optionally:
-        res.setHeader(
-            "Content-Disposition",
-            "attachment; filename=export.pdf"
-        );
+            // res.contentType("application/pdf");
+            res.contentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
 
-        res.send(pdf);
+            // // optionally:
+            // res.setHeader(
+            //     "Content-Disposition",
+            //     "attachment; filename=export.pdf"
+            // );
+
+            res.send(Buffer.from(await docx.arrayBuffer()));
+        } else {
+            browser = await puppeteer.launch(os.platform() != 'win32' ? {
+                // For Ubutnu, remove if doesn't work in windows
+                executablePath: '/usr/bin/chromium-browser',
+                headless: "new"
+            } : { headless: "new" });
+            const [page] = await browser.pages();
+
+            await page.setContent(html);
+
+            const pdf = await page.pdf({
+                format: "A4", margin: {
+                    top: 40,
+                    bottom: 40,
+                    left: 30,
+                    right: 30
+                },
+                // path: `${__dirname}/../puppeteer_${app_id}.pdf`
+            });
+            res.contentType("application/pdf");
+            res.send(pdf);
+        }
+
     })()
         .catch(err => {
             console.error(err);
